@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vaibhava Kumar Shrivastav | Full Stack Developer • AWS Enthusiast • Building GLA Exchange">
+  <meta name="theme-color" content="#E50914">
+  <meta property="og:title" content="Vaibhava Kumar Shrivastav | Full Stack Developer">
+  <meta property="og:description" content="Full Stack Developer • AWS Enthusiast • Building GLA Exchange • Netflix-inspired portfolio">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/images/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Vaibhava Kumar Shrivastav | Full Stack Developer">
+  <meta name="twitter:description" content="Full Stack Developer • AWS Enthusiast • Building GLA Exchange">
+  <meta name="twitter:image" content="assets/images/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+  <link rel="manifest" href="assets/manifest.json">
+  <title>Vaibhava Kumar Shrivastav | Full Stack Developer</title>
+
+  <!-- Font Loading -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/bebas-neue.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/inter.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/jetbrains-mono.woff2">
+
+  <!-- Font Face Declarations (fallback to system fonts if local not available) -->
+  <style>
+    @font-face {
+      font-family: 'Bebas Neue';
+      src: url('assets/fonts/bebas-neue.woff2') format('woff2');
+      font-weight: 400;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('assets/fonts/inter.woff2') format('woff2');
+      font-weight: 300 700;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'JetBrains Mono';
+      src: url('assets/fonts/jetbrains-mono.woff2') format('woff2');
+      font-weight: 400 700;
+      font-display: swap;
+    }
+  </style>
+</head>
+<body>
+  <!-- Skip Link for Accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Preloader Overlay (Intro Stage) -->
+  <div id="preloader" class="preloader" role="status" aria-label="Loading portfolio" aria-busy="true">
+    <div class="preloader__inner">
+      <div class="preloader__logo" aria-hidden="true">
+        <svg viewBox="0 0 120 120" class="preloader__svg">
+          <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#E50914"/>
+              <stop offset="100%" stop-color="#B8070F"/>
+            </linearGradient>
+          </defs>
+          <rect x="10" y="10" width="100" height="100" rx="12" fill="url(#logoGradient)"/>
+          <text x="60" y="78" font-family="Bebas Neue, sans-serif" font-size="52" font-weight="400" fill="white" text-anchor="middle" letter-spacing="2">VAIBHAVA</text>
+        </svg>
+      </div>
+      <div class="preloader__progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        <div class="preloader__bar" style="width: 0%"></div>
+      </div>
+      <p class="preloader__text">Initializing...</p>
+    </div>
+    <div class="preloader__bg" aria-hidden="true"></div>
+  </div>
+
+  <!-- Profile Select Modal (Intro Stage) -->
+  <dialog id="profile-select" class="profile-select" role="dialog" aria-modal="true" aria-labelledby="profile-select-title">
+    <div class="profile-select__backdrop" tabindex="-1"></div>
+    <div class="profile-select__panel">
+      <header class="profile-select__header">
+        <h2 id="profile-select-title" class="font-display text-3xl text-primary">SELECT PROFILE</h2>
+        <p class="text-tertiary mt-2">Choose your adventure</p>
+      </header>
+      <div class="profile-select__options" role="listbox" aria-label="Profile options">
+        <!-- Populated by intro.js -->
+      </div>
+      <footer class="profile-select__footer">
+        <button type="button" class="btn btn--ghost btn--sm" id="profile-select-skip">Skip Intro</button>
+        <button type="button" class="btn btn--primary" id="profile-select-confirm" disabled>Enter Portfolio</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- Main Content -->
+  <main id="main-content" class="main-content" hidden>
+    <!-- Navigation -->
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+      <div class="container nav__inner">
+        <a href="#" class="nav__logo" aria-label="Vaibhava Kumar Shrivastav - Home">
+          <span class="font-display text-xl text-primary">VAIBHAVA</span>
+          <span class="nav__logo-dot" aria-hidden="true"></span>
+        </a>
+        <div class="nav__links" role="menubar">
+          <a href="#home" class="nav__link" role="menuitem" data-nav="home">Home</a>
+          <a href="#about" class="nav__link" role="menuitem" data-nav="about">About</a>
+          <a href="#experience" class="nav__link" role="menuitem" data-nav="experience">Experience</a>
+          <a href="#projects" class="nav__link" role="menuitem" data-nav="projects">Projects</a>
+          <a href="#skills" class="nav__link" role="menuitem" data-nav="skills">Skills</a>
+          <a href="#contact" class="nav__link" role="menuitem" data-nav="contact">Contact</a>
+        </div>
+        <div class="nav__actions">
+          <button type="button" class="btn btn--ghost btn--sm nav__terminal-trigger" aria-label="Open terminal" data-terminal-trigger>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="2"/>
+              <line x1="6" y1="10" x2="18" y2="10"/>
+              <line x1="6" y1="14" x2="18" y2="14"/>
+              <path d="M6 18h12"/>
+            </svg>
+            <span class="nav__terminal-text">Terminal</span>
+            <kbd class="nav__terminal-kbd">⌘K</kbd>
+          </button>
+          <button type="button" class="nav__mobile-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+            <span class="nav__hamburger" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="section section--hero hero" aria-labelledby="hero-title">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__gradient"></div>
+        <div class="hero__grid" aria-hidden="true"></div>
+        <div class="hero__particles" aria-hidden="true"></div>
+      </div>
+      <div class="container hero__content">
+        <div class="hero__badge animate-slide-up">
+          <span class="badge badge--primary">AWS Student Builder Challenge</span>
+        </div>
+        <h1 id="hero-title" class="hero__title font-display text-5xl text-primary gradient-text animate-slide-up delay-1">
+          Vaibhava Kumar Shrivastav
+        </h1>
+        <p class="hero__subtitle text-xl text-secondary animate-slide-up delay-2" id="hero-tagline">
+          Full Stack Developer • Cloud Enthusiast • Building scalable systems
+        </p>
+        <div class="hero__stats flex gap-6 flex-wrap animate-slide-up delay-3" role="list" aria-label="Key metrics">
+          <div class="hero__stat" role="listitem">
+            <span class="font-mono text-3xl text-terminal" data-counter="10" data-suffix="K+">0</span>
+            <span class="text-tertiary text-sm">Users on GLA Exchange</span>
+          </div>
+          <div class="hero__stat" role="listitem">
+            <span class="font-mono text-3xl text-cyan" data-counter="99.9" data-suffix="%">0</span>
+            <span class="text-tertiary text-sm">Uptime</span>
+          </div>
+          <div class="hero__stat" role="listitem">
+            <span class="font-mono text-3xl text-warning" data-counter="4" data-suffix="Yrs">0</span>
+            <span class="text-tertiary text-sm">Experience</span>
+          </div>
+          <div class="hero__stat" role="listitem">
+            <span class="font-mono text-3xl text-primary" data-counter="12" data-suffix="+">0</span>
+            <span class="text-tertiary text-sm">Projects Shipped</span>
+          </div>
+        </div>
+        <div class="hero__actions flex gap-4 flex-wrap animate-slide-up delay-4">
+          <a href="#projects" class="btn btn--primary btn--lg">View Projects</a>
+          <a href="#contact" class="btn btn--secondary btn--lg">Get In Touch</a>
+          <button type="button" class="btn btn--terminal btn--lg" data-terminal-trigger>Open Terminal</button>
+        </div>
+        <div class="hero__scroll animate-float delay-5" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 5v14M19 12l-7 7-7-7"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section" aria-labelledby="about-title">
+      <div class="container">
+        <header class="section__header">
+          <h2 id="about-title" class="section__title font-display text-4xl">About Me</h2>
+          <p class="section__subtitle">Get to know the developer behind the code</p>
+        </header>
+        <div class="grid grid-responsive" style="grid-template-columns: 1fr; gap: var(--space-8);">
+          <article class="card card--glass about__bio">
+            <div class="card__body">
+              <h3 class="font-display text-2xl text-primary mb-4">Hello, I'm Vaibhava</h3>
+              <div class="prose text-secondary" id="about-bio">
+                <!-- Populated by main.js from DATA.profile.bio -->
+              </div>
+            </div>
+          </article>
+          <aside class="card card--glass about__details">
+            <div class="card__body">
+              <h3 class="font-display text-2xl text-primary mb-4">Quick Facts</h3>
+              <dl class="about__facts" id="about-facts">
+                <!-- Populated by main.js -->
+              </dl>
+            </div>
+          </aside>
+        </div>
+        <div class="divider divider--primary mt-8"></div>
+        <div class="about__tech" id="about-tech">
+          <h3 class="font-display text-2xl text-primary mb-6">Tech Stack</h3>
+          <div class="grid grid-responsive" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--space-4);" role="list">
+            <!-- Populated by main.js from DATA.skills.top -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section" aria-labelledby="experience-title">
+      <div class="container">
+        <header class="section__header">
+          <h2 id="experience-title" class="section__title font-display text-4xl">Experience</h2>
+          <p class="section__subtitle">My journey through code and cloud</p>
+        </header>
+        <div class="timeline" id="experience-timeline" role="list">
+          <!-- Populated by main.js from DATA.experience -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section" aria-labelledby="projects-title">
+      <div class="container">
+        <header class="section__header flex justify-between items-end flex-wrap gap-4">
+          <div>
+            <h2 id="projects-title" class="section__title font-display text-4xl">Projects</h2>
+            <p class="section__subtitle">Selected work and side projects</p>
+          </div>
+          <div class="projects__filter" role="group" aria-label="Filter projects">
+            <button type="button" class="btn btn--ghost btn--sm projects__filter-btn active" data-filter="all">All</button>
+            <button type="button" class="btn btn--ghost btn--sm projects__filter-btn" data-filter="featured">Featured</button>
+            <button type="button" class="btn btn--ghost btn--sm projects__filter-btn" data-filter="production">Production</button>
+            <button type="button" class="btn btn--ghost btn--sm projects__filter-btn" data-filter="open-source">Open Source</button>
+          </div>
+        </header>
+        <div class="grid grid-responsive" id="projects-grid" role="list">
+          <!-- Populated by main.js from DATA.projects -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section" aria-labelledby="skills-title">
+      <div class="container">
+        <header class="section__header">
+          <h2 id="skills-title" class="section__title font-display text-4xl">Skills</h2>
+          <p class="section__subtitle">Technologies I work with</p>
+        </header>
+        <div class="grid grid-responsive" id="skills-grid" role="list">
+          <!-- Populated by main.js from DATA.skills.categories -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section" aria-labelledby="contact-title">
+      <div class="container">
+        <header class="section__header text-center">
+          <h2 id="contact-title" class="section__title font-display text-4xl">Get In Touch</h2>
+          <p class="section__subtitle">Always open to discussing new opportunities</p>
+        </header>
+        <div class="grid grid-responsive" style="max-width: 800px; margin: 0 auto;">
+          <form class="card card--glass contact__form" id="contact-form" novalidate>
+            <div class="card__body">
+              <div class="form__group">
+                <label for="contact-name" class="form__label">Name</label>
+                <input type="text" id="contact-name" name="name" class="input" required autocomplete="name" placeholder="Your name">
+              </div>
+              <div class="form__group">
+                <label for="contact-email" class="form__label">Email</label>
+                <input type="email" id="contact-email" name="email" class="input" required autocomplete="email" placeholder="you@example.com">
+              </div>
+              <div class="form__group">
+                <label for="contact-subject" class="form__label">Subject</label>
+                <input type="text" id="contact-subject" name="subject" class="input" required placeholder="What's this about?">
+              </div>
+              <div class="form__group">
+                <label for="contact-message" class="form__label">Message</label>
+                <textarea id="contact-message" name="message" class="input" rows="5" required placeholder="Your message..."></textarea>
+              </div>
+              <button type="submit" class="btn btn--primary btn--lg w-full mt-4">Send Message</button>
+              <p class="form__note text-tertiary text-sm text-center mt-4">Or reach me directly at <a href="mailto:vaibhava.kumar@example.com" class="text-primary">vaibhava.kumar@example.com</a></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid grid grid-responsive" style="grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--space-8);">
+        <div class="footer__brand">
+          <a href="#" class="footer__logo font-display text-2xl text-primary">VAIBHAVA</a>
+          <p class="text-tertiary mt-4" id="footer-tagline">Building scalable systems, one commit at a time.</p>
+          <div class="footer__social flex gap-4 mt-6" role="list" aria-label="Social links">
+            <a href="https://github.com/vaibhava-shrivastav" class="footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub" role="listitem">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/vaibhavakumarshrivastav/" class="footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" role="listitem">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            </a>
+            <a href="mailto:vaibhava.kumar@example.com" class="footer__social-link" aria-label="Email" role="listitem">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </a>
+          </div>
+        </div>
+        <nav class="footer__nav" aria-label="Footer navigation">
+          <h4 class="font-display text-lg text-primary mb-4">Navigate</h4>
+          <ul class="footer__links" role="list">
+            <li><a href="#home" class="text-tertiary hover:text-primary transition-colors">Home</a></li>
+            <li><a href="#about" class="text-tertiary hover:text-primary transition-colors">About</a></li>
+            <li><a href="#experience" class="text-tertiary hover:text-primary transition-colors">Experience</a></li>
+            <li><a href="#projects" class="text-tertiary hover:text-primary transition-colors">Projects</a></li>
+            <li><a href="#skills" class="text-tertiary hover:text-primary transition-colors">Skills</a></li>
+            <li><a href="#contact" class="text-tertiary hover:text-primary transition-colors">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="footer__links-column" aria-label="Projects">
+          <h4 class="font-display text-lg text-primary mb-4">Featured Projects</h4>
+          <ul class="footer__links" role="list" id="footer-projects">
+            <!-- Populated by main.js -->
+          </ul>
+        </div>
+        <div class="footer__links-column" aria-label="Connect">
+          <h4 class="font-display text-lg text-primary mb-4">Connect</h4>
+          <ul class="footer__links" role="list">
+            <li><a href="https://glaexchange.online" target="_blank" rel="noopener noreferrer" class="text-tertiary hover:text-primary transition-colors">GLA Exchange</a></li>
+            <li><a href="https://github.com/vaibhava-shrivastav" target="_blank" rel="noopener noreferrer" class="text-tertiary hover:text-primary transition-colors">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/vaibhavakumarshrivastav/" target="_blank" rel="noopener noreferrer" class="text-tertiary hover:text-primary transition-colors">LinkedIn</a></li>
+            <li><a href="assets/resume.pdf" target="_blank" rel="noopener noreferrer" class="text-tertiary hover:text-primary transition-colors">Download Resume</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <div class="divider"></div>
+        <p class="text-muted text-sm text-center">© 2025 Vaibhava Kumar Shrivastav. Built with <span class="text-primary">♥</span> and <span class="text-terminal">☕</span>. Deployed on AWS Amplify.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Terminal Overlay -->
+  <dialog id="terminal" class="terminal" role="dialog" aria-modal="true" aria-labelledby="terminal-title">
+    <div class="terminal__backdrop" tabindex="-1"></div>
+    <div class="terminal__window">
+      <header class="terminal__header">
+        <div class="terminal__controls" aria-hidden="true">
+          <button class="terminal__control terminal__control--close" aria-label="Close terminal"></button>
+          <button class="terminal__control terminal__control--minimize" aria-label="Minimize"></button>
+          <button class="terminal__control terminal__control--maximize" aria-label="Maximize"></button>
+        </div>
+        <h2 id="terminal-title" class="terminal__title font-mono text-xs text-terminal">vaibhava@portfolio:~$</h2>
+        <button type="button" class="terminal__close-btn" aria-label="Close terminal">&times;</button>
+      </header>
+      <div class="terminal__body" role="log" aria-live="polite" aria-label="Terminal output">
+        <div class="terminal__output" id="terminal-output"></div>
+        <div class="terminal__input-line flex items-center gap-2">
+          <span class="terminal__prompt font-mono text-terminal">vaibhava@portfolio:~$</span>
+          <input type="text" class="terminal__input input input--terminal flex-1" id="terminal-input" autocomplete="off" spellcheck="false" aria-label="Terminal command input" placeholder="Type 'help' for commands">
+          <span class="terminal__cursor font-mono text-terminal animate-pulse" aria-hidden="true">_</span>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Toast Container (for terminal-toast style notifications) -->
+  <div id="toast-container" class="toast-container" role="region" aria-label="Notifications" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/xp.js"></script>
+  <script src="js/terminal.js"></script>
+  <script src="js/intro.js"></script>
+  <script src="js/main.js"></script>
+
+  <!-- Inline initialization -->
+  <script>
+    // Initialize app when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.App && window.App.init) {
+        window.App.init();
+      }
+    });
+  </script>
+</body>
+</html>
