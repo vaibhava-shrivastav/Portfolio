@@ -3,7 +3,7 @@
  * About Section
  * ==========================================================================
  */
-import { profile as profileData, experience, education } from '../data/profile';
+import { profile as profileData, experience, education, contact } from '../data/profile';
 import { Row, Card, CardBody, Badge } from './Row';
 import { useInView } from '../hooks/useInView';
 
@@ -39,11 +39,11 @@ export function About() {
                 </div>
                 <div>
                   <p className="font-mono text-xs text-tertiary text-transform-uppercase tracking-wider mb-1">Timezone</p>
-                  <p className="text-primary">UTC+5:30</p>
+                  <p className="text-primary">{contact.timezone}</p>
                 </div>
                 <div>
                   <p className="font-mono text-xs text-tertiary text-transform-uppercase tracking-wider mb-1">Availability</p>
-                  <p className="text-primary">Open to opportunities</p>
+                  <p className="text-primary">{contact.availability}</p>
                 </div>
                 <div>
                   <p className="font-mono text-xs text-tertiary text-transform-uppercase tracking-wider mb-1">Pronouns</p>
