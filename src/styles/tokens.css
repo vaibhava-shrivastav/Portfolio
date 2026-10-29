@@ -1,0 +1,202 @@
+/* ==========================================================================
+   Netflix-Inspired Developer Portfolio — Design System Tokens
+   Extracted from Stitch Project: 10673983893490798032
+   ========================================================================== */
+
+:root {
+  /* ==========================================================================
+     1. COLOR TOKENS
+     ========================================================================== */
+  /* Primary Brand Colors */
+  --color-primary: #E50914;
+  --color-primary-hover: #F40612;
+  --color-primary-active: #B8070F;
+  --color-primary-muted: rgba(229, 9, 20, 0.15);
+
+  /* Terminal / RPG Accent Colors */
+  --color-terminal: #39FF14;
+  --color-terminal-dim: #2CC710;
+  --color-cyan: #00E5FF;
+  --color-cyan-dim: #00B8CC;
+
+  /* Background System */
+  --color-bg-primary: #131313;
+  --color-bg-secondary: #1F1F1F;
+  --color-bg-tertiary: #262626;
+  --color-bg-quaternary: #2E2E2E;
+  --color-bg-glass: rgba(20, 20, 20, 0.85);
+
+  /* Surface / Border */
+  --color-border-subtle: #2A2A2A;
+  --color-border-default: #333333;
+  --color-border-strong: #444444;
+
+  /* Text Hierarchy */
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #E5E5E5;
+  --color-text-tertiary: #B3B3B3;
+  --color-text-muted: #808080;
+  --color-text-inverse: #131313;
+
+  /* State Colors */
+  --color-success: #39FF14;
+  --color-warning: #FFB800;
+  --color-error: #FF4444;
+  --color-info: #00E5FF;
+
+  /* Gradient Tokens */
+  --gradient-primary: linear-gradient(135deg, #E50914 0%, #B8070F 100%);
+  --gradient-terminal: linear-gradient(135deg, #39FF14 0%, #2CC710 100%);
+  --gradient-cyan: linear-gradient(135deg, #00E5FF 0%, #00B8CC 100%);
+  --gradient-radial-hero: radial-gradient(ellipse at center, rgba(229, 9, 20, 0.25) 0%, transparent 70%);
+  --gradient-glass: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+
+  /* Project Image Fallback Gradients */
+  --gradient-project-gla: linear-gradient(135deg, #E50914 0%, #B8070F 100%);
+  --gradient-project-edu: linear-gradient(135deg, #00E5FF 0%, #00B8CC 100%);
+
+  /* ==========================================================================
+     2. TYPOGRAPHY TOKENS
+     ========================================================================== */
+  --font-display: 'Bebas Neue', 'Oswald', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  --text-xs: clamp(0.625rem, 0.6rem + 0.125vw, 0.75rem);
+  --text-sm: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-base: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+  --text-lg: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+  --text-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+  --text-2xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --text-3xl: clamp(2rem, 1.7rem + 1.5vw, 3rem);
+  --text-4xl: clamp(3rem, 2.5rem + 2.5vw, 5rem);
+  --text-5xl: clamp(4rem, 3.5rem + 3vw, 7rem);
+
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  --leading-tight: 1.1;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+
+  /* ==========================================================================
+     3. SPACING TOKENS (4px/8px base, gutter 1.5rem, margin 2rem, scale ×2)
+     ========================================================================== */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  --gutter: var(--space-6);
+  --page-margin: var(--space-8);
+  --section-gap: var(--space-16);
+  --component-gap: var(--space-6);
+  --element-gap: var(--space-4);
+
+  /* ==========================================================================
+     4. BORDER RADIUS TOKENS
+     ========================================================================== */
+  --radius-none: 0;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* ==========================================================================
+     5. SHADOW TOKENS
+     ========================================================================== */
+  --shadow-cinematic: 0 20px 40px -12px rgba(0, 0, 0, 0.6),
+                      0 8px 16px -8px rgba(229, 9, 20, 0.15),
+                      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  --shadow-terminal: 0 0 0 1px rgba(57, 255, 20, 0.3),
+                     0 0 30px rgba(57, 255, 20, 0.15),
+                     inset 0 1px 0 rgba(57, 255, 20, 0.1);
+
+  --shadow-deep: 0 25px 50px -12px rgba(0, 0, 0, 0.8),
+                 0 0 0 1px rgba(255, 255, 255, 0.03);
+
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.05),
+                  inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+
+  --shadow-focus: 0 0 0 3px rgba(229, 9, 20, 0.4);
+  --shadow-focus-terminal: 0 0 0 3px rgba(57, 255, 20, 0.4);
+  --shadow-focus-cyan: 0 0 0 3px rgba(0, 229, 255, 0.4);
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+  /* ==========================================================================
+     6. GRID & LAYOUT TOKENS
+     ========================================================================== */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1440px;
+  --container-full: 100%;
+
+  --grid-cols-mobile: 4;
+  --grid-cols-tablet: 8;
+  --grid-cols-desktop: 12;
+
+  --bp-mobile: 480px;
+  --bp-tablet: 768px;
+  --bp-desktop: 1024px;
+  --bp-wide: 1440px;
+
+  /* ==========================================================================
+     7. TRANSITION & ANIMATION TOKENS
+     ========================================================================== */
+  --duration-instant: 50ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  --duration-slower: 500ms;
+
+  --ease-linear: linear;
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-in: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ==========================================================================
+     8. Z-INDEX SCALE
+     ========================================================================== */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+  --z-toast: 800;
+  --z-terminal: 900;
+  --z-preloader: 1000;
+}
