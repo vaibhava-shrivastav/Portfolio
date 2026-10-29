@@ -4,27 +4,23 @@ applications:
       phases:
         preBuild:
           commands:
-            - echo "Pre-build phase - No build step required for static site"
+            - echo "Pre-build phase - Installing dependencies"
             - echo "Node version: $(node --version)"
             - echo "NPM version: $(npm --version)"
+            - npm ci
         build:
           commands:
-            - echo "Build phase - Static site, no compilation needed"
-            - echo "Verifying files exist..."
-            - test -f index.html && echo "✓ index.html found" || (echo "✗ index.html missing" && exit 1)
-            - test -f css/styles.css && echo "✓ css/styles.css found" || (echo "✗ css/styles.css missing" && exit 1)
-            - test -f js/main.js && echo "✓ js/main.js found" || (echo "✗ js/main.js missing" && exit 1)
-            - test -f js/data.js && echo "✓ js/data.js found" || (echo "✗ js/data.js missing" && exit 1)
-            - test -f js/xp.js && echo "✓ js/xp.js found" || (echo "✗ js/xp.js missing" && exit 1)
-            - test -f js/terminal.js && echo "✓ js/terminal.js found" || (echo "✗ js/terminal.js missing" && exit 1)
-            - test -f js/intro.js && echo "✓ js/intro.js found" || (echo "✗ js/intro.js missing" && exit 1)
-            - echo "All required files verified ✓"
+            - echo "Build phase - Building Vite React app"
+            - npm run build
+            - echo "Verifying build output..."
+            - test -f dist/index.html && echo "✓ index.html found" || (echo "✗ index.html missing" && exit 1)
+            - test -d dist/assets && echo "✓ assets directory found" || (echo "✗ assets directory missing" && exit 1)
+            - echo "Build completed successfully ✓"
         postBuild:
           commands:
-            - echo "Post-build phase - Optimizing assets"
-            - echo "Generating sitemap..."
+            - echo "Post-build phase - Generating sitemap"
             - |
-              cat > public/sitemap.xml << 'EOF'
+              cat > dist/sitemap.xml << 'EOF'
               <?xml version="1.0" encoding="UTF-8"?>
               <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
                 <url>
@@ -40,7 +36,7 @@ applications:
                   <priority>0.8</priority>
                 </url>
                 <url>
-                  <loc>https://vaibhava-shrivastav.vercel.app/#experience</loc>
+                  <loc>https://vaibhava-shrivastav.vercel.app/#skills</loc>
                   <lastmod>$(date -u +%Y-%m-%d)</lastmod>
                   <changefreq>monthly</changefreq>
                   <priority>0.8</priority>
@@ -52,7 +48,7 @@ applications:
                   <priority>0.9</priority>
                 </url>
                 <url>
-                  <loc>https://vaibhava-shrivastav.vercel.app/#skills</loc>
+                  <loc>https://vaibhava-shrivastav.vercel.app/#achievements</loc>
                   <lastmod>$(date -u +%Y-%m-%d)</lastmod>
                   <changefreq>monthly</changefreq>
                   <priority>0.7</priority>
@@ -67,11 +63,12 @@ applications:
               EOF
             - echo "Sitemap generated ✓"
       artifacts:
-        baseDirectory: .
+        baseDirectory: dist
         files:
           - '**/*'
       cache:
-        paths: []
+        paths:
+          - node_modules/**/*
     appRoot: .
     # Custom headers for security and performance
     customHeaders:
@@ -92,7 +89,7 @@ applications:
           - key: 'Cache-Control'
             value: 'public, max-age=0, must-revalidate'
           - key: 'Content-Security-Policy'
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' ${VITE_CONTACT_API_URL}; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
       - pattern: '**/*.css'
         headers:
           - key: 'Cache-Control'
@@ -127,7 +124,7 @@ applications:
             value: 'public, max-age=86400'
           - key: 'Content-Disposition'
             value: 'attachment; filename="Vaibhava_Kumar_Shrivastav_Resume.pdf"'
-    # Redirects for SPA-like behavior (if needed)
+    # SPA rewrites - serve index.html for all routes
     customRewrites:
       - source: '/<*>'
         target: '/index.html'
@@ -136,3 +133,4 @@ applications:
     env:
       variables:
         NODE_ENV: 'production'
+        # VITE_CONTACT_API_URL will be set in Amplify console
