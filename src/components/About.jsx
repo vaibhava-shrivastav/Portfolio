@@ -1,119 +1,169 @@
 /**
  * ==========================================================================
- * About Section
+ * About — "About Me: Season 1" Netflix-Style Episodic Shelf
+ * ==========================================================================
+ * Features:
+ * - Episodic structure built strictly from resume.pdf facts:
+ *   - Ep 1: Education at GLA University (2024-2028, CPI 8.8)
+ *   - Ep 2: Experience at Astrea IT Services (Jun-Jul 2026)
+ *   - Ep 3: GLA Exchange (Full-Stack Project, Jan-May 2026)
+ *   - Ep 4: EduCloud (Collaborative Project, Feb-Apr 2026)
+ * - Awards about_view (+30 XP once) via useInView
+ * - Preserves id="about" for Navbar scroll-spy and anchor navigation
+ * - Reusable Row component with scroll snap & desktop arrows
  * ==========================================================================
  */
-import { profile as profileData, experience, education, contact } from '../data/profile';
-import { Row, Card, CardBody, Badge } from './Row';
+import { useEffect, useRef } from 'react';
+import { education, experience, projects } from '../data/profile';
+import { Row } from './Row';
 import { useInView } from '../hooks/useInView';
+import { useGame, useUI } from '../context/GameContext';
 
 export function About() {
-  const [ref, inView] = useInView({ triggerOnce: true });
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+  const { actions } = useGame();
+  const { openProjectModal } = useUI();
+  const awardedRef = useRef(false);
+
+  // Award about_view (+30 XP once) when scrolled into view
+  useEffect(() => {
+    if (inView && !awardedRef.current) {
+      awardedRef.current = true;
+      if (actions.awardAction) {
+        actions.awardAction('about_view', 30);
+      }
+    }
+  }, [inView, actions]);
+
+  // Episodes built strictly from resume.pdf facts
+  const episodes = [
+    {
+      id: 'ep-1',
+      episodeNumber: '01',
+      tag: 'EDUCATION',
+      title: 'GLA University · Computer Science',
+      period: education[0]?.period || '2024 — 2028',
+      summary: `B.Tech in Computer Science at GLA University (CPI 8.8/10). Academic coursework spanning Data Structures, Database Systems, Computer Networks, and Cloud Computing. Prior: Adani Public School (89.8%), OP Jindal (86.2%).`,
+      tech: ['Data Structures', 'DBMS', 'OS', 'Networks', 'Cloud'],
+      gradient: 'linear-gradient(135deg, #1C0A35 0%, #0F081E 100%)',
+      actionLabel: 'View Education'
+    },
+    {
+      id: 'ep-2',
+      episodeNumber: '02',
+      tag: 'INTERNSHIP',
+      title: 'Astrea IT Services · Salesforce Intern',
+      period: experience[0]?.period || 'Jun 2026 — Jul 2026',
+      summary: `Hands-on training program on the Salesforce.com cloud computing development platform. Practical exposure to cloud-based application development and platform architecture with strong conceptual engagement.`,
+      tech: ['Salesforce.com', 'Cloud Platform', 'Architecture'],
+      gradient: 'linear-gradient(135deg, #2A0815 0%, #150208 100%)',
+      actionLabel: 'View Experience'
+    },
+    {
+      id: 'ep-3',
+      episodeNumber: '03',
+      tag: 'FULL-STACK PROJECT',
+      title: 'GLA Exchange · Campus Marketplace',
+      period: projects[0]?.period || 'Jan 2026 — May 2026',
+      summary: `Production campus marketplace for GLA University students. Features real-time peer-to-peer Socket.io chat, Google OAuth, Cloudinary image hosting, and MongoDB Atlas, deployed at glaexchange.online.`,
+      tech: ['ReactJS', 'Node.js', 'Socket.io', 'JWT', 'MongoDB'],
+      gradient: 'linear-gradient(135deg, #8E0E00 0%, #1F1C18 100%)',
+      projectRef: projects[0],
+      actionLabel: 'Open Project'
+    },
+    {
+      id: 'ep-4',
+      episodeNumber: '04',
+      tag: 'CLOUD ARCHITECTURE',
+      title: 'EduCloud · Multi-Tenant AWS Infra',
+      period: projects[1]?.period || 'Feb 2026 — Apr 2026',
+      summary: `Collaborative cloud infrastructure on AWS orchestrated with Terraform IaC. Provisions isolated, fault-tolerant student workspaces utilizing VPC network segregation, IAM role policies, EC2, and S3.`,
+      tech: ['AWS', 'Terraform', 'IAM', 'VPC', 'EC2', 'S3'],
+      gradient: 'linear-gradient(135deg, #09203F 0%, #05101E 100%)',
+      projectRef: projects[1],
+      actionLabel: 'Open Project'
+    }
+  ];
+
+  const handleEpisodeClick = (ep) => {
+    if (ep.projectRef) {
+      openProjectModal(ep.projectRef);
+    }
+  };
 
   return (
-    <section id="about" className="section" ref={ref} aria-labelledby="about-title">
-      <div className="container">
-        <header className="section__header">
-          <h2 id="about-title" className="section__title">About Me</h2>
-          <p className="section__subtitle">Full-stack developer passionate about cloud-native applications and scalable systems.</p>
-        </header>
+    <div id="about" ref={ref} className="about-section">
+      <Row
+        title="About Me: Season 1"
+        subtitle="The Developer Journey · 4 Episodes"
+        badgeText="ORIGINAL SERIES"
+        items={episodes}
+        renderItem={(ep) => (
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => handleEpisodeClick(ep)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleEpisodeClick(ep);
+              }
+            }}
+            className="episode-card group"
+            aria-label={`Episode ${ep.episodeNumber}: ${ep.title}, ${ep.period}`}
+          >
+            {/* Episode Media Banner */}
+            <div className="episode-card__media">
+              <div
+                className="episode-card__gradient"
+                style={{ background: ep.gradient }}
+              />
+              <div className="episode-card__scrim" />
 
-        <Row className="section__content" align="start">
-          {/* Profile Card */}
-          <Card variant="glass" className={inView ? 'animate-slide-up' : ''} delay={1}>
-            <CardBody>
-              <h3 className="font-display text-2xl text-primary mb-4">Profile</h3>
-              <p className="text-secondary mb-6 leading-relaxed">{profileData.bio}</p>
-
-              <div className="flex flex-wrap gap-3 mb-6">
-                <Badge variant="terminal">AWS Student Builder</Badge>
-                <Badge variant="primary">Full Stack</Badge>
-                <Badge variant="cyan">Cloud Native</Badge>
-                <Badge variant="neutral">Open Source</Badge>
+              <div className="episode-card__badge-top-left font-mono">
+                EP. {ep.episodeNumber}
               </div>
 
-              <div className="grid grid-responsive gap-4">
-                <div>
-                  <p className="font-mono text-xs text-tertiary text-transform-uppercase tracking-wider mb-1">Location</p>
-                  <p className="text-primary">{profileData.location}</p>
-                </div>
-                <div>
-                  <p className="font-mono text-xs text-tertiary text-transform-uppercase tracking-wider mb-1">Timezone</p>
-                  <p className="text-primary">{contact.timezone}</p>
-                </div>
-                <div>
-                  <p className="font-mono text-xs text-tertiary text-transform-uppercase tracking-wider mb-1">Availability</p>
-                  <p className="text-primary">{contact.availability}</p>
-                </div>
-                <div>
-                  <p className="font-mono text-xs text-tertiary text-transform-uppercase tracking-wider mb-1">Pronouns</p>
-                  <p className="text-primary">{profileData.pronoun}</p>
-                </div>
+              <div className="episode-card__badge-bottom-left font-mono">
+                {ep.tag}
               </div>
-            </CardBody>
-          </Card>
+            </div>
 
-          {/* Experience & Education */}
-          <div className="flex-1 flex-col gap-6" style={{ minWidth: 0 }}>
-            <Card variant="glass" className={inView ? 'animate-slide-up delay-2' : ''}>
-              <CardBody>
-                <h3 className="font-display text-2xl text-primary mb-6 flex items-center gap-3">
-                  <span className="text-terminal">{'>'}</span> Experience
+            {/* Episode Details */}
+            <div className="episode-card__body">
+              <div className="episode-card__header-line">
+                <h3 className="episode-card__title">
+                  {ep.title}
                 </h3>
-                {experience.map((exp, i) => (
-                  <div key={exp.id} className="mb-6 last:mb-0 pb-6 last:pb-0 last:border-0 border-b border-border-subtle">
-                    <div className="flex flex-wrap justify-between items-start gap-4 mb-3">
-                      <div>
-                        <h4 className="text-xl text-primary font-semibold">{exp.role}</h4>
-                        <p className="text-tertiary">{exp.company} • {exp.location}</p>
-                      </div>
-                      <Badge variant={exp.featured ? 'primary' : 'neutral'}>{exp.period}</Badge>
-                    </div>
-                    <p className="text-secondary mb-4 leading-relaxed">{exp.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {exp.tech.map(t => <Badge key={t} variant="neutral" className="text-xs">{t}</Badge>)}
-                    </div>
-                  </div>
-                ))}
-              </CardBody>
-            </Card>
+                <span className="episode-card__period font-mono">
+                  {ep.period}
+                </span>
+              </div>
 
-            <Card variant="glass" className={inView ? 'animate-slide-up delay-3' : ''}>
-              <CardBody>
-                <h3 className="font-display text-2xl text-primary mb-6 flex items-center gap-3">
-                  <span className="text-terminal">{'>'}</span> Education
-                </h3>
-                {education.map((edu, i) => (
-                  <div key={edu.id} className="mb-6 last:mb-0">
-                    <div className="flex flex-wrap justify-between items-start gap-4 mb-3">
-                      <div>
-                        <h4 className="text-xl text-primary font-semibold">{edu.degree} in {edu.field}</h4>
-                        <p className="text-tertiary">{edu.institution} • {edu.location}</p>
-                      </div>
-                      <Badge variant="cyan">{edu.period}</Badge>
-                    </div>
-                    {edu.gpa && <p className="text-secondary mb-3">GPA: <span className="text-primary font-mono">{edu.gpa}</span></p>}
-                    {edu.honors.length > 0 && (
-                      <div className="mb-3">
-                        <p className="font-mono text-xs text-tertiary text-transform-uppercase tracking-wider mb-2">Honors</p>
-                        <ul className="list-disc list-inside text-secondary space-y-1">
-                          {edu.honors.map(h => <li key={h}>{h}</li>)}
-                        </ul>
-                      </div>
-                    )}
-                    <div>
-                      <p className="font-mono text-xs text-tertiary text-transform-uppercase tracking-wider mb-2">Relevant Coursework</p>
-                      <div className="flex flex-wrap gap-2">
-                        {edu.relevantCoursework.map(c => <Badge key={c} variant="neutral" className="text-xs">{c}</Badge>)}
-                      </div>
-                    </div>
-                  </div>
+              <p className="episode-card__desc">
+                {ep.summary}
+              </p>
+
+              <div className="episode-card__tech-row" aria-label="Skills and tools">
+                {ep.tech.map((t) => (
+                  <span key={t} className="episode-card__tech-chip font-mono">
+                    {t}
+                  </span>
                 ))}
-              </CardBody>
-            </Card>
+              </div>
+
+              {ep.projectRef && (
+                <div className="episode-card__footer font-mono">
+                  <span className="episode-card__cta-text">
+                    {ep.actionLabel}
+                  </span>
+                  <span className="episode-card__cta-arrow" aria-hidden="true">➔</span>
+                </div>
+              )}
+            </div>
           </div>
-        </Row>
-      </div>
-    </section>
+        )}
+      />
+    </div>
   );
 }
