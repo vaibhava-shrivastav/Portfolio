@@ -5,10 +5,11 @@
  */
 import { profile as profileData } from '../data/profile';
 import { skills } from '../data/profile';
-import { useGame } from '../context/GameContext';
+import { useGame, usePersona } from '../context/GameContext';
 
 export function Hero() {
   const { actions } = useGame();
+  const { tagline, persona } = usePersona();
 
   const handleCtaClick = (section) => {
     actions.addXp(25, `hero_cta_${section}`);
@@ -25,7 +26,7 @@ export function Hero() {
             {profileData.name}
           </h1>
           <p className="hero__headline">{profileData.headline}</p>
-          <p className="hero__tagline">{profileData.tagline}</p>
+          <p className="hero__tagline">{tagline}</p>
 
           <div className="hero__actions">
             <button
