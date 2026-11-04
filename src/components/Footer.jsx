@@ -1,109 +1,151 @@
 /**
  * ==========================================================================
- * Footer — Site footer with links and social
+ * Footer — Clean Cinematic Footer with Stitch Parity
+ * ==========================================================================
+ * Features:
+ * - Candidate branding & tagline
+ * - Accessible GitHub, LinkedIn, and Email SVG icon buttons
+ * - "Reset progress" control (clears localStorage & sessionStorage)
+ * - 44px minimum tap targets
+ * - Pure black background matching Stitch design system
  * ==========================================================================
  */
-import { profile as profileData, contact, site } from '../data/profile';
+import { profile, contact } from '../data/profile';
+import { useGame } from '../context/GameContext';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const { actions } = useGame();
 
-  const navColumns = [
-    {
-      title: 'Navigate',
-      links: [
-        { label: 'About', href: '#about' },
-        { label: 'Skills', href: '#skills' },
-        { label: 'Projects', href: '#projects' },
-        { label: 'Achievements', href: '#achievements' },
-        { label: 'Contact', href: '#contact' }
-      ]
-    },
-    {
-      title: 'Projects',
-      links: [
-        { label: 'GLA Exchange', href: 'https://glaexchange.online', external: true },
-        { label: 'EduCloud', href: 'https://github.com/vaibhava-shrivastav/educloud', external: true }
-      ]
-    },
-    {
-      title: 'Legal',
-      links: [
-        { label: 'Privacy Policy', href: '/privacy' },
-        { label: 'Terms of Service', href: '/terms' },
-        { label: 'Cookie Policy', href: '/cookies' }
-      ]
+  const handleResetProgress = (e) => {
+    e.preventDefault();
+    if (window.confirm('Are you sure you want to reset all your portfolio XP, level, and visitor choices?')) {
+      if (actions.resetGame) {
+        actions.resetGame();
+      }
+      try {
+        sessionStorage.clear();
+      } catch (err) {
+        /* ignore */
+      }
+      window.location.reload();
     }
-  ];
+  };
 
-  const socialLinks = [
-    { label: 'GitHub', href: contact.github, icon: '⌘' },
-    { label: 'LinkedIn', href: contact.linkedin, icon: '💼' },
-    { label: 'Email', href: `mailto:${contact.email}`, icon: '✉' }
-  ];
+  const handleTrackLinkClick = () => {
+    if (actions.addXp) {
+      actions.addXp(15, 'link_click');
+    }
+  };
 
   return (
     <footer className="footer" role="contentinfo">
-      <div className="container">
-        <div className="footer__grid">
-          {/* Brand */}
-          <div className="footer__brand">
-            <p className="footer__logo">
-              <span className="gradient-text">VKS</span>
-            </p>
-            <p className="footer__tagline">
-              {profileData.tagline}
-            </p>
-            <div className="footer__social" role="list" aria-label="Social links">
-              {socialLinks.map((social, i) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  className="footer__social-link"
-                  target={social.external ? '_blank' : '_self'}
-                  rel={social.external ? 'noopener noreferrer' : ''}
-                  aria-label={social.label}
-                  role="listitem"
-                >
-                  <span aria-hidden="true">{social.icon}</span>
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Navigation Columns */}
-          {navColumns.map((column, i) => (
-            <nav key={column.title} aria-label={column.title}>
-              <h4 className="footer__column-title">{column.title}</h4>
-              <ul className="footer__links">
-                {column.links.map(link => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="footer__link"
-                      target={link.external ? '_blank' : '_self'}
-                      rel={link.external ? 'noopener noreferrer' : ''}
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ))}
+      <div className="container footer__inner">
+        {/* Left Column: Name & Metadata */}
+        <div className="footer__info">
+          <p className="footer__brand-title">
+            {profile.name} <span className="footer__brand-sep">·</span>{' '}
+            <span className="footer__brand-sub">Student &amp; Full-Stack Builder</span>
+          </p>
+          <p className="footer__copyright">
+            © {currentYear} {profile.name}. All rights reserved.
+          </p>
         </div>
 
-        <div className="footer__bottom">
-          <p className="footer__copyright">
-            © {currentYear} {profileData.name}. Built with React, Vite, and ☕.
-          </p>
-          <nav className="footer__legal" aria-label="Legal links">
-            <a href="/privacy" className="footer__legal-link">Privacy</a>
-            <a href="/terms" className="footer__legal-link">Terms</a>
-            <a href="/cookies" className="footer__legal-link">Cookies</a>
-          </nav>
+        {/* Right Column: Social Links & Reset Control */}
+        <div className="footer__actions">
+          {/* Social Icons with SVG */}
+          <div className="footer__socials" role="list" aria-label="Social and contact profiles">
+            {/* GitHub */}
+            <a
+              href={contact.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer__social-btn"
+              aria-label="GitHub Profile (opens in new tab)"
+              role="listitem"
+              onClick={handleTrackLinkClick}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+              </svg>
+            </a>
+
+            {/* LinkedIn */}
+            <a
+              href={contact.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer__social-btn"
+              aria-label="LinkedIn Profile (opens in new tab)"
+              role="listitem"
+              onClick={handleTrackLinkClick}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                <rect x="2" y="9" width="4" height="12" />
+                <circle cx="4" cy="4" r="2" />
+              </svg>
+            </a>
+
+            {/* Email */}
+            <a
+              href={`mailto:${contact.email}`}
+              className="footer__social-btn"
+              aria-label={`Email ${profile.name}`}
+              role="listitem"
+              onClick={handleTrackLinkClick}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+            </a>
+          </div>
+
+          {/* Reset Progress Link */}
+          <button
+            type="button"
+            className="footer__reset-link"
+            onClick={handleResetProgress}
+            aria-label="Reset all game progress, levels, and achievements"
+          >
+            Reset progress
+          </button>
         </div>
       </div>
     </footer>
   );
 }
+
+export default Footer;

@@ -4,7 +4,33 @@
 
 @import './tokens.css';
 
-/* Reset */
+/* ==========================================================================
+   FONTS — Google Fonts with font-display: swap
+   ========================================================================== */
+@font-face {
+  font-family: 'Bebas Neue';
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/bebasneue/v11/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/inter/v19/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjp-Ek-_EeA.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/jetbrainsmono/v23/tDbD2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8eF28cKsVZw.woff2') format('woff2');
+}
+
+/* ==========================================================================
+   RESET
+   ========================================================================== */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -173,6 +199,7 @@ body {
 .tracking-wide { letter-spacing: var(--tracking-wide); }
 .tracking-wider { letter-spacing: var(--tracking-wider); }
 .tracking-widest { letter-spacing: var(--tracking-widest); }
+.tracking-cinematic { letter-spacing: var(--tracking-cinematic); }
 
 .leading-tight { line-height: var(--leading-tight); }
 .leading-snug { line-height: var(--leading-snug); }
@@ -288,7 +315,7 @@ body {
 .glass {
   background: var(--color-bg-glass);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border-subtle);
 }
 
 /* Gradient Text */
