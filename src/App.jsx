@@ -76,6 +76,16 @@ function App() {
       );
     }
 
+    if (personaId === 'recruiter') {
+      return (
+        <>
+          <SkillsSheet />
+          <Projects />
+          <About />
+        </>
+      );
+    }
+
     // Default order: Top Projects -> About Me: Season 1
     return (
       <>
@@ -107,7 +117,7 @@ function App() {
         {renderRows()}
 
         {/* Placeholder sections with IDs preserved for Navbar scroll-spy */}
-        <SkillsSheet />
+        {personaId !== 'recruiter' && <SkillsSheet />}
         <Achievements />
         <ContactSection />
       </main>

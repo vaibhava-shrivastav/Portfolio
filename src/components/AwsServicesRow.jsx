@@ -8,11 +8,25 @@
  * ==========================================================================
  */
 import { Row } from './Row';
-import { useUI } from '../context/GameContext';
+import { useUI, useGame } from '../context/GameContext';
+import { useInView } from '../hooks/useInView';
+import { useEffect, useRef } from 'react';
 import { projects } from '../data/profile';
 
 export function AwsServicesRow() {
   const { openProjectModal } = useUI();
+  const { actions } = useGame();
+  const [rowRef, inView] = useInView({ threshold: 0.1, triggerOnce: false });
+  const awardedRef = useRef(false);
+
+  useEffect(() => {
+    if (inView && !awardedRef.current) {
+      awardedRef.current = true;
+      if (actions.awardAction) {
+        actions.awardAction('aws_services_view', 0, 'AWS Services Shelf Viewed');
+      }
+    }
+  }, [inView, actions]);
   const eduCloud = projects[1];
 
   const awsCards = [
@@ -59,7 +73,7 @@ export function AwsServicesRow() {
   ];
 
   return (
-    <div id="aws-services" className="aws-services-section">
+    <div id="aws-services" ref={rowRef} className="aws-services-section">
       <Row
         title="AWS Cloud Architecture · EduCloud"
         subtitle="Terraform Orchestration & Infrastructure as Code"
