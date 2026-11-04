@@ -15,6 +15,7 @@
  */
 import { useEffect, useRef } from 'react';
 import { useUI, useGame } from '../context/GameContext';
+import { profile as profileData } from '../data/profile';
 
 export function ProjectModal() {
   const { modalOpen, selectedProject, closeProjectModal } = useUI();
@@ -152,7 +153,7 @@ export function ProjectModal() {
           <div className="project-modal__hud-badge font-mono">
             <span className="project-modal__pulse-dot" />
             <span>
-              {isGlaExchange ? 'SYS.STATUS // DEPLOYED LIVE' : 'SYS.STATUS // AWS TERRAFORM IAC'}
+              {isGlaExchange ? 'SYS.STATUS // LIVE PRODUCTION' : 'SYS.STATUS // AWS TERRAFORM IAC'}
             </span>
           </div>
 
@@ -188,28 +189,30 @@ export function ProjectModal() {
                 </a>
               )}
 
-              {selectedProject.repoUrl && (
-                <a
-                  href={selectedProject.repoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn--secondary"
+              <a
+                href={profileData.contact?.github || 'https://github.com/vaibhava-shrivastav'}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => {
+                  if (actions.awardAction) {
+                    actions.awardAction('link_click:github', 15);
+                  }
+                }}
+                className="btn btn--secondary"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  aria-hidden="true"
                 >
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <polyline points="4 17 10 11 4 5" />
-                    <line x1="12" y1="19" x2="20" y2="19" />
-                  </svg>
-                  <span>GitHub Repo</span>
-                </a>
-              )}
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                </svg>
+                <span>GitHub Profile</span>
+              </a>
             </div>
           </div>
         </div>
@@ -227,7 +230,7 @@ export function ProjectModal() {
                 {selectedProject.status}
               </span>
               <span className="project-modal__badge-tech">
-                {isGlaExchange ? 'MERN + WEBSOCKET' : 'AWS CLUSTER'}
+                {isGlaExchange ? 'MERN + SOCKET.IO' : 'AWS + TERRAFORM'}
               </span>
             </div>
 
