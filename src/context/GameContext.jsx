@@ -2,27 +2,58 @@
  * ==========================================================================
  * GameContext — XP, Level, Achievements, Profile State Management
  * ==========================================================================
- * Persisted in localStorage with migration support
+ * Persisted in localStorage with migration support and StrictMode safety
  * ==========================================================================
  */
 import { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from 'react';
-import { profile as initialProfile } from '../data/profile';
-import { achievements as initialAchievements } from '../data/profile';
+import {
+  profile as initialProfile,
+  gameAchievements as initialAchievements,
+  visitorPersonas,
+  xpLevels,
+  xpActions
+} from '../data/profile';
 
 const STORAGE_KEY = 'netflix-portfolio-game-state';
-const STORAGE_VERSION = 1;
+const STORAGE_VERSION = 2;
+
+/**
+ * Level threshold calculator matching profile.js xpLevels:
+ * Level 1: 0 XP (Curious Visitor)
+ * Level 2: 100 XP (Explorer)
+ * Level 3: 200 XP (Insider)
+ * Level 4: 350 XP (Power User)
+ * Level 5: 500 XP (Hired!)
+ */
+export function calculateLevel(xp) {
+  if (xp >= 500) return { level: 5, name: 'Hired!', minXp: 500, nextXp: 500 };
+  if (xp >= 350) return { level: 4, name: 'Power User', minXp: 350, nextXp: 500 };
+  if (xp >= 200) return { level: 3, name: 'Insider', minXp: 200, nextXp: 350 };
+  if (xp >= 100) return { level: 2, name: 'Explorer', minXp: 100, nextXp: 200 };
+  return { level: 1, name: 'Curious Visitor', minXp: 0, nextXp: 100 };
+}
+
+export function calculateLevelProgress(xp) {
+  const current = calculateLevel(xp);
+  if (current.level >= 5) return 100;
+  const range = current.nextXp - current.minXp;
+  if (range <= 0) return 100;
+  const progressInLevel = Math.max(0, Math.min(xp - current.minXp, range));
+  return Math.round((progressInLevel / range) * 100);
+}
 
 // Initial state
 const initialState = {
   // Profile & RPG Stats
   profile: initialProfile.stats,
 
-  // XP System
-  xp: initialProfile.stats.xp,
-  level: initialProfile.stats.level,
-  xpToNext: initialProfile.stats.xpToNext,
+  // XP System (strictly discrete action-based)
+  xp: 0,
+  level: 1,
+  xpToNext: 100,
+  awardedActionIds: [],
 
-  // Achievements
+  // Achievements (10 badge-only achievements, 0 XP)
   achievements: initialAchievements.map(a => ({
     ...a,
     unlocked: !!a.unlockedAt,
@@ -38,7 +69,7 @@ const initialState = {
     matrixMode: false
   },
 
-  // Session/Profile select
+  // Session / Persona select state
   session: {
     profileSelected: false,
     selectedProfile: null,
@@ -58,7 +89,8 @@ const initialState = {
 
 // Action types
 const ActionTypes = {
-  // XP & Level
+  // XP & Actions
+  AWARD_ACTION: 'AWARD_ACTION',
   ADD_XP: 'ADD_XP',
   SET_LEVEL: 'SET_LEVEL',
 
@@ -72,7 +104,7 @@ const ActionTypes = {
   ADD_EASTER_EGG: 'ADD_EASTER_EGG',
   TOGGLE_MATRIX_MODE: 'TOGGLE_MATRIX_MODE',
 
-  // Session
+  // Session & Personas
   SET_PROFILE_SELECTED: 'SET_PROFILE_SELECTED',
   SET_SELECTED_PROFILE: 'SET_SELECTED_PROFILE',
   ADD_VISITED_SECTION: 'ADD_VISITED_SECTION',
@@ -91,65 +123,120 @@ const ActionTypes = {
 // Reducer
 function gameReducer(state, action) {
   switch (action.type) {
-    case ActionTypes.ADD_XP: {
-      const { amount, source } = action.payload;
-      let newXp = state.xp + amount;
-      let newLevel = state.level;
-      let newXpToNext = state.xpToNext;
-      const newlyUnlocked = [];
-
-      // Level up logic
-      while (newXp >= newXpToNext) {
-        newXp -= newXpToNext;
-        newLevel += 1;
-        newXpToNext = Math.floor(newXpToNext * 1.5); // Exponential growth
-
-        // Level up achievement check
-        if (newLevel === 10) {
-          newlyUnlocked.push('level_10');
-        } else if (newLevel === 25) {
-          newlyUnlocked.push('level_25');
-        } else if (newLevel === 50) {
-          newlyUnlocked.push('level_50');
-        }
+    case ActionTypes.AWARD_ACTION: {
+      const { actionId, amount } = action.payload;
+      const awarded = state.awardedActionIds || [];
+      // StrictMode / duplicate protection
+      if (awarded.includes(actionId)) {
+        return state;
       }
 
-      // Update profile stats
-      const newProfile = {
-        ...state.profile,
-        level: newLevel,
-        xp: newXp,
-        xpToNext: newXpToNext
-      };
+      const newXp = state.xp + amount;
+      const levelInfo = calculateLevel(newXp);
+      const newAwarded = [...awarded, actionId];
+
+      let toasts = state.ui.toastQueue;
+      if (levelInfo.level > state.level) {
+        toasts = [
+          ...toasts,
+          {
+            id: Date.now(),
+            type: 'achievement',
+            title: `Level Up! Level ${levelInfo.level}`,
+            message: `Rank achieved: ${levelInfo.name}`
+          }
+        ];
+      }
 
       return {
         ...state,
         xp: newXp,
-        level: newLevel,
-        xpToNext: newXpToNext,
-        profile: newProfile,
-        // Queue achievements for notification
-        achievements: state.achievements.map(a =>
-          newlyUnlocked.includes(a.key) ? { ...a, unlocked: true, unlockedAt: new Date().toISOString(), notified: false } : a
-        )
+        level: levelInfo.level,
+        xpToNext: levelInfo.nextXp,
+        awardedActionIds: newAwarded,
+        profile: {
+          ...state.profile,
+          level: levelInfo.level,
+          xp: newXp,
+          title: levelInfo.name
+        },
+        ui: {
+          ...state.ui,
+          toastQueue: toasts
+        }
+      };
+    }
+
+    case ActionTypes.ADD_XP: {
+      const { amount } = action.payload;
+      const newXp = state.xp + amount;
+      const levelInfo = calculateLevel(newXp);
+
+      let toasts = state.ui.toastQueue;
+      if (levelInfo.level > state.level) {
+        toasts = [
+          ...toasts,
+          {
+            id: Date.now(),
+            type: 'achievement',
+            title: `Level Up! Level ${levelInfo.level}`,
+            message: `Rank achieved: ${levelInfo.name}`
+          }
+        ];
+      }
+
+      return {
+        ...state,
+        xp: newXp,
+        level: levelInfo.level,
+        xpToNext: levelInfo.nextXp,
+        profile: {
+          ...state.profile,
+          level: levelInfo.level,
+          xp: newXp,
+          title: levelInfo.name
+        },
+        ui: {
+          ...state.ui,
+          toastQueue: toasts
+        }
       };
     }
 
     case ActionTypes.SET_LEVEL: {
       const { level } = action.payload;
-      const newProfile = { ...state.profile, level };
-      return { ...state, level, profile: newProfile };
+      return {
+        ...state,
+        level,
+        profile: { ...state.profile, level }
+      };
     }
 
     case ActionTypes.UNLOCK_ACHIEVEMENT: {
       const { key } = action.payload;
+      const target = state.achievements.find(a => a.key === key);
+      if (!target || target.unlocked) return state;
+
+      const updatedAchievements = state.achievements.map(a =>
+        a.key === key
+          ? { ...a, unlocked: true, unlockedAt: new Date().toISOString(), notified: false }
+          : a
+      );
+
+      const toast = {
+        id: Date.now(),
+        type: 'achievement',
+        title: `Badge Unlocked: ${target.name || target.title}`,
+        message: target.description || 'Achievement unlocked!'
+      };
+
       return {
         ...state,
-        achievements: state.achievements.map(a =>
-          a.key === key && !a.unlocked
-            ? { ...a, unlocked: true, unlockedAt: new Date().toISOString(), notified: false }
-            : a
-        )
+        achievements: updatedAchievements,
+        ui: {
+          ...state.ui,
+          toastQueue: [...state.ui.toastQueue, toast]
+        }
       };
     }
 
@@ -176,19 +263,9 @@ function gameReducer(state, action) {
 
     case ActionTypes.INCREMENT_COMMAND_COUNT: {
       const newCount = state.terminal.commandCount + 1;
-      const newlyUnlocked = [];
-
-      // Command count achievements
-      if (newCount === 10) newlyUnlocked.push('cmd_10');
-      if (newCount === 50) newlyUnlocked.push('cmd_50');
-      if (newCount === 100) newlyUnlocked.push('cmd_100');
-
       return {
         ...state,
-        terminal: { ...state.terminal, commandCount: newCount },
-        achievements: state.achievements.map(a =>
-          newlyUnlocked.includes(a.key) ? { ...a, unlocked: true, unlockedAt: new Date().toISOString(), notified: false } : a
-        )
+        terminal: { ...state.terminal, commandCount: newCount }
       };
     }
 
@@ -196,17 +273,12 @@ function gameReducer(state, action) {
       const { egg } = action.payload;
       if (state.terminal.easterEggsFound.includes(egg)) return state;
 
-      const newlyUnlocked = egg === 'konami' ? ['terminal_master'] : [];
-
       return {
         ...state,
         terminal: {
           ...state.terminal,
           easterEggsFound: [...state.terminal.easterEggsFound, egg]
-        },
-        achievements: state.achievements.map(a =>
-          newlyUnlocked.includes(a.key) ? { ...a, unlocked: true, unlockedAt: new Date().toISOString(), notified: false } : a
-        )
+        }
       };
     }
 
@@ -233,18 +305,50 @@ function gameReducer(state, action) {
 
     case ActionTypes.ADD_VISITED_SECTION: {
       const { section } = action.payload;
-      if (state.session.visitedSections.includes(section)) return state;
+      const visited = state.session.visitedSections || [];
+      if (visited.includes(section)) return state;
 
-      // XP for visiting new sections
-      const sectionXp = { about: 50, skills: 50, projects: 50, achievements: 50, contact: 50 };
+      // Section visit XP mapping from profile.js action table
+      let actionId = null;
+      let xpAmount = 0;
+      if (section === 'about') {
+        actionId = 'about_view';
+        xpAmount = 30;
+      } else if (section === 'skills') {
+        actionId = 'skills_view';
+        xpAmount = 30;
+      } else if (section === 'achievements') {
+        actionId = 'achievements_view';
+        xpAmount = 20;
+      } else if (section === 'contact') {
+        actionId = 'contact_view';
+        xpAmount = 20;
+      }
+
+      const awarded = state.awardedActionIds || [];
+      let newXp = state.xp;
+      let newAwarded = awarded;
+      let newLevel = state.level;
+      let newXpToNext = state.xpToNext;
+
+      if (actionId && !awarded.includes(actionId)) {
+        newXp += xpAmount;
+        const levelInfo = calculateLevel(newXp);
+        newLevel = levelInfo.level;
+        newXpToNext = levelInfo.nextXp;
+        newAwarded = [...awarded, actionId];
+      }
 
       return {
         ...state,
+        xp: newXp,
+        level: newLevel,
+        xpToNext: newXpToNext,
+        awardedActionIds: newAwarded,
         session: {
           ...state.session,
-          visitedSections: [...state.session.visitedSections, section]
-        },
-        xp: state.xp + (sectionXp[section] || 0)
+          visitedSections: [...visited, section]
+        }
       };
     }
 
@@ -296,18 +400,21 @@ const GameContext = createContext(null);
 // Provider
 export function GameProvider({ children }) {
   const [state, dispatch] = useReducer(gameReducer, initialState, (initial) => {
-    // Lazy initialization from localStorage
     if (typeof window === 'undefined') return initial;
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        // Migration logic
-        if (parsed.version !== STORAGE_VERSION) {
-          // Handle migrations here
-          console.log(`Migrating game state from v${parsed.version} to v${STORAGE_VERSION}`);
-        }
-        return { ...initial, ...parsed };
+        return {
+          ...initial,
+          ...parsed,
+          awardedActionIds: parsed.awardedActionIds || [],
+          session: {
+            ...initial.session,
+            ...(parsed.session || {})
+          },
+          version: STORAGE_VERSION
+        };
       }
     } catch (error) {
       console.warn('Failed to load game state:', error);
@@ -336,7 +443,11 @@ export function GameProvider({ children }) {
 
   // Actions
   const actions = useMemo(() => ({
-    // XP & Level
+    // XP & Discrete Action Awards
+    awardAction: (actionId, amount) => dispatch({
+      type: ActionTypes.AWARD_ACTION,
+      payload: { actionId, amount }
+    }),
     addXp: (amount, source = 'action') => dispatch({
       type: ActionTypes.ADD_XP,
       payload: { amount, source }
@@ -367,15 +478,29 @@ export function GameProvider({ children }) {
     }),
     toggleMatrixMode: () => dispatch({ type: ActionTypes.TOGGLE_MATRIX_MODE }),
 
-    // Session
+    // Session & Persona selection
     setProfileSelected: (selected) => dispatch({
       type: ActionTypes.SET_PROFILE_SELECTED,
       payload: selected
     }),
-    setSelectedProfile: (profile) => dispatch({
+    setSelectedProfile: (profileId) => dispatch({
       type: ActionTypes.SET_SELECTED_PROFILE,
-      payload: profile
+      payload: profileId
     }),
+    selectPersona: (personaId) => {
+      dispatch({
+        type: ActionTypes.SET_SELECTED_PROFILE,
+        payload: personaId
+      });
+      dispatch({
+        type: ActionTypes.SET_PROFILE_SELECTED,
+        payload: true
+      });
+      dispatch({
+        type: ActionTypes.AWARD_ACTION,
+        payload: { actionId: 'profile_select', amount: 20 }
+      });
+    },
     addVisitedSection: (section) => dispatch({
       type: ActionTypes.ADD_VISITED_SECTION,
       payload: { section }
@@ -400,19 +525,10 @@ export function GameProvider({ children }) {
       dispatch({ type: ActionTypes.RESET_STATE });
     },
 
-    // Computed
-    getLevelProgress: () => ((state.xp / state.xpToNext) * 100).toFixed(1),
-    getTotalXp: () => {
-      // Calculate total XP including previous levels
-      let total = state.xp;
-      let levelXp = 1000; // Base XP for level 1
-      for (let i = 1; i < state.level; i++) {
-        total += levelXp;
-        levelXp = Math.floor(levelXp * 1.5);
-      }
-      return total;
-    }
-  }), [state.xp, state.xpToNext, state.level, state.achievements]);
+    // Computed Helpers
+    getLevelProgress: () => calculateLevelProgress(state.xp),
+    getTotalXp: () => state.xp
+  }), [state.xp, state.level, state.achievements, state.awardedActionIds]);
 
   return (
     <GameContext.Provider value={{ state, actions }}>
@@ -438,7 +554,8 @@ export function useXP() {
     xpToNext: state.xpToNext,
     progress: actions.getLevelProgress(),
     totalXp: actions.getTotalXp(),
-    addXp: actions.addXp
+    addXp: actions.addXp,
+    awardAction: actions.awardAction
   };
 }
 
@@ -476,7 +593,22 @@ export function useSession() {
     visitedSections: state.session.visitedSections,
     setProfileSelected: actions.setProfileSelected,
     setSelectedProfile: actions.setSelectedProfile,
+    selectPersona: actions.selectPersona,
     addVisitedSection: actions.addVisitedSection
+  };
+}
+
+export function usePersona() {
+  const { state, actions } = useGame();
+  const personaId = state.session?.selectedProfile;
+  const persona = visitorPersonas.find(p => p.id === personaId) || null;
+  return {
+    persona,
+    personaId,
+    selectPersona: actions.selectPersona,
+    tagline: persona?.tagline || initialProfile.tagline,
+    firstRowOrder: persona?.firstRowOrder || ['projects', 'skills', 'about'],
+    isSelectingProfile: !state.session?.profileSelected
   };
 }
 

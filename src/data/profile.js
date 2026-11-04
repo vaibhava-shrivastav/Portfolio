@@ -557,6 +557,76 @@ export const easterEggs = {
   }
 };
 
+/**
+ * ==========================================================================
+ * Visitor Personas (Who\'s Watching)
+ * ==========================================================================
+ * Tailors the hero tagline and first row section order per persona.
+ * ==========================================================================
+ */
+export const visitorPersonas = [
+  {
+    id: 'recruiter',
+    key: 'recruiter',
+    title: 'Recruiter',
+    subtitle: 'Quick TL;DR & Resume Core',
+    badge: 'VIEW 01',
+    tag: 'RECRUITER',
+    accentColor: '#00DAF3',
+    glowColor: 'rgba(0, 218, 243, 0.35)',
+    shortcut: '1',
+    tagline: 'Proven full-stack engineering & cloud architecture — ready to deliver immediate team impact.',
+    firstRowOrder: ['resume', 'skills', 'projects', 'experience', 'education'],
+    heroActionText: 'Download Resume',
+    heroActionTarget: '/resume.pdf'
+  },
+  {
+    id: 'hiring_manager',
+    key: 'hiring_manager',
+    title: 'Hiring Manager',
+    subtitle: 'Architecture & Impact KPIs',
+    badge: 'VIEW 02',
+    tag: 'LEADERSHIP',
+    accentColor: '#FFB4AA',
+    glowColor: 'rgba(255, 180, 170, 0.3)',
+    shortcut: '2',
+    tagline: 'Architecting production-grade MERN platforms and resilient multi-tenant AWS cloud systems.',
+    firstRowOrder: ['projects', 'experience', 'skills', 'education', 'contact'],
+    heroActionText: 'View Projects',
+    heroActionTarget: '#projects'
+  },
+  {
+    id: 'fellow_dev',
+    key: 'fellow_dev',
+    title: 'Fellow Dev',
+    subtitle: 'Git Diffs, Stack & CLI Tooling',
+    badge: 'DEV_CLI',
+    tag: 'SYS.EXEC',
+    accentColor: '#39FF14',
+    glowColor: 'rgba(57, 255, 20, 0.35)',
+    shortcut: '3',
+    tagline: 'Clean commits, real-time WebSockets, IaC pipelines, and an interactive terminal environment.',
+    firstRowOrder: ['terminal', 'github', 'projects', 'skills', 'experience'],
+    heroActionText: 'Open Terminal',
+    heroActionTarget: 'terminal'
+  },
+  {
+    id: 'judge',
+    key: 'judge',
+    title: 'Hackathon Judge',
+    subtitle: 'Prototypes, Demos & Speed',
+    badge: 'PRIZE 1ST',
+    tag: 'JUDGE',
+    accentColor: '#E50914',
+    glowColor: 'rgba(229, 9, 20, 0.45)',
+    shortcut: '4',
+    tagline: 'Shipped GLA Exchange to production with 100+ campus users and modular AWS Terraform infrastructure.',
+    firstRowOrder: ['aws_services', 'terminal', 'projects', 'skills', 'achievements'],
+    heroActionText: 'Live Demo',
+    heroActionTarget: 'https://glaexchange.online'
+  }
+];
+
 // Default export for convenience
 export default {
   profile,
@@ -571,5 +641,6 @@ export default {
   certifications,
   contact,
   site,
-  easterEggs
+  easterEggs,
+  visitorPersonas
 };
