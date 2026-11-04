@@ -18,53 +18,28 @@ import { ContactSection } from './components/ContactSection';
 import { Terminal } from './components/Terminal';
 import { ToastContainer } from './components/Toast';
 import { Footer } from './components/Footer';
-import { useGame, usePersona } from './context/GameContext';
+import { usePersona } from './context/GameContext';
 
 function App() {
-  const { actions } = useGame();
-  const { personaId, firstRowOrder } = usePersona();
+  const { personaId } = usePersona();
 
-  // Keyboard shortcut to toggle terminal (Ctrl/Cmd + `)
+  // Initialize theme from localStorage on startup
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === '`') {
-        e.preventDefault();
-        actions.toggleTerminal();
+    try {
+      const savedTheme = localStorage.getItem('netflix-portfolio-theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.body.setAttribute('data-theme', savedTheme);
       }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [actions]);
+    } catch (e) {
+      // ignore
+    }
+  }, []);
 
-  // Konami code listener
-  useEffect(() => {
-    const sequence = [];
-    const konamiCode = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
-
-    const handleKeyDown = (e) => {
-      sequence.push(e.key.toLowerCase());
-      if (sequence.length > konamiCode.length) sequence.shift();
-
-      if (sequence.join(',') === konamiCode.join(',')) {
-        actions.addEasterEgg('konami');
-        actions.addToast({
-          type: 'achievement',
-          title: 'Konami Code Master!',
-          message: '🎮 Terminal secret unlocked!'
-        });
-        sequence.length = 0;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [actions]);
-
-  // Determine row order based on persona
+  // Determine row order based on persona:
   // - Hackathon Judge: AWS services first (EduCloud real stack: EC2, S3, IAM, VPC, Terraform)
-  // - Hiring Manager: Projects first
-  // - Recruiter: TODO Stage D skills row; projects first for now
-  // - Fellow Dev: TODO Stage E terminal row; projects first for now
+  // - Recruiter: Skills sheet first
+  // - Hiring Manager / Fellow Dev / Default: Projects first
   const renderRows = () => {
     if (personaId === 'judge') {
       return (
@@ -86,7 +61,7 @@ function App() {
       );
     }
 
-    // Default order: Top Projects -> About Me: Season 1
+    // Default order: Projects -> About
     return (
       <>
         <Projects />
@@ -116,7 +91,7 @@ function App() {
         {/* Persona-Ordered Shelves */}
         {renderRows()}
 
-        {/* Placeholder sections with IDs preserved for Navbar scroll-spy */}
+        {/* SkillsSheet rendered here if not already rendered above for recruiter */}
         {personaId !== 'recruiter' && <SkillsSheet />}
         <Achievements />
         <ContactSection />
@@ -128,7 +103,7 @@ function App() {
       {/* Footer */}
       <Footer />
 
-      {/* Terminal Overlay */}
+      {/* Terminal Overlay & Launcher */}
       <Terminal />
 
       {/* Toast Notifications */}

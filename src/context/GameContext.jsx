@@ -97,6 +97,7 @@ const ActionTypes = {
   REMOVE_TOAST: 'REMOVE_TOAST',
   SET_REDUCED_MOTION: 'SET_REDUCED_MOTION',
   TOGGLE_TERMINAL: 'TOGGLE_TERMINAL',
+  SET_TERMINAL_OPEN: 'SET_TERMINAL_OPEN',
   SET_MODAL_OPEN: 'SET_MODAL_OPEN',
   SET_SELECTED_PROJECT: 'SET_SELECTED_PROJECT',
   SET_PROFILE_SELECTED: 'SET_PROFILE_SELECTED',
@@ -121,8 +122,19 @@ function gameReducer(state, action) {
       if (awarded.includes(actionId)) {
         return state;
       }
+      if (actionId === 'terminal_open' && awarded.includes('terminal_first_open')) {
+        return state;
+      }
+      if (actionId === 'terminal_first_open' && awarded.includes('terminal_open')) {
+        return state;
+      }
 
       const newAwarded = [...awarded, actionId];
+      if (actionId === 'terminal_first_open' && !newAwarded.includes('terminal_open')) {
+        newAwarded.push('terminal_open');
+      } else if (actionId === 'terminal_open' && !newAwarded.includes('terminal_first_open')) {
+        newAwarded.push('terminal_first_open');
+      }
       const addedXp = Math.max(0, Number(amount) || 0);
       const newXp = state.xp + addedXp;
       const oldLevel = state.level;
@@ -223,10 +235,23 @@ function gameReducer(state, action) {
     }
 
     case ActionTypes.TOGGLE_TERMINAL: {
+      if (state.ui.modalOpen) {
+        return state;
+      }
       const willOpen = !state.ui.terminalOpen;
       return {
         ...state,
         ui: { ...state.ui, terminalOpen: willOpen }
+      };
+    }
+
+    case ActionTypes.SET_TERMINAL_OPEN: {
+      if (action.payload && state.ui.modalOpen) {
+        return state;
+      }
+      return {
+        ...state,
+        ui: { ...state.ui, terminalOpen: Boolean(action.payload) }
       };
     }
 
@@ -236,7 +261,8 @@ function gameReducer(state, action) {
         ui: {
           ...state.ui,
           modalOpen: action.payload,
-          selectedProject: action.payload ? state.ui.selectedProject : null
+          selectedProject: action.payload ? state.ui.selectedProject : null,
+          terminalOpen: action.payload ? false : state.ui.terminalOpen
         }
       };
     }
@@ -247,7 +273,8 @@ function gameReducer(state, action) {
         ui: {
           ...state.ui,
           selectedProject: action.payload,
-          modalOpen: Boolean(action.payload)
+          modalOpen: Boolean(action.payload),
+          terminalOpen: Boolean(action.payload) ? false : state.ui.terminalOpen
         }
       };
     }
@@ -512,6 +539,20 @@ export function GameProvider({ children }) {
         }
       },
 
+      openTerminal: () => {
+        dispatch({ type: ActionTypes.SET_TERMINAL_OPEN, payload: true });
+        dispatch({
+          type: ActionTypes.AWARD_ACTION,
+          payload: {
+            actionId: 'terminal_first_open',
+            amount: 50,
+            label: 'Interactive Terminal Initialized'
+          }
+        });
+      },
+
+      closeTerminal: () => dispatch({ type: ActionTypes.SET_TERMINAL_OPEN, payload: false }),
+
       addTerminalHistory: (entry) =>
         dispatch({ type: ActionTypes.ADD_TERMINAL_HISTORY, payload: entry }),
 
@@ -674,6 +715,8 @@ export function useUI() {
     closeProjectModal: actions.closeProjectModal,
     toasts: state.ui.toastQueue,
     toggleTerminal: actions.toggleTerminal,
+    openTerminal: actions.openTerminal,
+    closeTerminal: actions.closeTerminal,
     addToast: actions.addToast,
     removeToast: actions.removeToast
   };

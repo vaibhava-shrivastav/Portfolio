@@ -80,7 +80,7 @@ export function ProjectCard({ project, episodeIndex, onOpen }) {
           {project.tagline || project.description}
         </p>
 
-        {/* Verified Tech Chips */}
+        {/* Tech Chips */}
         <div className="project-card__tech-row" aria-label="Technologies used">
           {project.tech.slice(0, 4).map((tech) => (
             <span key={tech} className="project-card__tech-chip font-mono">

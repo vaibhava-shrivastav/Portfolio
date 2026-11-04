@@ -4,7 +4,7 @@
  * ==========================================================================
  * Features:
  * - Uses the reusable Row component with finite scroll snap and arrows
- * - Renders verified projects only (GLA Exchange & EduCloud)
+ * - Renders projects (GLA Exchange & EduCloud)
  * - Opens ProjectModal on card selection
  * - Preserves id="projects" for Navbar scroll-spy and anchor navigation
  * ==========================================================================

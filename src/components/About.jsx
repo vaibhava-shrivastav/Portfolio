@@ -77,7 +77,7 @@ export function About() {
       tag: 'CLOUD ARCHITECTURE',
       title: 'EduCloud · Multi-Tenant AWS Infra',
       period: projects[1]?.period || 'Feb 2026 — Apr 2026',
-      summary: `Collaborative cloud infrastructure on AWS orchestrated with Terraform IaC. Provisions isolated, fault-tolerant student workspaces utilizing VPC network segregation, IAM role policies, EC2, and S3.`,
+      summary: `Architected a cloud platform provisioning isolated, fault-tolerant AWS environments for students using Terraform IaC integrating EC2, S3, IAM, and VPC to deliver secure, cost-controlled multi-tenant workspaces at scale.`,
       tech: ['AWS', 'Terraform', 'IAM', 'VPC', 'EC2', 'S3'],
       gradient: 'linear-gradient(135deg, #09203F 0%, #05101E 100%)',
       projectRef: projects[1],
