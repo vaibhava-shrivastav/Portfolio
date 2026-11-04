@@ -11,6 +11,7 @@ import {
   gameAchievements as initialAchievements,
   visitorPersonas,
   defaultPersona,
+  projects as allProjects,
   xpLevels,
   xpActions
 } from '../data/profile';
@@ -81,6 +82,8 @@ const initialState = {
   ui: {
     reducedMotion: false,
     terminalOpen: false,
+    modalOpen: false,
+    selectedProject: null,
     toastQueue: []
   },
 
@@ -113,6 +116,8 @@ const ActionTypes = {
   // UI
   SET_REDUCED_MOTION: 'SET_REDUCED_MOTION',
   TOGGLE_TERMINAL: 'TOGGLE_TERMINAL',
+  SET_MODAL_OPEN: 'SET_MODAL_OPEN',
+  SET_SELECTED_PROJECT: 'SET_SELECTED_PROJECT',
   ADD_TOAST: 'ADD_TOAST',
   REMOVE_TOAST: 'REMOVE_TOAST',
 
@@ -360,6 +365,28 @@ function gameReducer(state, action) {
       };
     }
 
+    case ActionTypes.SET_MODAL_OPEN: {
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          modalOpen: action.payload,
+          selectedProject: action.payload ? state.ui.selectedProject : null
+        }
+      };
+    }
+
+    case ActionTypes.SET_SELECTED_PROJECT: {
+      return {
+        ...state,
+        ui: {
+          ...state.ui,
+          selectedProject: action.payload,
+          modalOpen: !!action.payload
+        }
+      };
+    }
+
     case ActionTypes.TOGGLE_TERMINAL: {
       return {
         ...state,
@@ -518,6 +545,28 @@ export function GameProvider({ children }) {
     }),
 
     // UI
+    openProjectModal: (projectOrId) => {
+      let proj = projectOrId;
+      if (typeof projectOrId === 'string') {
+        proj = (allProjects || []).find(p => p.id === projectOrId || p.title.toLowerCase().includes(projectOrId.toLowerCase())) || null;
+      }
+      if (proj) {
+        dispatch({
+          type: ActionTypes.SET_SELECTED_PROJECT,
+          payload: proj
+        });
+        dispatch({
+          type: ActionTypes.AWARD_ACTION,
+          payload: { actionId: `project:open:${proj.id}`, amount: 25 }
+        });
+      }
+    },
+    closeProjectModal: () => {
+      dispatch({
+        type: ActionTypes.SET_MODAL_OPEN,
+        payload: false
+      });
+    },
     toggleTerminal: () => dispatch({ type: ActionTypes.TOGGLE_TERMINAL }),
     addToast: (toast) => dispatch({
       type: ActionTypes.ADD_TOAST,
@@ -630,6 +679,10 @@ export function useUI() {
   return {
     reducedMotion: state.ui.reducedMotion,
     terminalOpen: state.ui.terminalOpen,
+    modalOpen: state.ui.modalOpen,
+    selectedProject: state.ui.selectedProject,
+    openProjectModal: actions.openProjectModal,
+    closeProjectModal: actions.closeProjectModal,
     toasts: state.ui.toastQueue,
     toggleTerminal: actions.toggleTerminal,
     addToast: actions.addToast,
