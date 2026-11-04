@@ -1,19 +1,142 @@
 /**
  * ==========================================================================
- * Toast — Minimal placeholder (full implementation in later stage)
+ * Toast — Single-Item Queued Notification System
+ * ==========================================================================
+ * Features:
+ * - Single visible toast at a time from GameContext queue
+ * - Auto-dismiss after 5 seconds with pause on hover/focus
+ * - Manual dismiss button (aria-label="Dismiss notification")
+ * - role="status" and aria-live="polite" for screen readers
+ * - Slide-in from right (instant with prefers-reduced-motion)
+ * - Variants: Achievement (red left border & tint), Level Up, and XP (+X XP)
+ * - Never obscures navbar XP bar or terminal button
  * ==========================================================================
  */
+import { useEffect, useRef, useState } from 'react';
+import { useUI, useGameActions } from '../context/GameContext';
+
 export function ToastContainer() {
-  // Full notification system will be implemented in a later stage
-  return null;
+  const { toasts, reducedMotion } = useUI();
+  const { removeToast } = useGameActions();
+
+  // Single active toast from front of queue
+  const activeToast = (toasts && toasts.length > 0) ? toasts[0] : null;
+
+  const [isPaused, setIsPaused] = useState(false);
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    if (!activeToast) return;
+
+    if (!isPaused) {
+      timerRef.current = setTimeout(() => {
+        removeToast(activeToast.id);
+      }, 5000);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [activeToast, isPaused, removeToast]);
+
+  if (!activeToast) return null;
+
+  const isAchievement = activeToast.type === 'achievement';
+  const isLevelUp = activeToast.type === 'levelup';
+  const isXp = activeToast.type === 'xp';
+
+  return (
+    <aside
+      className="toast-container"
+      aria-label="System notifications"
+    >
+      <div
+        role="status"
+        aria-live="polite"
+        className={`toast-card toast-card--${activeToast.type || 'info'} ${
+          reducedMotion ? 'toast-card--reduced-motion' : ''
+        }`}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onFocus={() => setIsPaused(true)}
+        onBlur={() => setIsPaused(false)}
+      >
+        {/* Glowing Badge / Icon Ring */}
+        <div className="toast-card__icon-wrapper" aria-hidden="true">
+          {isAchievement && (
+            <div className="toast-card__icon-pulse" />
+          )}
+          <span className="toast-card__icon font-mono">
+            {activeToast.icon || (isAchievement ? '🎖️' : isLevelUp ? '⚡' : '✨')}
+          </span>
+        </div>
+
+        {/* Text Content */}
+        <div className="toast-card__content">
+          <div className="toast-card__header">
+            <span className="toast-card__indicator" />
+            <span className="toast-card__category font-mono">
+              {isAchievement
+                ? 'ACHIEVEMENT UNLOCKED'
+                : isLevelUp
+                ? 'SYSTEM PROMOTION'
+                : 'EXPERIENCE GAINED'}
+            </span>
+          </div>
+
+          <h4 className="toast-card__title">
+            {activeToast.title}
+          </h4>
+
+          {activeToast.message && (
+            <p className="toast-card__message">
+              {activeToast.message}
+            </p>
+          )}
+
+          {isXp && activeToast.amount && (
+            <div className="toast-card__xp-pill font-mono">
+              +{activeToast.amount} XP RECORDED
+            </div>
+          )}
+        </div>
+
+        {/* Manual Dismiss Button */}
+        <button
+          type="button"
+          onClick={() => removeToast(activeToast.id)}
+          className="toast-card__dismiss-btn"
+          aria-label="Dismiss notification"
+          title="Dismiss"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </aside>
+  );
 }
 
 export function useToast() {
+  const { addToast } = useGameActions();
   return {
-    success: () => {},
-    error: () => {},
-    warning: () => {},
-    info: () => {},
-    achievement: () => {}
+    success: (title, message) => addToast({ type: 'info', title, message }),
+    error: (title, message) => addToast({ type: 'error', title, message }),
+    achievement: (title, message) => addToast({ type: 'achievement', title, message }),
+    xp: (amount, label) => addToast({ type: 'xp', amount, title: `+${amount} XP`, message: label })
   };
 }
