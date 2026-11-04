@@ -17,3 +17,5 @@ samconfig.toml
 
 # Logs
 *.log
+# Local tooling
+.claude/

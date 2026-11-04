@@ -1,42 +1,46 @@
 /* ==========================================================================
    Netflix-Inspired Developer Portfolio — Design System Tokens
-   Extracted from Stitch Project: 10673983893490798032
+   Authoritative from Stitch Project (pure black, white-opacity borders, 4-stop gradient)
    ========================================================================== */
 
 :root {
   /* ==========================================================================
-     1. COLOR TOKENS
+     1. COLOR TOKENS — Stitch Authoritative
      ========================================================================== */
-  /* Primary Brand Colors */
+  /* Primary Brand Colors — 4-stop gradient from Stitch */
   --color-primary: #E50914;
-  --color-primary-hover: #F40612;
-  --color-primary-active: #B8070F;
+  --color-primary-hover: #FF1E27;
+  --color-primary-active: #B20710;
+  --color-primary-dim: #6B0005;
   --color-primary-muted: rgba(229, 9, 20, 0.15);
 
   /* Terminal / RPG Accent Colors */
   --color-terminal: #39FF14;
   --color-terminal-dim: #2CC710;
+  --color-terminal-muted: rgba(57, 255, 20, 0.15);
   --color-cyan: #00E5FF;
   --color-cyan-dim: #00B8CC;
+  --color-cyan-muted: rgba(0, 229, 255, 0.15);
 
-  /* Background System */
-  --color-bg-primary: #131313;
-  --color-bg-secondary: #1F1F1F;
-  --color-bg-tertiary: #262626;
-  --color-bg-quaternary: #2E2E2E;
-  --color-bg-glass: rgba(20, 20, 20, 0.85);
+  /* Background System — Pure Black Base (Stitch) */
+  --color-bg-primary: #000000;
+  --color-bg-secondary: #0A0A0A;
+  --color-bg-tertiary: #111111;
+  --color-bg-quaternary: #1A1A1A;
+  --color-bg-glass: rgba(10, 10, 10, 0.9);
 
-  /* Surface / Border */
-  --color-border-subtle: #2A2A2A;
-  --color-border-default: #333333;
-  --color-border-strong: #444444;
+  /* Surface / Border — White-Opacity Model (Stitch) */
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-default: rgba(255, 255, 255, 0.12);
+  --color-border-strong: rgba(255, 255, 255, 0.2);
+  --color-border-focus: rgba(229, 9, 20, 0.5);
 
-  /* Text Hierarchy */
+  /* Text Hierarchy — White-Opacity Model */
   --color-text-primary: #FFFFFF;
-  --color-text-secondary: #E5E5E5;
-  --color-text-tertiary: #B3B3B3;
-  --color-text-muted: #808080;
-  --color-text-inverse: #131313;
+  --color-text-secondary: rgba(255, 255, 255, 0.8);
+  --color-text-tertiary: rgba(255, 255, 255, 0.5);
+  --color-text-muted: rgba(255, 255, 255, 0.35);
+  --color-text-inverse: #000000;
 
   /* State Colors */
   --color-success: #39FF14;
@@ -44,15 +48,23 @@
   --color-error: #FF4444;
   --color-info: #00E5FF;
 
-  /* Gradient Tokens */
-  --gradient-primary: linear-gradient(135deg, #E50914 0%, #B8070F 100%);
+  /* Rarity Colors (for game achievements) */
+  --color-rarity-common: rgba(255, 255, 255, 0.5);
+  --color-rarity-rare: #00E5FF;
+  --color-rarity-epic: #E50914;
+  --color-rarity-legendary: #FFB800;
+  --color-rarity-mythic: #39FF14;
+
+  /* Gradient Tokens — 4-stop Primary from Stitch */
+  --gradient-primary: linear-gradient(135deg, #FF242D 0%, #E50914 25%, #B20710 70%, #6B0005 100%);
+  --gradient-primary-hover: linear-gradient(135deg, #FF3841 0%, #FF1E27 25%, #E50914 70%, #B20710 100%);
   --gradient-terminal: linear-gradient(135deg, #39FF14 0%, #2CC710 100%);
   --gradient-cyan: linear-gradient(135deg, #00E5FF 0%, #00B8CC 100%);
-  --gradient-radial-hero: radial-gradient(ellipse at center, rgba(229, 9, 20, 0.25) 0%, transparent 70%);
-  --gradient-glass: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+  --gradient-radial-hero: radial-gradient(ellipse at center, rgba(229, 9, 20, 0.18) 0%, transparent 65%);
+  --gradient-glass: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
 
   /* Project Image Fallback Gradients */
-  --gradient-project-gla: linear-gradient(135deg, #E50914 0%, #B8070F 100%);
+  --gradient-project-gla: linear-gradient(135deg, #E50914 0%, #B20710 100%);
   --gradient-project-edu: linear-gradient(135deg, #00E5FF 0%, #00B8CC 100%);
 
   /* ==========================================================================
@@ -89,9 +101,10 @@
   --tracking-wide: 0.02em;
   --tracking-wider: 0.05em;
   --tracking-widest: 0.1em;
+  --tracking-cinematic: 0.24em;  /* Stitch wide tracking for subtitles */
 
   /* ==========================================================================
-     3. SPACING TOKENS (4px/8px base, gutter 1.5rem, margin 2rem, scale ×2)
+     3. SPACING TOKENS (4px base, gutter 1.5rem, margin 2rem, scale ×2)
      ========================================================================== */
   --space-0: 0;
   --space-1: 0.25rem;
@@ -127,27 +140,31 @@
   /* ==========================================================================
      5. SHADOW TOKENS
      ========================================================================== */
-  --shadow-cinematic: 0 20px 40px -12px rgba(0, 0, 0, 0.6),
+  --shadow-cinematic: 0 20px 40px -12px rgba(0, 0, 0, 0.8),
                       0 8px 16px -8px rgba(229, 9, 20, 0.15),
-                      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+                      inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
   --shadow-terminal: 0 0 0 1px rgba(57, 255, 20, 0.3),
                      0 0 30px rgba(57, 255, 20, 0.15),
                      inset 0 1px 0 rgba(57, 255, 20, 0.1);
 
-  --shadow-deep: 0 25px 50px -12px rgba(0, 0, 0, 0.8),
+  --shadow-cyan: 0 0 0 1px rgba(0, 229, 255, 0.3),
+                 0 0 30px rgba(0, 229, 255, 0.15),
+                 inset 0 1px 0 rgba(0, 229, 255, 0.1);
+
+  --shadow-deep: 0 25px 50px -12px rgba(0, 0, 0, 0.9),
                  0 0 0 1px rgba(255, 255, 255, 0.03);
 
-  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.05),
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.5),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.04),
                   inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 
   --shadow-focus: 0 0 0 3px rgba(229, 9, 20, 0.4);
   --shadow-focus-terminal: 0 0 0 3px rgba(57, 255, 20, 0.4);
   --shadow-focus-cyan: 0 0 0 3px rgba(0, 229, 255, 0.4);
 
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
 
   /* ==========================================================================
      6. GRID & LAYOUT TOKENS
@@ -163,6 +180,9 @@
   --grid-cols-tablet: 8;
   --grid-cols-desktop: 12;
 
+  --bp-320: 320px;
+  --bp-360: 360px;
+  --bp-390: 390px;
   --bp-mobile: 480px;
   --bp-tablet: 768px;
   --bp-desktop: 1024px;
