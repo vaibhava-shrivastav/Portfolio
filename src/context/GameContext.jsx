@@ -10,6 +10,7 @@ import {
   profile as initialProfile,
   gameAchievements as initialAchievements,
   visitorPersonas,
+  defaultPersona,
   xpLevels,
   xpActions
 } from '../data/profile';
@@ -487,6 +488,16 @@ export function GameProvider({ children }) {
       type: ActionTypes.SET_SELECTED_PROFILE,
       payload: profileId
     }),
+        enterDirectly: (defaultPersonaId = 'default') => {
+      dispatch({
+        type: ActionTypes.SET_SELECTED_PROFILE,
+        payload: state.session?.selectedProfile || defaultPersonaId
+      });
+      dispatch({
+        type: ActionTypes.SET_PROFILE_SELECTED,
+        payload: true
+      });
+    },
     selectPersona: (personaId) => {
       dispatch({
         type: ActionTypes.SET_SELECTED_PROFILE,
@@ -601,13 +612,15 @@ export function useSession() {
 export function usePersona() {
   const { state, actions } = useGame();
   const personaId = state.session?.selectedProfile;
-  const persona = visitorPersonas.find(p => p.id === personaId) || null;
+  const persona = visitorPersonas.find(p => p.id === personaId) || (personaId === 'default' ? defaultPersona : null);
+  const activePersona = persona || defaultPersona;
   return {
-    persona,
-    personaId,
+    persona: activePersona,
+    personaId: personaId || 'default',
     selectPersona: actions.selectPersona,
-    tagline: persona?.tagline || initialProfile.tagline,
-    firstRowOrder: persona?.firstRowOrder || ['projects', 'skills', 'about'],
+    enterDirectly: actions.enterDirectly,
+    tagline: activePersona?.tagline || initialProfile.tagline,
+    firstRowOrder: activePersona?.firstRowOrder || ['projects', 'about'],
     isSelectingProfile: !state.session?.profileSelected
   };
 }

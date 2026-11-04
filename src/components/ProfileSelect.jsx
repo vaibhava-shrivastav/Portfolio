@@ -66,9 +66,13 @@ export function ProfileSelect() {
   };
 
   const handleDirectEnter = () => {
-    // If user already has a persona, continue with it; else default to recruiter
-    const target = selectedProfile || 'recruiter';
-    selectPersona(target);
+    // Enter directly: do not award +20 XP, do not leave persona undefined
+    if (actions.enterDirectly) {
+      actions.enterDirectly(selectedProfile || 'default');
+    } else {
+      actions.setSelectedProfile(selectedProfile || 'default');
+      actions.setProfileSelected(true);
+    }
   };
 
   return (
