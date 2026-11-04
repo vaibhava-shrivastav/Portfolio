@@ -7,7 +7,7 @@
  * - 6 real categories only from profile.js (Languages, Frameworks & Libraries,
  *   Cloud & DevOps, Databases, CS Fundamentals, Developer Tools)
  * - Left Panel: inline SVG avatar, visitor's "Level N · Title", real GameContext XP,
- *   HP/MP/XP vitals, active developer perks
+ *   Level progression and XP bar
  * - Right Panel: accessible accordion modules with button headers, aria-expanded,
  *   aria-controls, keyboard support (click/Enter/Space), no hover expand
  * - Animated level bars with role="progressbar" and numeric text
@@ -141,7 +141,7 @@ export function SkillsSheet() {
                   </text>
                 </svg>
                 <div className="skills-sheet-avatar-status font-mono">ONLINE</div>
-                <div className="skills-sheet-avatar-spec font-mono">SPEC: CLOUD & FULL-STACK</div>
+                
               </div>
             </div>
 
@@ -150,55 +150,15 @@ export function SkillsSheet() {
               <span className="skills-sheet-identity__label font-mono">DESIGNATION</span>
               <h3 className="skills-sheet-identity__name font-display">{profileData.name}</h3>
               <div className="skills-sheet-identity__pill font-mono">
-                <span>⚡ Level {level} Systems Developer</span>
+                <span>Level {level} · {profileData.headline}</span>
               </div>
-              <p className="skills-sheet-identity__class font-mono">
-                CLASS: <span className="text-white">Cloud Architect / Distributed Systems Mage</span>
-              </p>
             </div>
 
-            {/* RPG Vitals Progress Bars */}
-            <div className="skills-sheet-vitals font-mono" role="region" aria-label="Developer stamina and focus metrics">
-              {/* HP Bar: Coding Stamina */}
+            {/* XP Progression Bar */}
+            <div className="skills-sheet-vitals font-mono" role="region" aria-label="Visitor XP rank progression">
               <div className="skills-sheet-vital-item">
                 <div className="skills-sheet-vital-header">
-                  <span className="text-primary font-bold">♥ HP (Coding Stamina)</span>
-                  <span className="text-white">100 / 100</span>
-                </div>
-                <div
-                  className="skills-sheet-bar-track"
-                  role="progressbar"
-                  aria-label="Coding Stamina"
-                  aria-valuenow="100"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  <div className="skills-sheet-bar-fill skills-sheet-bar-fill--hp" style={{ width: '100%' }} />
-                </div>
-              </div>
-
-              {/* MP Bar: Creative Focus */}
-              <div className="skills-sheet-vital-item">
-                <div className="skills-sheet-vital-header">
-                  <span className="text-cyan font-bold">⚡ MP (Creative Focus)</span>
-                  <span className="text-white">100 / 100</span>
-                </div>
-                <div
-                  className="skills-sheet-bar-track"
-                  role="progressbar"
-                  aria-label="Creative Focus"
-                  aria-valuenow="100"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                >
-                  <div className="skills-sheet-bar-fill skills-sheet-bar-fill--mp" style={{ width: '100%' }} />
-                </div>
-              </div>
-
-              {/* XP Bar: Progress to Next Rank */}
-              <div className="skills-sheet-vital-item">
-                <div className="skills-sheet-vital-header">
-                  <span className="text-terminal font-bold">★ XP (Rank Progression)</span>
+                  <span className="text-terminal font-bold">★ XP PROGRESSION</span>
                   <span className="text-terminal">{progress}%</span>
                 </div>
                 <div
@@ -216,45 +176,9 @@ export function SkillsSheet() {
                 </div>
               </div>
             </div>
-
-            {/* Active Perks & Buffs Grid */}
-            <div className="skills-sheet-perks">
-              <span className="skills-sheet-perks__heading font-mono">ACTIVE ATTRIBUTES & BUFFS</span>
-              <div className="skills-sheet-perks__grid font-mono">
-                <div className="skills-sheet-perk-card">
-                  <span className="skills-sheet-perk-icon">✓</span>
-                  <span className="skills-sheet-perk-title">Clean Code</span>
-                  <span className="skills-sheet-perk-buff text-terminal">+15 ATK</span>
-                </div>
-                <div className="skills-sheet-perk-card">
-                  <span className="skills-sheet-perk-icon">👁</span>
-                  <span className="skills-sheet-perk-title">Debug Vision</span>
-                  <span className="skills-sheet-perk-buff text-cyan">+20 PER</span>
-                </div>
-                <div className="skills-sheet-perk-card">
-                  <span className="skills-sheet-perk-icon">☕</span>
-                  <span className="skills-sheet-perk-title">Fast Delivery</span>
-                  <span className="skills-sheet-perk-buff text-primary">+10 STA</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Ready to Deploy Cluster Node Pill */}
-            <div className="skills-sheet-deployment-node font-mono">
-              <div className="skills-sheet-node-info">
-                <span className="skills-sheet-node-dot" />
-                <div>
-                  <div className="text-white font-bold">READY TO DEPLOY</div>
-                  <div className="text-muted text-xs">AWS Cluster · Terraform IaC</div>
-                </div>
-              </div>
-              <a href="#projects" className="btn btn--primary btn--sm">
-                Catalog
-              </a>
-            </div>
           </aside>
 
-          {/* RIGHT COLUMN: 6 Verified Skill Modules (Accordion) */}
+          {/* RIGHT COLUMN: 6 Skill Modules (Accordion) */}
           <div className="skills-sheet-modules" role="region" aria-label="Technical skill categories">
             {categories.map((category, catIdx) => {
               const isExpanded = expandedIndices.has(catIdx);

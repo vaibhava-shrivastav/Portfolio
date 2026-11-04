@@ -4,7 +4,7 @@
  * ==========================================================================
  * Built STRICTLY from real resume facts (EduCloud AWS Stack):
  * - AWS EC2, S3, IAM, VPC, Terraform IaC
- * - NO unverified services (NO Amplify, CloudFront, Lambda, API Gateway, SES)
+ * - Resume EduCloud AWS Stack (NO Amplify, CloudFront, Lambda, API Gateway, SES)
  * ==========================================================================
  */
 import { Row } from './Row';
@@ -50,16 +50,16 @@ export function AwsServicesRow() {
       id: 'aws-iam',
       service: 'AWS IAM',
       tag: 'SECURITY & ACCESS',
-      role: 'Least-Privilege RBAC',
-      desc: 'Fine-grained role-based policies strictly isolating permissions across multi-tenant student accounts.',
+      role: 'IAM Role-Based Access Control',
+      desc: 'Designed IAM role-based access control for multitenant environments, ensuring security and resource separation.',
       gradient: 'linear-gradient(135deg, #DD344C 0%, #2B0A11 100%)'
     },
     {
       id: 'aws-vpc',
       service: 'Amazon VPC',
       tag: 'NETWORKING',
-      role: 'Isolated Subnet Topologies',
-      desc: 'Network segregation and security group boundary rules preventing inter-tenant cross-talk.',
+      role: 'VPC Network Isolation',
+      desc: 'VPC network isolation for multitenant environments, ensuring security and resource separation across concurrent student workspaces.',
       gradient: 'linear-gradient(135deg, #8C4FFF 0%, #1A0D33 100%)'
     },
     {

@@ -3527,38 +3527,20 @@
   transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.skills-sheet-bar-fill--hp {
-  background: linear-gradient(90deg, #930007, var(--color-primary));
-  box-shadow: 0 0 10px rgba(229, 9, 20, 0.8);
-}
 
-.skills-sheet-bar-fill--mp {
-  background: linear-gradient(90deg, #004f58, var(--color-cyan));
-  box-shadow: 0 0 10px rgba(0, 218, 243, 0.8);
-}
+
+
 
 .skills-sheet-bar-fill--xp {
   background: linear-gradient(90deg, #0f6d00, var(--color-terminal));
   box-shadow: 0 0 10px rgba(57, 255, 20, 0.8);
 }
 
-.skills-sheet-perks {
-  margin-bottom: var(--space-5);
-}
 
-.skills-sheet-perks__heading {
-  font-size: 10px;
-  letter-spacing: 0.15em;
-  color: var(--color-text-muted);
-  display: block;
-  margin-bottom: 8px;
-}
 
-.skills-sheet-perks__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
+
+
+
 
 .skills-sheet-perk-card {
   background: rgba(255, 255, 255, 0.04);
@@ -3582,33 +3564,13 @@
   color: #FFFFFF;
 }
 
-.skills-sheet-perk-buff {
-  font-size: 10px;
-}
 
-.skills-sheet-deployment-node {
-  background: rgba(14, 14, 14, 0.95);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 10px 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
-.skills-sheet-node-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
-.skills-sheet-node-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--color-terminal);
-  box-shadow: 0 0 10px var(--color-terminal);
-}
+
+
+
+
 
 /* Modules Accordion */
 .skills-sheet-modules {

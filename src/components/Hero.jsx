@@ -138,7 +138,7 @@ export function Hero() {
               {featuredProject.tagline || featuredProject.description}
             </p>
 
-            {/* Verified Tech Chips */}
+            {/* Tech Chips */}
             <div className="hero-billboard__tech-chips" aria-label="Featured technologies">
               {featuredProject.tech.slice(0, 6).map((tech) => (
                 <span key={tech} className="hero-billboard__tech-chip font-mono">

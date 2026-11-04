@@ -272,7 +272,7 @@ export function ProjectModal() {
             </div>
 
             <div className="project-modal__sidebar-group">
-              <span className="project-modal__sidebar-label font-mono">VERIFIED TECH STACK</span>
+              <span className="project-modal__sidebar-label font-mono">TECH STACK</span>
               <div className="project-modal__sidebar-tags">
                 {selectedProject.tech.map((t) => (
                   <span key={t} className="project-modal__tech-chip font-mono">

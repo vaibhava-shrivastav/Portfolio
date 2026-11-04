@@ -45,7 +45,7 @@ export function Achievements() {
     if (certsInView && !awardedCertsRef.current) {
       awardedCertsRef.current = true;
       if (actions.awardAction) {
-        actions.awardAction('certifications_view', 0, 'AWS Credentials Verified');
+        actions.awardAction('certifications_view', 0, 'AWS Credentials Inspected');
       }
     }
   }, [certsInView, actions]);
@@ -103,7 +103,7 @@ export function Achievements() {
               <span className="level-5-banner__pill font-mono">MAXIMUM RANK ACHIEVED</span>
               <h3 className="level-5-banner__title font-display">YOU'VE SEEN IT ALL · LEVEL 5 HIRED!</h3>
               <p className="level-5-banner__desc">
-                You've unlocked the full portfolio architecture, reviewed verified AWS infrastructure, and inspected production telemetry. Let's build what's next together.
+                You've unlocked the full portfolio architecture, reviewed AWS cloud infrastructure, and inspected production telemetry. Let's build what's next together.
               </p>
             </div>
             <a href="#contact" className="btn btn--primary level-5-glow">
@@ -116,7 +116,7 @@ export function Achievements() {
         <div ref={certsRef} className="credentials-shelf" aria-labelledby="certs-subheading">
           <div className="credentials-shelf__header">
             <h3 id="certs-subheading" className="credentials-shelf__title font-display">
-              VALIDATED CREDENTIALS // RESUME REALITY
+              CREDENTIALS & ACCOMPLISHMENTS // RESUME REALITY
             </h3>
             <span className="font-mono text-xs text-muted">AMAZON WEB SERVICES & COMPETITIVE PROGRAMMING</span>
           </div>

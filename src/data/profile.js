@@ -179,13 +179,7 @@ export const projects = [
     title: "GLA Exchange",
     tagline: "Campus Marketplace Platform",
     description: `Built and deployed a fullstack peer-to-peer marketplace for GLA University students featuring 20+ modules including real-time chat (Socket.io), Google OAuth 2.0, product listings with Cloudinary CDN image storage, and a role-based admin portal serving live users on a custom domain with SSL.`,
-    longDescription: `GLA Exchange is a production-grade peer-to-peer marketplace platform built for GLA University students.
-It features 20+ modules including real-time chat via Socket.io, Google OAuth 2.0 authentication,
-product listings with Cloudinary CDN image storage, and a role-based admin portal.
-Deployed on a custom domain (glaexchange.online) with SSL, serving live users.
-Production-grade security: Helmet.js headers, rate limiting, CORS whitelist, JWT authentication,
-input validation, Google Search Console SEO with sitemap.xml, and structured data
-demonstrating ownership across the full software development lifecycle from architecture to deployment.`,
+    longDescription: `Built and deployed a fullstack peer-to-peer marketplace for GLA University students featuring 20+ modules including real-time chat (Socket.io), Google OAuth 2.0, product listings with Cloudinary CDN image storage, and a role-based admin portal serving live users on a custom domain with SSL. Implemented production-grade security: Helmet.js headers, rate limiting, CORS whitelist, JWT, input validation, Google Search Console SEO with sitemap.xml, and structured data demonstrating ownership across the full software development lifecycle from architecture to deployment.`,
     image: "assets/images/projects/gla-exchange.png",
     images: [
       "assets/images/projects/gla-exchange-1.png",
@@ -200,14 +194,12 @@ demonstrating ownership across the full software development lifecycle from arch
     role: "Full-Stack Project",
     tech: ["MERN Stack", "Socket.io", "JWT", "Google OAuth", "Cloudinary", "MongoDB Atlas", "Render"],
     highlights: [
-      "Full-stack peer-to-peer marketplace with 20+ modules",
-      "Real-time chat via Socket.io",
-      "Google OAuth 2.0 authentication",
-      "Cloudinary CDN for product image storage",
-      "Role-based admin portal",
-      "Custom domain with SSL (glaexchange.online)",
-      "Production-grade security: Helmet.js, rate limiting, CORS, JWT, input validation",
-      "Google Search Console SEO with sitemap.xml and structured data"
+      "Fullstack peer-to-peer marketplace for GLA University students featuring 20+ modules",
+      "Real-time chat (Socket.io) and Google OAuth 2.0",
+      "Product listings with Cloudinary CDN image storage",
+      "Role-based admin portal serving live users on a custom domain with SSL",
+      "Production-grade security: Helmet.js headers, rate limiting, CORS whitelist, JWT, input validation",
+      "Google Search Console SEO with sitemap.xml, and structured data"
     ],
     gradient: "var(--gradient-project-gla)"
   },
@@ -217,12 +209,7 @@ demonstrating ownership across the full software development lifecycle from arch
     title: "EduCloud",
     tagline: "Managed Cloud Learning Platform",
     description: `Architected a cloud platform provisioning isolated, fault-tolerant AWS environments for students using Terraform IaC integrating EC2, S3, IAM, and VPC to deliver secure, cost-controlled multi-tenant workspaces at scale.`,
-    longDescription: `EduCloud is a collaborative cloud infrastructure project demonstrating enterprise-grade AWS architecture.
-Built with Terraform for reproducible infrastructure, featuring isolated, fault-tolerant AWS environments
-for students. Integrates EC2, S3, IAM, and VPC to deliver secure, cost-controlled multi-tenant workspaces at scale.
-Designed IAM role-based access control and VPC network isolation for multitenant environments,
-ensuring security and resource separation across concurrent student workspaces
-mirroring enterprise cloud topology.`,
+    longDescription: `Architected a cloud platform provisioning isolated, fault-tolerant AWS environments for students using Terraform IaC integrating EC2, S3, IAM, and VPC to deliver secure, cost-controlled multi-tenant workspaces at scale. Designed IAM role-based access control and VPC network isolation for multitenant environments, ensuring security and resource separation across concurrent student workspaces mirroring distributed system patterns used in large-scale cloud platforms.`,
     image: "assets/images/projects/educloud.png",
     images: [
       "assets/images/projects/educloud-1.png",
@@ -237,13 +224,12 @@ mirroring enterprise cloud topology.`,
     role: "Collaborative Project",
     tech: ["AWS", "Terraform", "IAM", "VPC", "EC2", "S3"],
     highlights: [
-      "Terraform IaC for reproducible AWS infrastructure",
-      "Isolated, fault-tolerant AWS environments for students",
-      "IAM role-based access control for multitenant security",
-      "VPC network isolation across concurrent student workspaces",
-      "Integration of EC2, S3, IAM, and VPC",
-      "Cost-controlled multi-tenant workspaces at scale",
-      "Cloud architecture mirroring enterprise cloud topology"
+      "Architected cloud platform provisioning isolated, fault-tolerant AWS environments using Terraform IaC",
+      "Integrating EC2, S3, IAM, and VPC to deliver secure, cost-controlled multi-tenant workspaces at scale",
+      "Designed IAM role-based access control for multitenant environments",
+      "VPC network isolation for multitenant environments",
+      "Security and resource separation across concurrent student workspaces",
+      "Mirroring distributed system patterns used in large-scale cloud platforms"
     ],
     gradient: "var(--gradient-project-edu)"
   }
@@ -418,7 +404,7 @@ export const gameAchievements = [
     key: "certified",
     name: "Certified",
     title: "Certified",
-    description: "Inspected verified AWS certifications",
+    description: "Inspected AWS certifications",
     icon: "📜",
     category: "accomplishment",
     rarity: "legendary",
