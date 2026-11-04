@@ -192,7 +192,7 @@ demonstrating ownership across the full software development lifecycle from arch
       "assets/images/projects/gla-exchange-2.png"
     ],
     demoUrl: "https://glaexchange.online",
-    repoUrl: "https://github.com/vaibhava-shrivastav/gla-exchange", // TODO: Verify
+    repoUrl: "", // Per resume, profile link is canonical
     docsUrl: "",
     featured: true,
     status: "Production",
@@ -222,14 +222,14 @@ Built with Terraform for reproducible infrastructure, featuring isolated, fault-
 for students. Integrates EC2, S3, IAM, and VPC to deliver secure, cost-controlled multi-tenant workspaces at scale.
 Designed IAM role-based access control and VPC network isolation for multitenant environments,
 ensuring security and resource separation across concurrent student workspaces
-mirroring distributed system patterns used in large-scale cloud platforms.`,
+mirroring enterprise cloud topology.`,
     image: "assets/images/projects/educloud.png",
     images: [
       "assets/images/projects/educloud-1.png",
       "assets/images/projects/educloud-2.png"
     ],
     demoUrl: "", // TODO: Add if deployed
-    repoUrl: "https://github.com/vaibhava-shrivastav/educloud", // TODO: Verify
+    repoUrl: "", // Per resume, profile link is canonical
     docsUrl: "",
     featured: true,
     status: "Completed",
@@ -243,7 +243,7 @@ mirroring distributed system patterns used in large-scale cloud platforms.`,
       "VPC network isolation across concurrent student workspaces",
       "Integration of EC2, S3, IAM, and VPC",
       "Cost-controlled multi-tenant workspaces at scale",
-      "Patterns mirroring distributed systems in large-scale cloud platforms"
+      "Cloud architecture mirroring enterprise cloud topology"
     ],
     gradient: "var(--gradient-project-edu)"
   }

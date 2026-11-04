@@ -229,8 +229,8 @@ export function Hero() {
           </div>
 
           <div className="hero-billboard__stat-card" role="listitem">
-            <span className="hero-billboard__stat-label">REAL PROJECTS</span>
-            <span className="hero-billboard__stat-value">{projectCount} Shipped</span>
+            <span className="hero-billboard__stat-label">PROJECTS</span>
+            <span className="hero-billboard__stat-value">{projectCount}</span>
           </div>
 
           <div className="hero-billboard__stat-card" role="listitem">
