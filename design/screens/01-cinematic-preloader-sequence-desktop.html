@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cinematic Splash Screen & Sequence - Desktop</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#E50914',
+            'brand-glow': '#ff1e27',
+            terminal: '#39FF14',
+            dark: '#000000',
+            surface: '#0A0A0A'
+          },
+          fontFamily: {
+            bebas: ['"Bebas Neue"', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 25px rgba(229, 9, 20, 0.7)) drop-shadow(0 0 60px rgba(229, 9, 20, 0.35)); }
+      50% { filter: drop-shadow(0 0 45px rgba(229, 9, 20, 0.95)) drop-shadow(0 0 90px rgba(229, 9, 20, 0.55)); }
+    }
+    @keyframes loadProgress {
+      0% { width: 0%; }
+      50% { width: 68%; }
+      100% { width: 100%; }
+    }
+    .glow-active {
+      animation: pulseGlow 2.5s infinite ease-in-out;
+    }
+    .lens-flare {
+      background: radial-gradient(circle, rgba(229,9,20,0.45) 0%, rgba(229,9,20,0.1) 40%, rgba(0,0,0,0) 70%);
+    }
+    .streak-lines {
+      background: repeating-linear-gradient(90deg, 
+        transparent, 
+        transparent 14px, 
+        rgba(229,9,20,0.18) 15px, 
+        transparent 16px, 
+        transparent 28px, 
+        rgba(180,0,10,0.25) 30px,
+        transparent 32px);
+    }
+  </style>
+</head>
+<body class="bg-black text-white font-inter antialiased min-h-screen overflow-x-hidden select-none">
+
+  <!-- Cinematic Top Bar / Portfolio Mode Header -->
+  <header class="w-full px-8 py-4 flex items-center justify-between border-b border-white/10 bg-black/80 backdrop-blur z-20">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 bg-brand rounded flex items-center justify-center font-bebas text-lg tracking-wider text-white shadow-[0_0_15px_rgba(229,9,20,0.8)]">V</div>
+      <div>
+        <span class="text-sm font-semibold tracking-wider text-white uppercase">CINEMATIC PRELOADER SEQUENCE</span>
+        <span class="text-xs text-white/40 block font-mono">FRAME 01 ➔ FRAME 03 STORYBOARD & LIVE PRELOADER</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-white/5 border border-white/10 text-white/70">
+        <span class="w-2 h-2 rounded-full bg-brand animate-ping"></span>
+        AUDIO: "TA-DUM" SYNTH STEREO
+      </span>
+      <span class="text-xs font-mono text-white/40">1440 × 900 VIEWPORT</span>
+    </div>
+  </header>
+
+  <!-- Sequence Showcase Header -->
+  <div class="max-w-[1400px] mx-auto pt-6 px-6 pb-2 text-center">
+    <div class="inline-block px-3 py-1 mb-2 text-xs font-mono text-brand bg-brand/10 border border-brand/20 rounded uppercase tracking-widest">
+      STORYBOARD // THE "TA-DUM" REVEAL SEQUENCE
+    </div>
+    <h1 class="text-2xl lg:text-3xl font-bebas tracking-wide text-white">
+      THREE-FRAME ANIMATION BREAKDOWN
+    </h1>
+    <p class="text-xs text-white/50 max-w-xl mx-auto font-inter">
+      Deconstruction of the Netflix-inspired ribbon ignition, maximum chromatic glow, and the light streak hyperspace expansion.
+    </p>
+  </div>
+
+  <!-- 3 FRAMES SIDE BY SIDE -->
+  <main class="max-w-[1400px] mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- ============================================== -->
+    <!-- FRAME 1: V Starting to Draw (Genesis) -->
+    <!-- ============================================== -->
+    <div class="relative bg-black rounded-xl border border-white/15 overflow-hidden flex flex-col shadow-2xl group transition-all duration-300 hover:border-brand/40">
+      
+      <!-- Frame Meta Header -->
+      <div class="px-4 py-2.5 bg-neutral-950/90 border-b border-white/10 flex items-center justify-between text-xs font-mono z-10">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+          <span class="text-white/80 font-semibold tracking-wider">FRAME 01 : 0.0s – 0.8s</span>
+        </div>
+        <span class="text-white/40 tracking-wider">RIBBON GENESIS</span>
+      </div>
+
+      <!-- Frame Visual Container (Screen Aspect) -->
+      <div class="relative h-[480px] w-full bg-black flex flex-col items-center justify-center overflow-hidden">
+        
+        <!-- Subtle dark grid background -->
+        <div class="absolute inset-0 opacity-15" style="background-image: linear-gradient(to right, #222 1px, transparent 1px), linear-gradient(to bottom, #222 1px, transparent 1px); background-size: 32px 32px;"></div>
+
+        <!-- Dim faint initial light cone -->
+        <div class="absolute w-48 h-72 rounded-full bg-brand/10 blur-[80px] -translate-y-8"></div>
+
+        <!-- Faint preliminary vertical streaks -->
+        <div class="absolute inset-x-0 top-0 bottom-12 opacity-25 flex justify-center gap-6 pointer-events-none">
+          <div class="w-[1px] h-full bg-gradient-to-b from-transparent via-brand/40 to-transparent"></div>
+          <div class="w-[1.5px] h-full bg-gradient-to-b from-transparent via-brand/20 to-transparent"></div>
+          <div class="w-[1px] h-full bg-gradient-to-b from-transparent via-red-900/30 to-transparent"></div>
+        </div>
+
+        <!-- SVG Graphic: Frame 1 - V Drawing Incomplete Ribbon -->
+        <div class="relative z-10 flex flex-col items-center">
+          <svg width="220" height="260" viewBox="0 0 220 260" fill="none" xmlns="http://www.w3.org/2000/svg" class="drop-shadow-[0_0_15px_rgba(229,9,20,0.5)]">
+            <defs>
+              <!-- Left stroke ribbon gradient -->
+              <linearGradient id="f1_left_ribbon" x1="40" y1="20" x2="110" y2="240" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#E50914" />
+                <stop offset="65%" stop-color="#B20710" />
+                <stop offset="100%" stop-color="#550005" />
+              </linearGradient>
+              <!-- 3D Fold overlay shadow -->
+              <linearGradient id="f1_fold_shadow" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="rgba(0,0,0,0.85)" />
+                <stop offset="100%" stop-color="rgba(229,9,20,0.1)" />
+              </linearGradient>
+            </defs>
+
+            <!-- Guide Ghost lines for full V -->
+            <path d="M35 30 L110 230 L185 30" stroke="#333333" stroke-width="26" stroke-linecap="butt" stroke-linejoin="miter" opacity="0.3" stroke-dasharray="4 6"/>
+
+            <!-- Left Stem (Almost completely drawn down) -->
+            <!-- Path with clip to simulate progressive drawing -->
+            <path d="M35 30 L108 225" stroke="url(#f1_left_ribbon)" stroke-width="28" stroke-linecap="butt" />
+            <!-- Inner highlight edge for left ribbon -->
+            <path d="M46 32 L112 212" stroke="#FF4D55" stroke-width="3" opacity="0.8" />
+
+            <!-- Vertex Fold Point (Starting to connect) -->
+            <path d="M102 208 L110 230 L118 208 Z" fill="#990008" />
+
+            <!-- Right Stem (Just starting to emerge/draw upwards from fold) -->
+            <path d="M108 225 L135 152" stroke="#E50914" stroke-width="28" stroke-linecap="butt" opacity="0.9" />
+            <path d="M112 216 L137 150" stroke="#FF4D55" stroke-width="3" opacity="0.7" />
+
+            <!-- Laser spark at drawing tip -->
+            <circle cx="135" cy="152" r="5" fill="#FFFFFF" class="animate-pulse" filter="drop-shadow(0 0 8px #FF1E27)" />
+            <line x1="125" y1="152" x2="145" y2="152" stroke="#FFFFFF" stroke-width="2" />
+            <line x1="135" y1="142" x2="135" y2="162" stroke="#FFFFFF" stroke-width="2" />
+          </svg>
+
+          <!-- Label Under V (Faded in Frame 1) -->
+          <div class="mt-4 text-center">
+            <span class="text-[10px] tracking-[0.28em] text-white/30 font-medium uppercase font-inter">
+              VAIBHAVA KUMAR SHRIVASTAV · PORTFOLIO
+            </span>
+            <div class="text-[9px] font-mono text-brand/70 mt-1 opacity-70">
+              [ 32% SYNTHESIZING BUFFER ]
+            </div>
+          </div>
+        </div>
+
+        <!-- Thin Red Loading Line (Frame 1: 30%) -->
+        <div class="absolute bottom-0 left-0 right-0 h-[2.5px] bg-neutral-900">
+          <div class="h-full bg-brand shadow-[0_0_10px_#E50914]" style="width: 32%;"></div>
+        </div>
+      </div>
+
+      <!-- Frame Explanation Footer -->
+      <div class="p-4 bg-neutral-950/80 border-t border-white/10 text-xs">
+        <p class="text-white/80 font-medium mb-1">Phase 1: Drawing & Ignition</p>
+        <p class="text-white/45 text-[11px] leading-relaxed">
+          The left ribbon forms first with high-velocity light spark tip, grounding into the apex fold before initiating the right upward stroke.
+        </p>
+      </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- FRAME 2: V Fully Formed with Glow (Hero Splash) -->
+    <!-- ============================================== -->
+    <div class="relative bg-black rounded-xl border border-brand/50 overflow-hidden flex flex-col shadow-[0_0_35px_rgba(229,9,20,0.25)] group transition-all duration-300 ring-1 ring-brand/40">
+      
+      <!-- Frame Meta Header (Hero Badge) -->
+      <div class="px-4 py-2.5 bg-neutral-950/90 border-b border-brand/30 flex items-center justify-between text-xs font-mono z-10">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-brand animate-ping"></span>
+          <span class="text-white font-semibold tracking-wider text-brand">FRAME 02 : 1.2s – 2.0s</span>
+        </div>
+        <span class="px-2 py-0.5 rounded text-[10px] bg-brand text-white font-bold tracking-wider">HERO STATE</span>
+      </div>
+
+      <!-- Frame Visual Container (Screen Aspect) -->
+      <div class="relative h-[480px] w-full bg-black flex flex-col items-center justify-center overflow-hidden">
+        
+        <!-- Radiant Lens Flare Core -->
+        <div class="absolute w-80 h-80 rounded-full lens-flare blur-[70px] pointer-events-none"></div>
+        <div class="absolute w-44 h-44 rounded-full bg-brand/30 blur-[40px] pointer-events-none"></div>
+
+        <!-- Vertical Red and Dark-Red Light Streaks Fanning Out Behind V -->
+        <div class="absolute inset-x-0 inset-y-0 pointer-events-none flex items-center justify-center overflow-hidden opacity-85">
+          <!-- Central and fanning vertical light streaks -->
+          <div class="w-[2px] h-[480px] bg-gradient-to-b from-transparent via-brand to-transparent blur-[0.5px]"></div>
+          
+          <!-- Left streaks with tilt fanning -->
+          <div class="absolute w-[1.5px] h-[460px] bg-gradient-to-b from-transparent via-brand/70 to-transparent -translate-x-8 rotate-[-3deg]"></div>
+          <div class="absolute w-[3px] h-[480px] bg-gradient-to-b from-transparent via-[#8B0000] to-transparent -translate-x-20 rotate-[-6deg] opacity-70"></div>
+          <div class="absolute w-[1px] h-[440px] bg-gradient-to-b from-transparent via-brand/40 to-transparent -translate-x-36 rotate-[-9deg]"></div>
+          <div class="absolute w-[2px] h-[450px] bg-gradient-to-b from-transparent via-[#5A0005] to-transparent -translate-x-56 rotate-[-12deg] opacity-60"></div>
+          <div class="absolute w-[1px] h-[400px] bg-gradient-to-b from-transparent via-brand/30 to-transparent -translate-x-72 rotate-[-15deg]"></div>
+
+          <!-- Right streaks with tilt fanning -->
+          <div class="absolute w-[1.5px] h-[460px] bg-gradient-to-b from-transparent via-brand/70 to-transparent translate-x-8 rotate-[3deg]"></div>
+          <div class="absolute w-[3px] h-[480px] bg-gradient-to-b from-transparent via-[#8B0000] to-transparent translate-x-20 rotate-[6deg] opacity-70"></div>
+          <div class="absolute w-[1px] h-[440px] bg-gradient-to-b from-transparent via-brand/40 to-transparent translate-x-36 rotate-[9deg]"></div>
+          <div class="absolute w-[2px] h-[450px] bg-gradient-to-b from-transparent via-[#5A0005] to-transparent translate-x-56 rotate-[12deg] opacity-60"></div>
+          <div class="absolute w-[1px] h-[400px] bg-gradient-to-b from-transparent via-brand/30 to-transparent translate-x-72 rotate-[15deg]"></div>
+
+          <!-- Horizontal subtle anamorphic lens line -->
+          <div class="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-brand/60 to-transparent"></div>
+        </div>
+
+        <!-- SVG Graphic: Frame 2 - V Fully Formed with 3D Fold Ribbon Effect & Glow -->
+        <div class="relative z-10 flex flex-col items-center">
+          <svg width="220" height="260" viewBox="0 0 220 260" fill="none" xmlns="http://www.w3.org/2000/svg" class="glow-active">
+            <defs>
+              <!-- 3D Ribbon Gradients -->
+              <linearGradient id="f2_left_ribbon" x1="25" y1="20" x2="115" y2="240" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FF1E27" />
+                <stop offset="30%" stop-color="#E50914" />
+                <stop offset="70%" stop-color="#B20710" />
+                <stop offset="100%" stop-color="#7A0006" />
+              </linearGradient>
+
+              <linearGradient id="f2_right_ribbon" x1="195" y1="20" x2="105" y2="240" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FF2E36" />
+                <stop offset="40%" stop-color="#E50914" />
+                <stop offset="85%" stop-color="#8E040B" />
+                <stop offset="100%" stop-color="#4A0004" />
+              </linearGradient>
+
+              <!-- Inner Fold Cast Shadow for Authentic Netflix Ribbon Overlap -->
+              <linearGradient id="f2_fold_shadow" x1="110" y1="180" x2="135" y2="225" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="rgba(0, 0, 0, 0.95)" />
+                <stop offset="60%" stop-color="rgba(0, 0, 0, 0.45)" />
+                <stop offset="100%" stop-color="rgba(0, 0, 0, 0)" />
+              </linearGradient>
+
+              <filter id="f2_inner_shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="-2" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.8"/>
+              </filter>
+            </defs>
+
+            <!-- LEFT RIBBON STROKE (Front/Base layer) -->
+            <path d="M35 30 L110 230 L128 230 L53 30 Z" fill="url(#f2_left_ribbon)" />
+            
+            <!-- Left Ribbon Bevel / Highlight Edge -->
+            <path d="M36 30 L110 228" stroke="#FFA4A8" stroke-width="2.5" opacity="0.8" />
+            <!-- Left Ribbon Outer Shadow -->
+            <path d="M52 32 L126 230" stroke="#400002" stroke-width="2" opacity="0.9" />
+
+            <!-- RIGHT RIBBON STROKE (Overlapping with 3D Fold) -->
+            <!-- The right ribbon folds cleanly over the apex corner -->
+            <path d="M185 30 L110 230 L92 230 L167 30 Z" fill="url(#f2_right_ribbon)" filter="url(#f2_inner_shadow)" />
+            
+            <!-- Right Ribbon Bevel / Highlight Edge -->
+            <path d="M184 30 L110 228" stroke="#FFBAC0" stroke-width="2.5" opacity="0.85" />
+            <!-- Right Ribbon Outer Shadow -->
+            <path d="M168 32 L94 230" stroke="#3A0002" stroke-width="2" opacity="0.8" />
+
+            <!-- 3D Ribbon Fold & Shadow Crease at Bottom V Vertex -->
+            <polygon points="100,205 110,232 125,232 118,200" fill="url(#f2_fold_shadow)" />
+            <line x1="110" y1="202" x2="110" y2="232" stroke="#250002" stroke-width="2.5" />
+
+            <!-- Apex Hotspot Specular Flare -->
+            <circle cx="110" cy="230" r="3" fill="#FFFFFF" opacity="0.9" />
+          </svg>
+
+          <!-- Authentic Letter-spaced Subtitle Text -->
+          <div class="mt-6 text-center">
+            <h2 class="text-xs md:text-sm tracking-[0.32em] text-[#E0E0E0] font-medium uppercase font-inter drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+              VAIBHAVA KUMAR SHRIVASTAV · PORTFOLIO
+            </h2>
+            <div class="flex items-center justify-center gap-2 mt-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-brand shadow-[0_0_6px_#E50914]"></span>
+              <span class="text-[10px] font-mono text-white/60 tracking-wider">INITIALIZING SYSTEM STREAM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thin Red Loading Line (Frame 2: 70%) -->
+        <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-neutral-900">
+          <div class="h-full bg-brand shadow-[0_0_14px_#FF1E27]" style="width: 72%;"></div>
+        </div>
+      </div>
+
+      <!-- Frame Explanation Footer -->
+      <div class="p-4 bg-neutral-950/80 border-t border-brand/20 text-xs">
+        <p class="text-brand font-medium mb-1 flex items-center justify-between">
+          <span>Phase 2: Full Formation & "Ta-Dum" Apex</span>
+          <span class="text-[10px] font-mono text-white/50">4K ULTRA CINEMA</span>
+        </p>
+        <p class="text-white/65 text-[11px] leading-relaxed">
+          Dual faceted ribbon strokes interlock with bevel lighting and 3D creased overlap. Red and dark-red streaks fan out in high-fidelity contrast against pure #000.
+        </p>
+      </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- FRAME 3: V Zoomed in & Fading with Streaks -->
+    <!-- ============================================== -->
+    <div class="relative bg-black rounded-xl border border-white/15 overflow-hidden flex flex-col shadow-2xl group transition-all duration-300 hover:border-brand/40">
+      
+      <!-- Frame Meta Header -->
+      <div class="px-4 py-2.5 bg-neutral-950/90 border-b border-white/10 flex items-center justify-between text-xs font-mono z-10">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-brand"></span>
+          <span class="text-white/80 font-semibold tracking-wider">FRAME 03 : 2.0s – 2.8s</span>
+        </div>
+        <span class="text-white/40 tracking-wider">ZOOM & SPECTRUM WARP</span>
+      </div>
+
+      <!-- Frame Visual Container (Screen Aspect) -->
+      <div class="relative h-[480px] w-full bg-black flex flex-col items-center justify-center overflow-hidden">
+        
+        <!-- Intense Hyperspace Streak Explosion -->
+        <div class="absolute inset-0 pointer-events-none streak-lines opacity-75"></div>
+
+        <!-- Heavy Red Ambient Wash -->
+        <div class="absolute w-[450px] h-[450px] rounded-full bg-gradient-to-r from-brand/20 via-brand/45 to-brand/10 blur-[90px] pointer-events-none"></div>
+
+        <!-- Dense Fanning Streaks Dissolving V -->
+        <div class="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden">
+          <!-- Dense laser array simulating the Netflix spectral breakdown -->
+          <div class="w-[3px] h-[520px] bg-gradient-to-b from-transparent via-white to-transparent blur-[1px]"></div>
+          
+          <div class="absolute w-[2px] h-[520px] bg-gradient-to-b from-transparent via-brand to-transparent -translate-x-12 rotate-[-8deg]"></div>
+          <div class="absolute w-[4px] h-[520px] bg-gradient-to-b from-transparent via-[#ff2a34] to-transparent -translate-x-28 rotate-[-14deg]"></div>
+          <div class="absolute w-[2.5px] h-[520px] bg-gradient-to-b from-transparent via-[#730207] to-transparent -translate-x-48 rotate-[-20deg]"></div>
+          <div class="absolute w-[5px] h-[520px] bg-gradient-to-b from-transparent via-brand to-transparent -translate-x-72 rotate-[-26deg]"></div>
+          <div class="absolute w-[3px] h-[520px] bg-gradient-to-b from-transparent via-[#3D0003] to-transparent -translate-x-96 rotate-[-32deg]"></div>
+          <div class="absolute w-[2px] h-[520px] bg-gradient-to-b from-transparent via-brand/40 to-transparent -translate-x-[120px] rotate-[-38deg]"></div>
+
+          <div class="absolute w-[2px] h-[520px] bg-gradient-to-b from-transparent via-brand to-transparent translate-x-12 rotate-[8deg]"></div>
+          <div class="absolute w-[4px] h-[520px] bg-gradient-to-b from-transparent via-[#ff2a34] to-transparent translate-x-28 rotate-[14deg]"></div>
+          <div class="absolute w-[2.5px] h-[520px] bg-gradient-to-b from-transparent via-[#730207] to-transparent translate-x-48 rotate-[20deg]"></div>
+          <div class="absolute w-[5px] h-[520px] bg-gradient-to-b from-transparent via-brand to-transparent translate-x-72 rotate-[26deg]"></div>
+          <div class="absolute w-[3px] h-[520px] bg-gradient-to-b from-transparent via-[#3D0003] to-transparent translate-x-96 rotate-[32deg]"></div>
+          <div class="absolute w-[2px] h-[520px] bg-gradient-to-b from-transparent via-brand/40 to-transparent translate-x-[120px] rotate-[38deg]"></div>
+        </div>
+
+        <!-- SVG Graphic: Frame 3 - Massive Scaled Up & Translucent V Dispersing into Streaks -->
+        <div class="relative z-10 flex flex-col items-center transform scale-150 transition-transform">
+          <svg width="240" height="280" viewBox="0 0 220 260" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-45 filter blur-[1.2px]">
+            <defs>
+              <linearGradient id="f3_ribbon" x1="0" y1="0" x2="220" y2="260" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FF4D55" stop-opacity="0.9" />
+                <stop offset="50%" stop-color="#E50914" stop-opacity="0.6" />
+                <stop offset="100%" stop-color="#300003" stop-opacity="0.2" />
+              </linearGradient>
+            </defs>
+
+            <!-- Zoomed and disintegrating ribbon outlines -->
+            <path d="M35 30 L110 230 L128 230 L53 30 Z" fill="url(#f3_ribbon)" />
+            <path d="M185 30 L110 230 L92 230 L167 30 Z" fill="url(#f3_ribbon)" />
+            
+            <!-- High velocity streak bleed lines through the letter -->
+            <line x1="45" y1="10" x2="45" y2="260" stroke="#FF4D55" stroke-width="1.5" opacity="0.8" />
+            <line x1="80" y1="0" x2="80" y2="260" stroke="#E50914" stroke-width="2" opacity="0.7" />
+            <line x1="110" y1="0" x2="110" y2="260" stroke="#FFFFFF" stroke-width="2.5" opacity="0.9" />
+            <line x1="140" y1="0" x2="140" y2="260" stroke="#E50914" stroke-width="2" opacity="0.7" />
+            <line x1="175" y1="10" x2="175" y2="260" stroke="#FF4D55" stroke-width="1.5" opacity="0.8" />
+          </svg>
+
+          <!-- Label Fading Out into Darkness -->
+          <div class="mt-2 text-center opacity-30 transform scale-90">
+            <span class="text-[10px] tracking-[0.38em] text-white/50 font-medium uppercase font-inter blur-[0.5px]">
+              VAIBHAVA KUMAR SHRIVASTAV · PORTFOLIO
+            </span>
+            <div class="text-[9px] font-mono text-terminal/80 mt-1">
+              [ ACCESS GRANTED ➔ ENTERING INTERFACE ]
+            </div>
+          </div>
+        </div>
+
+        <!-- Thin Red Loading Line (Frame 3: 100% Complete) -->
+        <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-neutral-900">
+          <div class="h-full bg-brand shadow-[0_0_18px_#FF1E27]" style="width: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- Frame Explanation Footer -->
+      <div class="p-4 bg-neutral-950/80 border-t border-white/10 text-xs">
+        <p class="text-white/80 font-medium mb-1">Phase 3: Hyper-Zoom & Dissolve</p>
+        <p class="text-white/45 text-[11px] leading-relaxed">
+          The monogram expands toward the camera viewport and atomizes into vertical photonic barcode ribbons, transitioning seamlessly into the Portfolio Home.
+        </p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ============================================== -->
+  <!-- FULL-SCREEN IMMERSIVE PREVIEW (STANDALONE DESKTOP 1440PX) -->
+  <!-- ============================================== -->
+  <section class="max-w-[1400px] mx-auto px-6 py-10">
+    <div class="border border-white/15 rounded-2xl bg-black overflow-hidden shadow-2xl">
+      <div class="px-6 py-3 bg-neutral-950 border-b border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="w-3 h-3 rounded-full bg-red-600"></span>
+          <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+          <span class="w-3 h-3 rounded-full bg-green-500"></span>
+          <span class="text-xs font-mono text-white/60 ml-2">SIMULATED 1440 × 900 FULL-SCREEN EXPERIENCE</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-[11px] font-mono text-brand bg-brand/10 border border-brand/20 px-2.5 py-0.5 rounded">PURE #000 CINEMA CANVAS</span>
+        </div>
+      </div>
+
+      <!-- Full-screen canvas container -->
+      <div class="relative w-full h-[620px] bg-black flex flex-col items-center justify-center overflow-hidden">
+        
+        <!-- Background Ambient Red Radial Fanning -->
+        <div class="absolute w-[600px] h-[600px] rounded-full lens-flare blur-[100px] pointer-events-none"></div>
+
+        <!-- Vertical Streaks Fanning Behind V (Desktop 1440px Scale) -->
+        <div class="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden opacity-90">
+          <!-- Center spine streak -->
+          <div class="w-[2px] h-full bg-gradient-to-b from-transparent via-white/80 to-transparent blur-[0.5px]"></div>
+          
+          <!-- Symmetrical fan streaks -->
+          <div class="absolute w-[1.5px] h-full bg-gradient-to-b from-transparent via-brand to-transparent -translate-x-12 rotate-[-2deg]"></div>
+          <div class="absolute w-[3px] h-full bg-gradient-to-b from-transparent via-[#B20710] to-transparent -translate-x-28 rotate-[-5deg] opacity-80"></div>
+          <div class="absolute w-[1px] h-full bg-gradient-to-b from-transparent via-brand/60 to-transparent -translate-x-48 rotate-[-8deg]"></div>
+          <div class="absolute w-[4px] h-full bg-gradient-to-b from-transparent via-[#600005] to-transparent -translate-x-72 rotate-[-11deg] opacity-70"></div>
+          <div class="absolute w-[2px] h-full bg-gradient-to-b from-transparent via-brand/40 to-transparent -translate-x-96 rotate-[-14deg]"></div>
+          <div class="absolute w-[1.5px] h-full bg-gradient-to-b from-transparent via-[#380002] to-transparent -translate-x-[120px] rotate-[-17deg]"></div>
+          <div class="absolute w-[1px] h-full bg-gradient-to-b from-transparent via-brand/25 to-transparent -translate-x-[150px] rotate-[-20deg]"></div>
+
+          <div class="absolute w-[1.5px] h-full bg-gradient-to-b from-transparent via-brand to-transparent translate-x-12 rotate-[2deg]"></div>
+          <div class="absolute w-[3px] h-full bg-gradient-to-b from-transparent via-[#B20710] to-transparent translate-x-28 rotate-[5deg] opacity-80"></div>
+          <div class="absolute w-[1px] h-full bg-gradient-to-b from-transparent via-brand/60 to-transparent translate-x-48 rotate-[8deg]"></div>
+          <div class="absolute w-[4px] h-full bg-gradient-to-b from-transparent via-[#600005] to-transparent translate-x-72 rotate-[11deg] opacity-70"></div>
+          <div class="absolute w-[2px] h-full bg-gradient-to-b from-transparent via-brand/40 to-transparent translate-x-96 rotate-[14deg]"></div>
+          <div class="absolute w-[1.5px] h-full bg-gradient-to-b from-transparent via-[#380002] to-transparent translate-x-[120px] rotate-[17deg]"></div>
+          <div class="absolute w-[1px] h-full bg-gradient-to-b from-transparent via-brand/25 to-transparent translate-x-[150px] rotate-[20deg]"></div>
+        </div>
+
+        <!-- Huge Bold Letter V (Cinematic Scale) -->
+        <div class="relative z-10 flex flex-col items-center">
+          <svg width="280" height="330" viewBox="0 0 280 330" fill="none" xmlns="http://www.w3.org/2000/svg" class="glow-active">
+            <defs>
+              <linearGradient id="hero_left" x1="30" y1="20" x2="140" y2="300" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FF242D" />
+                <stop offset="25%" stop-color="#E50914" />
+                <stop offset="65%" stop-color="#B20710" />
+                <stop offset="100%" stop-color="#6B0005" />
+              </linearGradient>
+
+              <linearGradient id="hero_right" x1="250" y1="20" x2="135" y2="300" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FF3841" />
+                <stop offset="35%" stop-color="#E50914" />
+                <stop offset="80%" stop-color="#90040C" />
+                <stop offset="100%" stop-color="#420003" />
+              </linearGradient>
+
+              <linearGradient id="hero_fold_shadow" x1="140" y1="230" x2="170" y2="295" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="rgba(0, 0, 0, 0.95)" />
+                <stop offset="70%" stop-color="rgba(0, 0, 0, 0.5)" />
+                <stop offset="100%" stop-color="rgba(0, 0, 0, 0)" />
+              </linearGradient>
+
+              <filter id="hero_shadow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="-4" dy="6" stdDeviation="7" flood-color="#000000" flood-opacity="0.9"/>
+              </filter>
+            </defs>
+
+            <!-- LEFT RIBBON STROKE -->
+            <path d="M45 40 L140 290 L163 290 L68 40 Z" fill="url(#hero_left)" />
+            <!-- Left Highlight Sheen -->
+            <path d="M46 40 L140 288" stroke="#FFA4A8" stroke-width="3" opacity="0.85" />
+            <!-- Left Outer Dark Edge -->
+            <path d="M67 42 L161 290" stroke="#3D0002" stroke-width="2.5" opacity="0.9" />
+
+            <!-- RIGHT RIBBON STROKE (Folds in front with shadow) -->
+            <path d="M235 40 L140 290 L117 290 L212 40 Z" fill="url(#hero_right)" filter="url(#hero_shadow)" />
+            <!-- Right Highlight Sheen -->
+            <path d="M234 40 L140 288" stroke="#FFBAC0" stroke-width="3" opacity="0.9" />
+            <!-- Right Outer Edge -->
+            <path d="M213 42 L119 290" stroke="#350002" stroke-width="2.5" opacity="0.85" />
+
+            <!-- 3D Ribbon Fold & Shadow Crease at Apex -->
+            <polygon points="128,260 140,292 160,292 150,250" fill="url(#hero_fold_shadow)" />
+            <line x1="140" y1="250" x2="140" y2="292" stroke="#1F0001" stroke-width="3" />
+
+            <!-- High Specular Gleam at Vertex -->
+            <circle cx="140" cy="290" r="3.5" fill="#FFFFFF" opacity="0.95" />
+          </svg>
+
+          <!-- Small Light-Gray Letter-Spaced Typography -->
+          <div class="mt-8 text-center">
+            <h3 class="text-sm md:text-base tracking-[0.35em] text-[#D4D4D4] font-medium uppercase font-inter drop-shadow-[0_2px_12px_rgba(0,0,0,1)]">
+              VAIBHAVA KUMAR SHRIVASTAV · PORTFOLIO
+            </h3>
+            <p class="text-[11px] font-mono text-white/40 tracking-[0.2em] mt-2">
+              STREAMING ARCHITECTURE // CLOUD & FULL-STACK
+            </p>
+          </div>
+        </div>
+
+        <!-- Thin Red Loading Line at Bottom of Screen -->
+        <div class="absolute bottom-0 left-0 right-0 h-[2.5px] bg-neutral-950">
+          <div class="h-full bg-brand shadow-[0_0_15px_#FF1E27]" style="width: 78%; animation: loadProgress 3.5s ease-in-out infinite;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Telemetry / Specifications Bar -->
+  <footer class="max-w-[1400px] mx-auto px-6 pb-12 flex flex-col md:flex-row items-center justify-between text-xs font-mono text-white/40 border-t border-white/10 pt-6">
+    <div>
+      VAIBHAVA KUMAR SHRIVASTAV · CINEMATIC NETFLIX PRELOADER ARCHITECTURE
+    </div>
+    <div class="flex items-center gap-6 mt-3 md:mt-0">
+      <span>COLOR: #000000 / #E50914</span>
+      <span>ASPECT: 16:9 CINEMASCOPE</span>
+      <span class="text-brand">TA-DUM TIMING: 2.8 SECONDS TOTAL</span>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+[
+  {
+    "order": 1,
+    "title": "Cinematic Preloader Sequence - Desktop",
+    "screenId": "d3169182465744e089e920c07c836f9e",
+    "htmlFile": "screens/01-cinematic-preloader-sequence-desktop.html",
+    "shotFile": "shots/01-cinematic-preloader-sequence-desktop.png"
+  },
+  {
+    "order": 2,
+    "title": "Skills Character Sheet",
+    "screenId": "51925be749614db3a7f17cf1dbe71572",
+    "htmlFile": "screens/02-skills-character-sheet.html",
+    "shotFile": "shots/02-skills-character-sheet.png"
+  },
+  {
+    "order": 3,
+    "title": "Portfolio Home - Mobile (390px)",
+    "screenId": "76fea61e29564f969950f71664bd2faf",
+    "htmlFile": "screens/03-portfolio-home-mobile-390px.html",
+    "shotFile": "shots/03-portfolio-home-mobile-390px.png"
+  },
+  {
+    "order": 4,
+    "title": "Project Detail Modal",
+    "screenId": "a240e3bb109e446aa84429ee6a7c3cc0",
+    "htmlFile": "screens/04-project-detail-modal.html",
+    "shotFile": "shots/04-project-detail-modal.png"
+  },
+  {
+    "order": 5,
+    "title": "Portfolio Home - With Contact Section",
+    "screenId": "e8e6d03f1e044dc7a09535846357f4ca",
+    "htmlFile": "screens/05-portfolio-home-with-contact-section.html",
+    "shotFile": "shots/05-portfolio-home-with-contact-section.png"
+  },
+  {
+    "order": 6,
+    "title": "Cinematic Preloader Sequence - Mobile (390px)",
+    "screenId": "3f7e3a2c181b415ea008322f25079de0",
+    "htmlFile": "screens/06-cinematic-preloader-sequence-mobile-390px.html",
+    "shotFile": "shots/06-cinematic-preloader-sequence-mobile-390px.png"
+  },
+  {
+    "order": 7,
+    "title": "Portfolio Home - Streaming Experience",
+    "screenId": "62d68ea039844c319f561ea2535f38e4",
+    "htmlFile": "screens/07-portfolio-home-streaming-experience.html",
+    "shotFile": "shots/07-portfolio-home-streaming-experience.png"
+  },
+  {
+    "order": 8,
+    "title": "Who's Watching? Profile Select",
+    "screenId": "f928071da83742f4901468fd352e5153",
+    "htmlFile": "screens/08-who-s-watching-profile-select.html",
+    "shotFile": "shots/08-who-s-watching-profile-select.png"
+  },
+  {
+    "order": 9,
+    "title": "Terminal Overlay & Achievement Toast",
+    "screenId": "250a237c8fe445a49deaddf15ed12582",
+    "htmlFile": "screens/09-terminal-overlay-achievement-toast.html",
+    "shotFile": "shots/09-terminal-overlay-achievement-toast.png"
+  }
+]

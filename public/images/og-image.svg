@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#131313;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A1A1A;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#E50914;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F40612;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#39FF14;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00E5FF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  <!-- Radial glow -->
+  <ellipse cx="600" cy="315" rx="400" ry="200" fill="url(#textGrad)" opacity="0.1"/>
+  <!-- Brand -->
+  <text x="600" y="220" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="bold" font-size="80" fill="url(#textGrad)">VKS</text>
+  <text x="600" y="300" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="normal" font-size="36" fill="white" opacity="0.9">Vaibhava Kumar Shrivastav</text>
+  <text x="600" y="350" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="normal" font-size="24" fill="url(#accentGrad)">Full Stack Developer • AWS Enthusiast</text>
+  <text x="600" y="420" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="normal" font-size="20" fill="white" opacity="0.7">Building GLA Exchange • Netflix-inspired Portfolio</text>
+  <!-- Bottom accent line -->
+  <line x1="400" y1="480" x2="800" y2="480" stroke="url(#accentGrad)" stroke-width="3"/>
+</svg>
