@@ -1,6 +1,6 @@
 /**
  * ==========================================================================
- * App — Root component with layout and routing
+ * App — Root Component with Layout, Persona-Tailored Rows, and Modals
  * ==========================================================================
  */
 import { useEffect } from 'react';
@@ -8,19 +8,21 @@ import { Navbar } from './components/Navbar';
 import { Preloader } from './components/Preloader';
 import { ProfileSelect } from './components/ProfileSelect';
 import { Hero } from './components/Hero';
-import { About } from './components/About';
-import { SkillsSheet } from './components/SkillsSheet';
 import { Projects } from './components/Projects';
+import { About } from './components/About';
+import { AwsServicesRow } from './components/AwsServicesRow';
+import { ProjectModal } from './components/ProjectModal';
+import { SkillsSheet } from './components/SkillsSheet';
 import { Achievements } from './components/Achievements';
 import { ContactSection } from './components/ContactSection';
 import { Terminal } from './components/Terminal';
 import { ToastContainer } from './components/Toast';
 import { Footer } from './components/Footer';
-import { useGame } from './context/GameContext';
-import { useInView } from './hooks/useInView';
+import { useGame, usePersona } from './context/GameContext';
 
 function App() {
-  const { state, actions } = useGame();
+  const { actions } = useGame();
+  const { personaId, firstRowOrder } = usePersona();
 
   // Keyboard shortcut to toggle terminal (Ctrl/Cmd + `)
   useEffect(() => {
@@ -47,9 +49,8 @@ function App() {
         actions.addEasterEgg('konami');
         actions.addToast({
           type: 'achievement',
-          title: 'Konami Code!',
-          message: '🎮 You\'ve unlocked the Terminal Master achievement!',
-          persist: true
+          title: 'Konami Code Master!',
+          message: '🎮 Terminal secret unlocked!'
         });
         sequence.length = 0;
       }
@@ -58,6 +59,31 @@ function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [actions]);
+
+  // Determine row order based on persona
+  // - Hackathon Judge: AWS services first (EduCloud real stack: EC2, S3, IAM, VPC, Terraform)
+  // - Hiring Manager: Projects first
+  // - Recruiter: TODO Stage D skills row; projects first for now
+  // - Fellow Dev: TODO Stage E terminal row; projects first for now
+  const renderRows = () => {
+    if (personaId === 'judge') {
+      return (
+        <>
+          <AwsServicesRow />
+          <Projects />
+          <About />
+        </>
+      );
+    }
+
+    // Default order: Top Projects -> About Me: Season 1
+    return (
+      <>
+        <Projects />
+        <About />
+      </>
+    );
+  };
 
   return (
     <>
@@ -76,12 +102,18 @@ function App() {
       {/* Main Content */}
       <main id="main-content" role="main">
         <Hero />
-        <About />
+
+        {/* Persona-Ordered Shelves */}
+        {renderRows()}
+
+        {/* Placeholder sections with IDs preserved for Navbar scroll-spy */}
         <SkillsSheet />
-        <Projects />
         <Achievements />
         <ContactSection />
       </main>
+
+      {/* Project Detail Modal */}
+      <ProjectModal />
 
       {/* Footer */}
       <Footer />

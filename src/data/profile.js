@@ -627,6 +627,22 @@ export const visitorPersonas = [
   }
 ];
 
+export const defaultPersona = {
+  id: 'default',
+  key: 'default',
+  title: 'Visitor',
+  subtitle: 'Standard Showcase',
+  badge: 'DEFAULT',
+  tag: 'EXPLORER',
+  accentColor: '#E50914',
+  glowColor: 'rgba(229, 9, 20, 0.35)',
+  shortcut: '0',
+  tagline: profile.tagline,
+  firstRowOrder: ['projects', 'about'],
+  heroActionText: 'View Projects',
+  heroActionTarget: '#projects'
+};
+
 // Default export for convenience
 export default {
   profile,
@@ -642,5 +658,6 @@ export default {
   contact,
   site,
   easterEggs,
-  visitorPersonas
+  visitorPersonas,
+  defaultPersona
 };
