@@ -14,6 +14,7 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import { useUI, useGameActions } from '../context/GameContext';
+import { Icon } from './Icon';
 
 export function ToastContainer() {
   const { toasts, reducedMotion } = useUI();
@@ -69,7 +70,10 @@ export function ToastContainer() {
             <div className="toast-card__icon-pulse" />
           )}
           <span className="toast-card__icon font-mono">
-            {activeToast.icon || (isAchievement ? '🎖️' : isLevelUp ? '⚡' : '✨')}
+            <Icon
+              name={activeToast.icon || (isAchievement ? 'trophy' : isLevelUp ? 'bolt' : 'sparkles')}
+              size={20}
+            />
           </span>
         </div>
 
@@ -111,20 +115,7 @@ export function ToastContainer() {
           aria-label="Dismiss notification"
           title="Dismiss"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
+          <Icon name="x" size={14} />
         </button>
       </div>
     </aside>
