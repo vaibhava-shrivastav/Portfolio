@@ -174,11 +174,12 @@ export function Navbar() {
             <ul className="navbar__nav-list" role="menubar">
               {SECTIONS.map((section) => {
                 const isActive = activeSection === section.id;
+                const isContactLevel5 = section.id === 'contact' && currentLevel >= 5;
                 return (
                   <li key={section.id} role="none" className="navbar__nav-item">
                     <a
                       href={`#${section.id}`}
-                      className={`navbar__link ${isActive ? 'navbar__link--active' : ''}`}
+                      className={`navbar__link ${isActive ? 'navbar__link--active' : ''} ${isContactLevel5 ? 'level-5-glow' : ''}`}
                       role="menuitem"
                       aria-current={isActive ? 'page' : undefined}
                       onClick={(e) => {
@@ -407,11 +408,12 @@ export function Navbar() {
           <ul className="navbar__mobile-nav-list" role="menu">
             {SECTIONS.map((section) => {
               const isActive = activeSection === section.id;
+              const isContactLevel5 = section.id === 'contact' && currentLevel >= 5;
               return (
                 <li key={section.id} role="none" className="navbar__mobile-nav-item">
                   <a
                     href={`#${section.id}`}
-                    className={`navbar__mobile-link ${isActive ? 'navbar__mobile-link--active' : ''}`}
+                    className={`navbar__mobile-link ${isActive ? 'navbar__mobile-link--active' : ''} ${isContactLevel5 ? 'level-5-glow' : ''}`}
                     role="menuitem"
                     onClick={(e) => {
                       e.preventDefault();
