@@ -8,8 +8,7 @@
 
 export const profile = {
   name: "Vaibhava Kumar Shrivastav",
-  headline: "B.Tech Computer Science Student · Full-Stack & Cloud Builder",
-  tagline: "Building scalable systems, one commit at a time.",
+  headline: "Computer Science Student & AWS Cloud / Full-Stack Builder",
   welcome: "Welcome. I'm Vaibhava, pick a profile to see the portfolio tailored for you.",
   pronoun: "he/him",
   location: "Lucknow, Uttar Pradesh, India",

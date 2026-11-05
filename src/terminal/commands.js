@@ -527,7 +527,7 @@ export const commands = {
       output: [
         { type: 'warning', text: '>>> [CLASSIFIED PROTOCOL UNLOCKED] <<<' },
         { type: 'success', text: 'Hello, explorer! Thank you for inspecting the terminal.' },
-        { type: 'text', text: `"${profile.tagline}"` },
+        { type: 'text', text: `"${profile.headline}"` },
         { type: 'info', text: 'Achievement Unlocked: Secret Protocol (+100 XP awarded)' }
       ],
       sideEffects: [

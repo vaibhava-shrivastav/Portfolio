@@ -18,7 +18,7 @@ import { profile as profileData, projects } from '../data/profile';
 import { useGame, useUI } from '../context/GameContext';
 import { Icon } from './Icon';
 
-const FULL_GREETING = '> VAIBHAVA.K.SHRIVASTAV';
+const FULL_GREETING = '> whoami';
 const HINT_STORAGE_KEY = 'netflix-portfolio-onboarding-dismissed';
 
 export function Hero() {
@@ -121,12 +121,9 @@ export function Hero() {
               {profileData.name}
             </h1>
 
-            {/* Factual Headline & Tagline */}
+            {/* Factual Headline */}
             <p className="hero-billboard__headline">
-              B.Tech Computer Science Student · Full-Stack &amp; Cloud Builder
-            </p>
-            <p className="hero-billboard__tagline">
-              {profileData.tagline}
+              {profileData.headline}
             </p>
 
             {/* Primary Action Buttons: Play, Resume, Contact */}
