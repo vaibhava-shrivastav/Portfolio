@@ -121,7 +121,7 @@ export function Preloader() {
   if (!shouldShow) return null;
 
   // Telemetry tick text based on current phase
-  let tickerText = '[ 32% SYNTHESIZING BUFFER ]';
+  let tickerText = '[ 32% SYNTHESIZING ASSETS ]';
   if (phase === 'hero') tickerText = '[ INITIALIZING SYSTEM STREAM ]';
   if (phase === 'warp') tickerText = '[ 100% ACCESS GRANTED ➔ ENTERING INTERFACE ]';
 
