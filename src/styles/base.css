@@ -72,19 +72,32 @@ body {
   color: var(--color-text-primary);
 }
 
-/* Focus Visible — Accessibility */
+/* Focus Visible — Accessibility & Interactive Polish */
 :focus-visible {
-  outline: none;
-  box-shadow: var(--shadow-focus);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  box-shadow: 0 0 14px rgba(229, 9, 20, 0.5);
   border-radius: var(--radius-sm);
 }
 
 :focus-visible[data-focus-terminal] {
+  outline-color: var(--color-terminal);
   box-shadow: var(--shadow-focus-terminal);
 }
 
 :focus-visible[data-focus-cyan] {
+  outline-color: var(--color-cyan);
   box-shadow: var(--shadow-focus-cyan);
+}
+
+/* Lightweight Scroll Motion & Reveals */
+@media (prefers-reduced-motion: no-preference) {
+  .section,
+  .row-shelf,
+  .skills-sheet-section,
+  .contact-section {
+    animation: fadeIn var(--duration-normal) var(--ease-out) both;
+  }
 }
 
 /* Skip Link */
