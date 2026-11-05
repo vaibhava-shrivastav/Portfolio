@@ -15,14 +15,13 @@
  */
 import { useState, useEffect } from 'react';
 import { profile as profileData, projects } from '../data/profile';
-import { useGame, usePersona, useUI } from '../context/GameContext';
+import { useGame, useUI } from '../context/GameContext';
 
 const FULL_GREETING = '> VAIBHAVA.K.SHRIVASTAV';
 const HINT_STORAGE_KEY = 'netflix-portfolio-onboarding-dismissed';
 
 export function Hero() {
   const { state, actions } = useGame();
-  const { tagline } = usePersona();
   const { openProjectModal, reducedMotion } = useUI();
   const [typedText, setTypedText] = useState(reducedMotion ? FULL_GREETING : '');
   const [hintDismissed, setHintDismissed] = useState(() => {
@@ -126,7 +125,7 @@ export function Hero() {
               B.Tech Computer Science Student · Full-Stack &amp; Cloud Builder
             </p>
             <p className="hero-billboard__tagline">
-              {tagline || 'Building GLA Exchange and EduCloud. AWS certified.'}
+              {profileData.tagline}
             </p>
 
             {/* Primary Action Buttons: Play, Resume, Contact */}

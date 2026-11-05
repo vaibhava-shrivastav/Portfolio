@@ -88,7 +88,7 @@ export function SkillsSheet() {
           <div className="skills-sheet-header__right font-mono">
             <div className="skills-sheet-xp-badge">
               <span className="skills-sheet-xp-label">TOTAL XP POOL</span>
-              <span className="skills-sheet-xp-val text-terminal">{totalXp.toLocaleString()} PTS</span>
+              <span className="skills-sheet-xp-val text-terminal">{(totalXp ?? xp ?? 0).toLocaleString()} PTS</span>
             </div>
             <div className="skills-sheet-rank-badge">
               <span className="skills-sheet-xp-label">OPERATOR RANK</span>

@@ -54,7 +54,6 @@ export function Navbar() {
   const currentLevel = state.level || 1;
   const currentXp = state.xp || 0;
   const levelProgress = calculateLevelProgress(currentXp, currentLevel);
-  const selectedPersona = state.session?.selectedProfile;
 
   // Solid background on scroll & body class for mobile nav
   useEffect(() => {
@@ -132,18 +131,8 @@ export function Navbar() {
     }
   };
 
-  const handleSwitchProfile = () => {
-    if (actions.setProfileSelected) {
-      actions.setProfileSelected(false);
-    }
-    setAvatarOpen(false);
-    setMobileOpen(false);
-    // Scroll to top where profile select or hero lives
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   const handleResetProgress = () => {
-    if (window.confirm('Reset all progress, XP, and profile choices?')) {
+    if (window.confirm('Reset all progress and XP?')) {
       if (actions.resetGame) {
         actions.resetGame();
       }
@@ -290,38 +279,12 @@ export function Navbar() {
                 aria-label="Profile actions"
               >
                 <div className="navbar__avatar-dropdown-header">
-                  <span className="navbar__avatar-dropdown-label">CURRENT VISITOR</span>
-                  <p className="navbar__avatar-dropdown-persona">
-                    {selectedPersona ? (typeof selectedPersona === 'object' ? selectedPersona.title || selectedPersona.id : selectedPersona) : 'Guest Visitor'}
-                  </p>
+                  <span className="navbar__avatar-dropdown-label">VISITOR STATUS</span>
                   <p className="navbar__avatar-dropdown-stats">
                     Level {currentLevel} · {currentXp} XP
                   </p>
                 </div>
                 <div className="navbar__avatar-dropdown-divider" />
-                <button
-                  type="button"
-                  className="navbar__avatar-dropdown-item"
-                  role="menuitem"
-                  onClick={handleSwitchProfile}
-                >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="8.5" cy="7" r="4" />
-                    <polyline points="17 11 19 13 23 9" />
-                  </svg>
-                  Switch Profile
-                </button>
                 <button
                   type="button"
                   className="navbar__avatar-dropdown-item navbar__avatar-dropdown-item--danger"
@@ -441,13 +404,6 @@ export function Navbar() {
 
           {/* Mobile Action Controls */}
           <div className="navbar__mobile-actions">
-            <button
-              type="button"
-              className="btn btn--secondary btn--full"
-              onClick={handleSwitchProfile}
-            >
-              Switch Profile Persona
-            </button>
             <button
               type="button"
               className="navbar__mobile-reset-btn"
