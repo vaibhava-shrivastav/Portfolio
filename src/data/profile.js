@@ -61,7 +61,9 @@ export const education = [
     field: "Computer Science",
     period: "2024 — 2028",
     location: "Mathura, Uttar Pradesh, India",
-    gpa: "8.8/10", // CPI 8.8
+    score: "CPI 8.8",
+    cpi: "CPI 8.8",
+    gpa: "CPI 8.8",
     honors: [],
     relevantCoursework: [
       // NOTE: Inferred from skills section; resume does not list specific courses
@@ -80,6 +82,7 @@ export const education = [
     field: "",
     period: "2023",
     location: "India",
+    score: "89.8%",
     gpa: "89.8%",
     honors: [],
     relevantCoursework: [],
@@ -92,6 +95,7 @@ export const education = [
     field: "",
     period: "2021",
     location: "India",
+    score: "86.2%",
     gpa: "86.2%",
     honors: [],
     relevantCoursework: [],
