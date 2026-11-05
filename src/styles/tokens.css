@@ -169,6 +169,10 @@
   /* ==========================================================================
      6. GRID & LAYOUT TOKENS
      ========================================================================== */
+  --nav-height: 64px;
+  --container-max: 1280px;
+  --container-padding: clamp(1rem, 3.5vw, 2.5rem);
+
   --container-sm: 640px;
   --container-md: 768px;
   --container-lg: 1024px;

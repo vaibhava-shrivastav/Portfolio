@@ -21,8 +21,8 @@ export function Projects() {
     <div id="projects" className="projects-section">
       <Row
         title="Top Projects"
-        subtitle="Trending Production & Cloud Platforms"
-        badgeText="TOP 2 TODAY"
+        subtitle="Production & Cloud Applications"
+        badgeText="FEATURED"
         items={projects}
         renderItem={(project, index) => (
           <ProjectCard

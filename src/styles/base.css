@@ -72,19 +72,32 @@ body {
   color: var(--color-text-primary);
 }
 
-/* Focus Visible — Accessibility */
+/* Focus Visible — Accessibility & Interactive Polish */
 :focus-visible {
-  outline: none;
-  box-shadow: var(--shadow-focus);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  box-shadow: 0 0 14px rgba(229, 9, 20, 0.5);
   border-radius: var(--radius-sm);
 }
 
 :focus-visible[data-focus-terminal] {
+  outline-color: var(--color-terminal);
   box-shadow: var(--shadow-focus-terminal);
 }
 
 :focus-visible[data-focus-cyan] {
+  outline-color: var(--color-cyan);
   box-shadow: var(--shadow-focus-cyan);
+}
+
+/* Lightweight Scroll Motion & Reveals */
+@media (prefers-reduced-motion: no-preference) {
+  .section,
+  .row-shelf,
+  .skills-sheet-section,
+  .contact-section {
+    animation: fadeIn var(--duration-normal) var(--ease-out) both;
+  }
 }
 
 /* Skip Link */
@@ -117,18 +130,15 @@ body {
    REUSABLE UTILITY CLASSES
    ========================================================================== */
 
-/* Container */
+/* Container — Unified 1280px Grid & Fluid Padding */
 .container {
   width: 100%;
-  max-width: var(--container-xl);
-  margin: 0 auto;
-  padding: 0 var(--page-margin);
-}
-
-@media (min-width: 1440px) {
-  .container {
-    max-width: var(--container-2xl);
-  }
+  max-width: var(--container-max, 1280px);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--container-padding, clamp(1rem, 3.5vw, 2.5rem));
+  padding-right: var(--container-padding, clamp(1rem, 3.5vw, 2.5rem));
+  box-sizing: border-box;
 }
 
 /* Grid System */
@@ -215,7 +225,18 @@ body {
 .text-4xl { font-size: var(--text-4xl); }
 .text-5xl { font-size: var(--text-5xl); }
 
-/* Section */
+/* Section — Anchor Offset for Fixed Navbar & Spacing */
+.section,
+section[id],
+#hero,
+#about,
+#skills,
+#projects,
+#achievements,
+#contact {
+  scroll-margin-top: calc(var(--nav-height, 64px) + 1.5rem);
+}
+
 .section {
   padding: var(--section-gap) 0;
 }

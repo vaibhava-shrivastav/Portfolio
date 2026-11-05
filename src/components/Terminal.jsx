@@ -144,41 +144,42 @@ export function Terminal() {
 
   return (
     <>
-      {/* Floating Bottom-Right Launcher Widget */}
-      <aside className="terminal-launcher-container" aria-label="Terminal discovery launcher">
-        {/* One-Time Hint Banner */}
-        {showHintBanner && !terminalOpen && (
-          <div className="terminal-hint-banner font-mono" role="status">
-            <span className="terminal-hint-banner__text">
-              💡 Tip: Press <kbd className="terminal-kbd">`</kbd> for interactive CLI
-            </span>
-            <button
-              type="button"
-              onClick={dismissHintBanner}
-              className="terminal-hint-banner__close"
-              aria-label="Dismiss terminal hint"
-            >
-              ×
-            </button>
-          </div>
-        )}
+      {/* Floating Bottom-Right Launcher Widget (Mobile / Small Screen only) */}
+      {!terminalOpen && !modalOpen && (
+        <aside className="terminal-launcher-container" aria-label="Terminal discovery launcher">
+          {/* One-Time Hint Banner */}
+          {showHintBanner && (
+            <div className="terminal-hint-banner font-mono" role="status">
+              <span className="terminal-hint-banner__text">
+                💡 Tip: Press <kbd className="terminal-kbd">`</kbd> for interactive CLI
+              </span>
+              <button
+                type="button"
+                onClick={dismissHintBanner}
+                className="terminal-hint-banner__close"
+                aria-label="Dismiss terminal hint"
+              >
+                ×
+              </button>
+            </div>
+          )}
 
-        {/* Launcher Button */}
-        <button
-          ref={launcherRef}
-          type="button"
-          onClick={handleLauncherClick}
-          className={`terminal-launcher-btn font-mono ${terminalOpen ? 'terminal-launcher-btn--active' : ''}`}
-          aria-expanded={terminalOpen}
-          aria-haspopup="dialog"
-          title="Press ` to open terminal"
-        >
-          <span className="terminal-launcher-btn__pulse" aria-hidden="true" />
-          <span className="terminal-launcher-btn__prompt font-bold">&gt;_</span>
-          <span className="terminal-launcher-btn__label">Terminal</span>
-          <kbd className="terminal-launcher-btn__kbd hidden sm:inline" aria-hidden="true">`</kbd>
-        </button>
-      </aside>
+          {/* Launcher Button */}
+          <button
+            ref={launcherRef}
+            type="button"
+            onClick={handleLauncherClick}
+            className="terminal-launcher-btn font-mono"
+            aria-expanded="false"
+            aria-haspopup="dialog"
+            title="Press ` to open terminal"
+          >
+            <span className="terminal-launcher-btn__pulse" aria-hidden="true" />
+            <span className="terminal-launcher-btn__prompt font-bold">&gt;_</span>
+            <span className="terminal-launcher-btn__label">Terminal</span>
+          </button>
+        </aside>
+      )}
 
       {/* Lazy Loaded Terminal Drawer */}
       {terminalOpen && (

@@ -56,7 +56,7 @@ export function Navbar() {
   const levelProgress = calculateLevelProgress(currentXp, currentLevel);
   const selectedPersona = state.session?.selectedProfile;
 
-  // Solid background on scroll
+  // Solid background on scroll & body class for mobile nav
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -64,6 +64,15 @@ export function Navbar() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.classList.add('mobile-nav-open');
+    } else {
+      document.body.classList.remove('mobile-nav-open');
+    }
+    return () => document.body.classList.remove('mobile-nav-open');
+  }, [mobileOpen]);
 
   // Scroll-spy via IntersectionObserver
   useEffect(() => {
@@ -198,14 +207,15 @@ export function Navbar() {
 
         {/* Right Section: XP Bar, Avatar Menu & Mobile Toggle */}
         <div className="navbar__right">
-          {/* XP Bar (Desktop / Tablet) */}
+          {/* XP Indicator (Compact on small screens, expanded track on wider screens) */}
           <div
             className="navbar__xp"
             role="status"
             aria-label={`Visitor Level ${currentLevel}, ${currentXp} Experience Points`}
           >
-            <div className="navbar__xp-header">
-              <span className="navbar__xp-level">LEVEL {currentLevel}</span>
+            <div className="navbar__xp-header font-mono">
+              <span className="navbar__xp-level">Lv {currentLevel}</span>
+              <span className="navbar__xp-sep" aria-hidden="true">·</span>
               <span className="navbar__xp-text">{currentXp} XP</span>
             </div>
             <div
@@ -222,7 +232,7 @@ export function Navbar() {
             </div>
           </div>
 
-          {/* Terminal Quick Button */}
+          {/* Terminal Quick Button (Desktop / Tablet) */}
           {actions.toggleTerminal && (
             <button
               type="button"
@@ -232,8 +242,8 @@ export function Navbar() {
               title="Toggle terminal (`)"
             >
               <svg
-                width="16"
-                height="16"
+                width="15"
+                height="15"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -246,6 +256,7 @@ export function Navbar() {
                 <line x1="12" y1="19" x2="20" y2="19" />
               </svg>
               <span className="navbar__terminal-text">Terminal</span>
+              <kbd className="navbar__terminal-kbd" aria-hidden="true">`</kbd>
             </button>
           )}
 
