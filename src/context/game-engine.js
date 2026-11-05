@@ -13,7 +13,7 @@ export const STORAGE_VERSION = 3;
  * Maximum achievable XP across all discrete game actions.
  * Level 5 ("Hired!") is reached at 500 XP.
  */
-export const MAX_TOTAL_XP = 555;
+export const MAX_TOTAL_XP = 570;
 
 /**
  * Known discrete actions that award XP or trigger badges.
@@ -31,8 +31,11 @@ export const KNOWN_ACTIONS = {
   contact_form_sent: 20,
 
   // Projects (25 XP each, max 2 = 50 XP)
-  'project:open:proj-1': 25,
-  'project:open:proj-2': 25,
+  'project:open:gla-exchange': 25,
+  'project:open:educloud': 25,
+
+  // Live project link (15 XP, only GLA Exchange has a live link)
+  'project:live:gla-exchange': 15,
 
   // Terminal
   terminal_first_open: 50,
@@ -54,21 +57,17 @@ export const KNOWN_ACTIONS = {
   'command:github': 10,
   'command:linkedin': 10,
   'command:deploy --global': 10,
-  'command:deploy': 10,
   'command:theme': 10,
   'command:clear': 10,
 
   // Link clicks (15 XP each, max 3 link clicks = 45 XP)
-  'link_click:resume': 15,
   'link_click:github': 15,
   'link_click:linkedin': 15,
-  'project:live:proj-1': 15,
-  'project:live:proj-2': 15,
+  'link_click:resume': 15,
 
   // Zero-XP Badge triggers (valid actions, 0 XP)
   preloader_finish: 0,
   certifications_view: 0,
-  aws_services_view: 0,
   'skill_cat:Languages': 0,
   'skill_cat:Frameworks & Libraries': 0,
   'skill_cat:Cloud & DevOps': 0,
@@ -106,11 +105,15 @@ export function calculateLevelProgress(xp = 0) {
  * Pure function deriving badges from awarded action IDs and existing unlock timestamps.
  * Returns { unlocked, timestamps, newlyUnlockedKeys }
  */
-export function deriveBadges(awardedActionIds = [], existingTimestamps = {}) {
+export function deriveBadges(awardedActionIds = [], existingTimestamps = {}, currentXp = null) {
   const ids = new Set(awardedActionIds || []);
   const timestamps = { ...(existingTimestamps || {}) };
   const newlyUnlockedKeys = [];
   const now = new Date().toISOString();
+
+  const xp = typeof currentXp === 'number' && currentXp >= 0
+    ? currentXp
+    : recomputeXpFromActions(awardedActionIds);
 
   const evaluate = (key, condition) => {
     const isUnlocked = Boolean(condition || timestamps[key]);
@@ -122,8 +125,8 @@ export function deriveBadges(awardedActionIds = [], existingTimestamps = {}) {
   };
 
   const unlocked = {
-    // 1. Pilot Episode (preloader finished)
-    pilot_episode: evaluate('pilot_episode', ids.has('preloader_finish')),
+    // 1. Pilot Episode (preloader finished or entered portfolio)
+    pilot_episode: evaluate('pilot_episode', ids.has('preloader_finish') || ids.has('enter_portfolio')),
 
     // 2. Found the Terminal (terminal opened)
     found_the_terminal: evaluate('found_the_terminal', ids.has('terminal_first_open')),
@@ -131,7 +134,7 @@ export function deriveBadges(awardedActionIds = [], existingTimestamps = {}) {
     // 3. Project Binge (both projects opened)
     project_binge: evaluate(
       'project_binge',
-      ids.has('project:open:proj-1') && ids.has('project:open:proj-2')
+      ids.has('project:open:gla-exchange') && ids.has('project:open:educloud')
     ),
 
     // 4. Skill Collector (all 6 skill categories expanded)
@@ -145,34 +148,24 @@ export function deriveBadges(awardedActionIds = [], existingTimestamps = {}) {
       ids.has('skill_cat:Developer Tools')
     ),
 
-    // 5. Reached Out (contact form sent)
+    // 5. Reached Out (contact form sent on real API success)
     reached_out: evaluate('reached_out', ids.has('contact_form_sent')),
 
-    // 6. Konami Master (Konami code entered)
+    // 6. Konami Master (Konami sequence or secret protocol activated)
     konami_master: evaluate('konami_master', ids.has('secret_or_konami')),
 
-    // 7. Cloud Native (AWS services shelf viewed)
-    cloud_native: evaluate('cloud_native', ids.has('aws_services_view')),
+    // 7. Cloud Native (EduCloud project detail opened)
+    cloud_native: evaluate('cloud_native', ids.has('project:open:educloud')),
 
     // 8. Shipped It (visited live GLA Exchange)
-    shipped_it: evaluate(
-      'shipped_it',
-      ids.has('link_click:gla_exchange') || ids.has('project:live:proj-1')
-    ),
+    shipped_it: evaluate('shipped_it', ids.has('project:live:gla-exchange')),
 
     // 9. Certified (certifications card viewed)
     certified: evaluate('certified', ids.has('certifications_view')),
 
-    // 10. Full Run (all other 9 unlocked)
-    full_run: false
+    // 10. Full Run (reached Level 5: 500+ XP)
+    full_run: evaluate('full_run', xp >= 500 || ids.has('level_5_reached'))
   };
-
-  const otherNineKeys = [
-    'pilot_episode', 'found_the_terminal', 'project_binge', 'skill_collector',
-    'reached_out', 'konami_master', 'cloud_native', 'shipped_it', 'certified'
-  ];
-  const allNineUnlocked = otherNineKeys.every((k) => unlocked[k]);
-  unlocked.full_run = evaluate('full_run', allNineUnlocked);
 
   return { unlocked, timestamps, newlyUnlockedKeys };
 }
@@ -220,66 +213,87 @@ export function enqueueToast(queue = [], newToast) {
 
 /**
  * Pure function: strictly recomputes total XP from a list of action IDs based on KNOWN_ACTIONS.
- * Deduplicates, enforces caps on link clicks (max 3 = 45 XP) and unique commands (max 17 = 170 XP),
- * and clamps between 0 and MAX_TOTAL_XP (555 XP).
+ * Deduplicates, maps legacy action IDs to approved equivalents, and sums valid actions.
+ * No clamping is applied because valid actions mathematically sum to the real maximum (570 XP).
  */
 export function recomputeXpFromActions(actionIds = []) {
+  if (!Array.isArray(actionIds)) return 0;
   const seen = new Set();
-  let linkClickCount = 0;
-  let commandCount = 0;
   let total = 0;
 
   for (const rawId of actionIds) {
     if (!rawId || typeof rawId !== 'string') continue;
     let id = rawId;
-    if (id === 'profile_select' || id === 'profile-select') id = 'enter_portfolio';
-    else if (id === 'terminal_open') id = 'terminal_first_open';
-    else if (id === 'link_click:gla_exchange') id = 'project:live:proj-1';
+    if (id === 'profile_select' || id === 'profile-select' || id.startsWith('persona:')) {
+      id = 'enter_portfolio';
+    } else if (id === 'terminal_open') {
+      id = 'terminal_first_open';
+    } else if (id === 'project:open:proj-1' || id === 'project_modal_view' || id === 'project_gla_exchange_view') {
+      id = 'project:open:gla-exchange';
+    } else if (id === 'project:open:proj-2' || id === 'project_educloud_view') {
+      id = 'project:open:educloud';
+    } else if (id === 'link_click:gla_exchange' || id === 'project:live:proj-1') {
+      id = 'project:live:gla-exchange';
+    } else if (id === 'command:deploy') {
+      id = 'command:deploy --global';
+    }
 
     if (seen.has(id)) continue;
     seen.add(id);
 
-    if (id.startsWith('command:')) {
-      if (KNOWN_ACTIONS[id] !== undefined && commandCount < 17) {
-        commandCount++;
-        total += 10;
-      }
-    } else if (id.startsWith('link_click:') || id.startsWith('project:live:')) {
-      if (KNOWN_ACTIONS[id] !== undefined && linkClickCount < 3) {
-        linkClickCount++;
-        total += 15;
-      }
-    } else if (KNOWN_ACTIONS[id] !== undefined) {
+    if (KNOWN_ACTIONS[id] !== undefined) {
       total += KNOWN_ACTIONS[id];
     }
   }
 
-  return Math.min(MAX_TOTAL_XP, Math.max(0, total));
+  return Math.max(0, total);
 }
 
 /**
  * Migration for persisted localStorage state.
  * Validates saved state against KNOWN_ACTIONS, drops unknown IDs, removes old persona keys,
- * strictly recomputes XP from valid actions, and clamps XP between 0 and 555.
+ * and strictly recomputes XP from valid actions without clamping.
+ * If the saved state is not an object or has an unrecognized shape, resets to empty state (null).
  */
 export function migrateState(stored) {
-  if (!stored || typeof stored !== 'object') return null;
+  if (!stored || typeof stored !== 'object' || Array.isArray(stored)) {
+    return null;
+  }
+
+  const hasRecognizedShape =
+    'awardedActionIds' in stored ||
+    'xp' in stored ||
+    'version' in stored ||
+    'session' in stored;
+
+  if (!hasRecognizedShape) {
+    return null;
+  }
+
   const migrated = { ...stored };
 
-  // Sanitize awardedActionIds: map legacy IDs, drop unknown IDs & persona keys
+  // Sanitize awardedActionIds: map legacy IDs, drop unknown IDs
   const rawAwarded = Array.isArray(migrated.awardedActionIds) ? migrated.awardedActionIds : [];
   const validActionIds = [];
   const seen = new Set();
 
   for (const rawId of rawAwarded) {
     if (!rawId || typeof rawId !== 'string') continue;
-    // Drop old persona actions
-    if (rawId.startsWith('persona:')) continue;
 
     let id = rawId;
-    if (id === 'profile_select' || id === 'profile-select') id = 'enter_portfolio';
-    else if (id === 'terminal_open') id = 'terminal_first_open';
-    else if (id === 'link_click:gla_exchange') id = 'project:live:proj-1';
+    if (id === 'profile_select' || id === 'profile-select' || id.startsWith('persona:')) {
+      id = 'enter_portfolio';
+    } else if (id === 'terminal_open') {
+      id = 'terminal_first_open';
+    } else if (id === 'project:open:proj-1' || id === 'project_modal_view' || id === 'project_gla_exchange_view') {
+      id = 'project:open:gla-exchange';
+    } else if (id === 'project:open:proj-2' || id === 'project_educloud_view') {
+      id = 'project:open:educloud';
+    } else if (id === 'link_click:gla_exchange' || id === 'project:live:proj-1') {
+      id = 'project:live:gla-exchange';
+    } else if (id === 'command:deploy') {
+      id = 'command:deploy --global';
+    }
 
     if (KNOWN_ACTIONS[id] !== undefined && !seen.has(id)) {
       seen.add(id);
@@ -288,7 +302,7 @@ export function migrateState(stored) {
   }
   migrated.awardedActionIds = validActionIds;
 
-  // Recompute XP strictly from valid actions and clamp
+  // Recompute XP strictly from valid actions without clamping
   const recomputedXp = recomputeXpFromActions(validActionIds);
   migrated.xp = recomputedXp;
   const levelInfo = calculateLevel(recomputedXp);
@@ -302,7 +316,7 @@ export function migrateState(stored) {
   }
 
   // Derive badges with updated action set
-  const { unlocked, timestamps } = deriveBadges(validActionIds, migrated.badgeTimestamps);
+  const { unlocked, timestamps } = deriveBadges(validActionIds, migrated.badgeTimestamps, recomputedXp);
   migrated.badgeTimestamps = timestamps;
   migrated.badgeUnlocked = unlocked;
 
@@ -343,18 +357,24 @@ export function migrateState(stored) {
 /**
  * Pure state transition for awarding an XP action.
  * Idempotent: if actionId has already been awarded, returns original state without modifying XP.
- * Clamps XP to MAX_TOTAL_XP (555).
+ * Recomputes strictly from approved action values without clamping.
  */
 export function applyAwardAction(state, actionId, amount = 0) {
   if (!state || !actionId) return state;
 
   let normalizedId = actionId;
-  if (normalizedId === 'profile_select' || normalizedId === 'profile-select') {
+  if (normalizedId === 'profile_select' || normalizedId === 'profile-select' || normalizedId.startsWith('persona:')) {
     normalizedId = 'enter_portfolio';
   } else if (normalizedId === 'terminal_open') {
     normalizedId = 'terminal_first_open';
-  } else if (normalizedId === 'link_click:gla_exchange') {
-    normalizedId = 'project:live:proj-1';
+  } else if (normalizedId === 'project:open:proj-1' || normalizedId === 'project_modal_view' || normalizedId === 'project_gla_exchange_view') {
+    normalizedId = 'project:open:gla-exchange';
+  } else if (normalizedId === 'project:open:proj-2' || normalizedId === 'project_educloud_view') {
+    normalizedId = 'project:open:educloud';
+  } else if (normalizedId === 'link_click:gla_exchange' || normalizedId === 'project:live:proj-1') {
+    normalizedId = 'project:live:gla-exchange';
+  } else if (normalizedId === 'command:deploy') {
+    normalizedId = 'command:deploy --global';
   }
 
   const awarded = state.awardedActionIds || [];
@@ -367,14 +387,17 @@ export function applyAwardAction(state, actionId, amount = 0) {
     newAwarded.push('terminal_open');
   }
 
-  const addedXp = Math.max(0, Number(amount) || 0);
+  const addedXp = KNOWN_ACTIONS[normalizedId] !== undefined
+    ? KNOWN_ACTIONS[normalizedId]
+    : Math.max(0, Number(amount) || 0);
   const currentXp = Number(state.xp) || 0;
-  const newXp = Math.min(MAX_TOTAL_XP, currentXp + addedXp);
+  const newXp = currentXp + addedXp;
   const levelInfo = calculateLevel(newXp);
 
   const { unlocked, timestamps, newlyUnlockedKeys } = deriveBadges(
     newAwarded,
-    state.badgeTimestamps
+    state.badgeTimestamps,
+    newXp
   );
 
   return {
