@@ -171,7 +171,8 @@ export default function TerminalDrawer({ onClose }) {
     if (result.success) {
       // Award discrete XP once per valid unique command name (+10 XP)
       if (actions.awardAction && result.commandName) {
-        const normalized = result.commandName.toLowerCase();
+        let normalized = result.commandName.toLowerCase();
+        if (normalized === 'deploy') normalized = 'deploy --global';
         if (normalized !== 'secret' && normalized !== 'konami') {
           actions.awardAction(`command:${normalized}`, 10, `Terminal Command: ${normalized}`);
         }
@@ -346,7 +347,7 @@ export default function TerminalDrawer({ onClose }) {
           </div>
 
           <div className="terminal-drawer__title font-mono">
-            <span className="terminal-drawer__title-cmd text-terminal">guest@vaibhava-portfolio:~</span>
+            <span className="terminal-drawer__title-cmd text-terminal">visitor@vaibhava-portfolio:~</span>
             <span className="terminal-drawer__shell-meta text-muted hidden sm:inline">
               (bash · 80x24 · UTF-8)
             </span>
@@ -426,7 +427,7 @@ export default function TerminalDrawer({ onClose }) {
             <div key={entry.id} className="terminal-entry">
               {entry.input && (
                 <div className="terminal-entry__prompt">
-                  <span className="text-terminal font-bold">guest@portfolio:~$</span>
+                  <span className="text-terminal font-bold">visitor@portfolio:~$</span>
                   <span className="text-white ml-2">{entry.input}</span>
                 </div>
               )}
@@ -454,7 +455,7 @@ export default function TerminalDrawer({ onClose }) {
         {/* Active Command Input Form */}
         <form onSubmit={handleSubmit} className="terminal-drawer__input-form">
           <label htmlFor="terminal-cli-input" className="terminal-drawer__input-label text-terminal font-bold">
-            guest@portfolio:~$
+            visitor@portfolio:~$
           </label>
           <div className="terminal-drawer__input-wrapper">
             <input
