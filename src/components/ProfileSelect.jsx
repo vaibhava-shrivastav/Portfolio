@@ -12,9 +12,9 @@
  * - 44px+ tap targets, WCAG AA contrast, hover/focus scale & glow
  * ==========================================================================
  */
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useGame, useSession, usePersona, calculateLevelProgress } from '../context/GameContext';
-import { visitorPersonas } from '../data/profile';
+import { profile as profileData, visitorPersonas } from '../data/profile';
 
 export function ProfileSelect() {
   const { state, actions } = useGame();
@@ -27,7 +27,33 @@ export function ProfileSelect() {
   const currentXp = state.xp || 0;
   const levelProgress = calculateLevelProgress(currentXp);
 
-  // Handle keyboard shortcuts: 1, 2, 3, 4, Esc
+  const handleCliMode = useCallback(() => {
+    if (actions.enterDirectly) {
+      actions.enterDirectly(selectedProfile || 'default');
+    } else {
+      actions.setSelectedProfile(selectedProfile || 'default');
+      actions.setProfileSelected(true);
+    }
+    if (actions.openTerminal) {
+      actions.openTerminal();
+    }
+  }, [actions, selectedProfile]);
+
+  const handleSelect = (personaId) => {
+    selectPersona(personaId);
+  };
+
+  const handleDirectEnter = () => {
+    // Enter directly: do not award +20 XP, do not leave persona undefined
+    if (actions.enterDirectly) {
+      actions.enterDirectly(selectedProfile || 'default');
+    } else {
+      actions.setSelectedProfile(selectedProfile || 'default');
+      actions.setProfileSelected(true);
+    }
+  };
+
+  // Handle keyboard shortcuts: 1, 2, 3, 4, `, Esc
   useEffect(() => {
     if (profileSelected) return;
 
@@ -47,6 +73,9 @@ export function ProfileSelect() {
       } else if (e.key === '4') {
         e.preventDefault();
         selectPersona('judge');
+      } else if (e.key === '`' || e.key === '~') {
+        e.preventDefault();
+        handleCliMode();
       } else if (e.key === 'Escape' && selectedProfile) {
         // Allow closing without change if user already had a profile
         e.preventDefault();
@@ -56,26 +85,12 @@ export function ProfileSelect() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [profileSelected, selectPersona, selectedProfile, actions]);
+  }, [profileSelected, selectPersona, selectedProfile, actions, handleCliMode]);
 
   // If already selected and not toggled back open, do not render
   if (profileSelected) {
     return null;
   }
-
-  const handleSelect = (personaId) => {
-    selectPersona(personaId);
-  };
-
-  const handleDirectEnter = () => {
-    // Enter directly: do not award +20 XP, do not leave persona undefined
-    if (actions.enterDirectly) {
-      actions.enterDirectly(selectedProfile || 'default');
-    } else {
-      actions.setSelectedProfile(selectedProfile || 'default');
-      actions.setProfileSelected(true);
-    }
-  };
 
   return (
     <div
@@ -126,7 +141,7 @@ export function ProfileSelect() {
             WHO&apos;S WATCHING?
           </h1>
           <p className="profile-select__subtitle font-mono">
-            Select access privilege level to tailor interface telemetry &amp; skill logs.
+            {profileData.welcome}
           </p>
         </div>
 
@@ -205,6 +220,16 @@ export function ProfileSelect() {
 
           <button
             type="button"
+            onClick={handleCliMode}
+            className="btn btn--secondary btn--pill profile-select__btn-cli"
+            aria-label="Launch portfolio in interactive CLI terminal mode"
+          >
+            <span className="profile-select__btn-cli-prompt font-mono" aria-hidden="true">&gt;_</span>
+            <span>CLI / TERMINAL MODE</span>
+          </button>
+
+          <button
+            type="button"
             onClick={handleDirectEnter}
             className="btn btn--primary btn--pill"
           >
@@ -232,12 +257,13 @@ export function ProfileSelect() {
             <span className="profile-select__indicator-dot" />
             <span>SYSTEM READY</span>
             <span className="profile-select__separator">•</span>
-            <span>SESSION: {selectedProfile ? selectedProfile.toUpperCase() : 'GUEST_EXPLORER'}</span>
+            <span>LEVEL {currentLevel} // {currentXp} XP</span>
             <span className="profile-select__separator">•</span>
-            <span>REWARD: +20 XP ON SELECT</span>
+            <span>+20 XP ON SELECT</span>
           </div>
           <p className="profile-select__info-prompt">
-            Pick a profile to calibrate the showcase or bypass to root.
+            <span className="profile-select__kbd-text">Pick a profile to calibrate the showcase or bypass to root.</span>
+            <span className="profile-select__touch-text">Tap a profile to calibrate the showcase or bypass to root.</span>
           </p>
         </div>
 
@@ -252,7 +278,12 @@ export function ProfileSelect() {
                 CLI Shortcut Mode Available
               </span>
               <span className="profile-select__shortcut-desc font-mono">
-                Press 1-4 on your keyboard to instantly authenticate selected viewport profile
+                <span className="profile-select__kbd-text">
+                  Press 1-4 on your keyboard to instantly authenticate selected viewport profile · Press <kbd>`</kbd> for terminal
+                </span>
+                <span className="profile-select__touch-text">
+                  Tap a profile to enter tailored view · Tap CLI mode button above
+                </span>
               </span>
             </div>
           </div>
@@ -261,6 +292,7 @@ export function ProfileSelect() {
             <span className="profile-select__pill-key">[2] MANAGER</span>
             <span className="profile-select__pill-key">[3] DEV</span>
             <span className="profile-select__pill-key">[4] JUDGE</span>
+            <span className="profile-select__pill-key">[`] TERMINAL</span>
           </div>
         </div>
       </div>
