@@ -1,0 +1,19 @@
+{
+  "name": "portfolio-contact-backend",
+  "version": "1.0.0",
+  "description": "Serverless contact form dispatch function for portfolio",
+  "type": "module",
+  "main": "src/handler.mjs",
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "aws",
+    "lambda",
+    "ses",
+    "sam"
+  ],
+  "author": "Vaibhava Kumar Shrivastav",
+  "license": "MIT"
+}
+

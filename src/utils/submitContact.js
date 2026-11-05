@@ -184,7 +184,8 @@ export async function submitContact(
       body: JSON.stringify({
         name: cleanName,
         email: cleanEmail,
-        message: cleanMessage
+        message: cleanMessage,
+        website: cleanWebsite || ''
       }),
       signal: controller.signal
     });
@@ -209,15 +210,20 @@ export async function submitContact(
     }
 
     let errorDetail = '';
+    let responseErrors = null;
     try {
       const json = await response.json();
       errorDetail = json?.message || json?.error || '';
+      if (json?.errors && typeof json.errors === 'object') {
+        responseErrors = json.errors;
+      }
     } catch (e) {
       // non-JSON response
     }
 
     return {
       status: 'error',
+      errors: responseErrors,
       message: errorDetail || `Delivery failed (HTTP ${response.status}). Please try again or email directly.`
     };
   } catch (err) {
