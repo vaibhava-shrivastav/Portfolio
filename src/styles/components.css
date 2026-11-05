@@ -2235,6 +2235,28 @@ body.modal-open .terminal-launcher-container {
   justify-content: center;
 }
 
+.profile-select__btn-cli {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #FFFFFF;
+}
+
+.profile-select__btn-cli:hover,
+.profile-select__btn-cli:focus-visible {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--color-terminal, #39FF14);
+  box-shadow: 0 0 16px rgba(57, 255, 20, 0.25);
+  color: #FFFFFF;
+}
+
+.profile-select__btn-cli-prompt {
+  color: var(--color-terminal, #39FF14);
+  font-weight: var(--font-bold);
+}
+
 /* Footer Status Strip */
 .profile-select__footer-info {
   display: flex;
@@ -2342,11 +2364,35 @@ body.modal-open .terminal-launcher-container {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.profile-select__touch-text {
+  display: none;
+}
+
+@media (pointer: coarse), (hover: none), (max-width: 768px) {
+  .profile-select__kbd-text {
+    display: none !important;
+  }
+
+  .profile-select__touch-text {
+    display: inline !important;
+  }
+
+  .profile-select__shortcut-keys {
+    display: none !important;
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .profile-select {
+    padding: var(--space-6) var(--space-4);
+  }
+
   .profile-select__grid {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-4);
+    max-width: 440px;
+    margin-bottom: var(--space-6);
   }
 
   .profile-select__card-frame {
@@ -2368,17 +2414,45 @@ body.modal-open .terminal-launcher-container {
   }
 }
 
-@media (max-width: 390px) {
+@media (max-width: 420px) {
+  .profile-select {
+    padding: var(--space-4) var(--space-3);
+  }
+
   .profile-select__grid {
     gap: var(--space-3);
+    max-width: 340px;
   }
 
   .profile-select__card-frame {
-    max-width: 140px;
+    max-width: 148px;
   }
 
   .profile-select__title {
     font-size: 2.25rem;
+  }
+
+  .profile-select__tile-sub {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 340px) {
+  .profile-select {
+    padding: var(--space-4) 8px;
+  }
+
+  .profile-select__grid {
+    gap: 8px;
+    max-width: 300px;
+  }
+
+  .profile-select__card-frame {
+    max-width: 138px;
+  }
+
+  .profile-select__title {
+    font-size: 1.85rem;
   }
 }
 
