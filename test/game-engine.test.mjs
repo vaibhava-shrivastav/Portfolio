@@ -61,23 +61,24 @@ test('XP Action Table maximum sum is at least 500 (Level 5 reachable)', () => {
   const table = [
     { name: 'enter_portfolio', xp: 20 },
     { name: 'about_view', xp: 30 },
-    { name: 'project_open_proj1', xp: 25 },
-    { name: 'project_open_proj2', xp: 25 },
+    { name: 'project:open:gla-exchange', xp: 25 },
+    { name: 'project:open:educloud', xp: 25 },
+    { name: 'project:live:gla-exchange', xp: 15 },
     { name: 'skills_view', xp: 30 },
     { name: 'terminal_first_open', xp: 50 },
     { name: 'terminal_unique_commands', xp: 170 }, // 17 commands * 10
     { name: 'secret_or_konami', xp: 100 },
     { name: 'achievements_view', xp: 20 },
     { name: 'contact_view', xp: 20 },
-    { name: 'link_click_github', xp: 15 },
-    { name: 'link_click_linkedin', xp: 15 },
-    { name: 'link_click_resume', xp: 15 },
+    { name: 'link_click:github', xp: 15 },
+    { name: 'link_click:linkedin', xp: 15 },
+    { name: 'link_click:resume', xp: 15 },
     { name: 'contact_form_sent', xp: 20 }
   ];
 
   const totalPossibleXp = table.reduce((sum, item) => sum + item.xp, 0);
-  assert.equal(totalPossibleXp, 555);
-  assert.equal(MAX_TOTAL_XP, 555);
+  assert.equal(totalPossibleXp, 570);
+  assert.equal(MAX_TOTAL_XP, 570);
   assert.ok(totalPossibleXp >= 500, 'Sum of all possible XP must be >= 500 to reach Level 5');
 });
 
@@ -94,22 +95,25 @@ test('Pure deriveBadges unlocks badges based on discrete action IDs', () => {
   const initial = deriveBadges([], {});
   assert.equal(Object.values(initial.unlocked).filter(Boolean).length, 0);
 
-  // Pilot Episode
+  // 1. Pilot Episode (preloader_finish or enter_portfolio)
   const s1 = deriveBadges(['preloader_finish'], {});
   assert.equal(s1.unlocked.pilot_episode, true);
   assert.ok(s1.timestamps.pilot_episode);
 
-  // Found the Terminal
+  const s1b = deriveBadges(['enter_portfolio'], {});
+  assert.equal(s1b.unlocked.pilot_episode, true);
+
+  // 2. Found the Terminal
   const s2 = deriveBadges(['terminal_first_open'], {});
   assert.equal(s2.unlocked.found_the_terminal, true);
 
-  // Project Binge requires both projects
-  const partialProjects = deriveBadges(['project:open:proj-1'], {});
+  // 3. Project Binge requires both projects
+  const partialProjects = deriveBadges(['project:open:gla-exchange'], {});
   assert.equal(partialProjects.unlocked.project_binge, false);
-  const fullProjects = deriveBadges(['project:open:proj-1', 'project:open:proj-2'], {});
+  const fullProjects = deriveBadges(['project:open:gla-exchange', 'project:open:educloud'], {});
   assert.equal(fullProjects.unlocked.project_binge, true);
 
-  // Skill Collector requires all 6 categories
+  // 4. Skill Collector requires all 6 categories
   const partialSkills = deriveBadges([
     'skill_cat:Languages',
     'skill_cat:Frameworks & Libraries'
@@ -126,24 +130,38 @@ test('Pure deriveBadges unlocks badges based on discrete action IDs', () => {
   ], {});
   assert.equal(fullSkills.unlocked.skill_collector, true);
 
-  // Cloud Native unlocks on aws_services_view
-  const awsView = deriveBadges(['aws_services_view'], {});
-  assert.equal(awsView.unlocked.cloud_native, true);
+  // 5. Reached Out
+  const reached = deriveBadges(['contact_form_sent'], {});
+  assert.equal(reached.unlocked.reached_out, true);
 
-  // Shipped It unlocks on link_click:gla_exchange or project:live:proj-1
-  const shippedIt = deriveBadges(['link_click:gla_exchange'], {});
+  // 6. Konami Master
+  const konami = deriveBadges(['secret_or_konami'], {});
+  assert.equal(konami.unlocked.konami_master, true);
+
+  // 7. Cloud Native unlocks on project:open:educloud
+  const eduCloudView = deriveBadges(['project:open:educloud'], {});
+  assert.equal(eduCloudView.unlocked.cloud_native, true);
+
+  // 8. Shipped It unlocks on project:live:gla-exchange
+  const shippedIt = deriveBadges(['project:live:gla-exchange'], {});
   assert.equal(shippedIt.unlocked.shipped_it, true);
 
-  // Certified unlocks on certifications_view
+  // 9. Certified unlocks on certifications_view
   const certView = deriveBadges(['certifications_view'], {});
   assert.equal(certView.unlocked.certified, true);
 
-  // Full Run unlocks only when all other 9 are unlocked
-  const allNineActions = [
+  // 10. Full Run unlocks on Level 5 (500+ XP)
+  const below500 = deriveBadges([], {}, 499);
+  assert.equal(below500.unlocked.full_run, false);
+
+  const at500 = deriveBadges([], {}, 500);
+  assert.equal(at500.unlocked.full_run, true);
+
+  const allActions = [
     'preloader_finish',
     'terminal_first_open',
-    'project:open:proj-1',
-    'project:open:proj-2',
+    'project:open:gla-exchange',
+    'project:open:educloud',
     'skill_cat:Languages',
     'skill_cat:Frameworks & Libraries',
     'skill_cat:Cloud & DevOps',
@@ -152,13 +170,12 @@ test('Pure deriveBadges unlocks badges based on discrete action IDs', () => {
     'skill_cat:Developer Tools',
     'contact_form_sent',
     'secret_or_konami',
-    'aws_services_view',
-    'link_click:gla_exchange',
+    'project:live:gla-exchange',
     'certifications_view'
   ];
 
-  const fullRunResult = deriveBadges(allNineActions, {});
-  assert.equal(fullRunResult.unlocked.full_run, true, 'Full Run must unlock when all other 9 are unlocked');
+  const fullRunResult = deriveBadges(allActions, {}, 570);
+  assert.equal(fullRunResult.unlocked.full_run, true);
   assert.equal(Object.values(fullRunResult.unlocked).filter(Boolean).length, 10);
 });
 
@@ -242,14 +259,16 @@ test('Stored-state bug fix: 8810 XP corrupted state recovers to strictly valid r
   assert.deepEqual(recovered.session.visitedSections, ['hero', 'projects']);
 });
 
-test('State migration maps legacy action IDs (profile_select, terminal_open, link_click:gla_exchange)', () => {
+test('State migration maps legacy action IDs (profile_select, terminal_open, link_click:gla_exchange, proj-1, proj-2)', () => {
   const legacyActionsState = {
     version: 2,
     xp: 9999,
     awardedActionIds: [
       'profile_select',
       'terminal_open',
-      'link_click:gla_exchange'
+      'link_click:gla_exchange',
+      'project:open:proj-1',
+      'project:open:proj-2'
     ]
   };
 
@@ -257,11 +276,23 @@ test('State migration maps legacy action IDs (profile_select, terminal_open, lin
   assert.deepEqual(migrated.awardedActionIds, [
     'enter_portfolio',
     'terminal_first_open',
-    'project:live:proj-1'
+    'project:live:gla-exchange',
+    'project:open:gla-exchange',
+    'project:open:educloud'
   ]);
-  // enter_portfolio (20) + terminal_first_open (50) + project:live:proj-1 (15) = 85 XP
-  assert.equal(migrated.xp, 85);
-  assert.equal(migrated.level, 1);
+  // enter_portfolio (20) + terminal_first_open (50) + project:live:gla-exchange (15) + 25 + 25 = 135 XP
+  assert.equal(migrated.xp, 135);
+  assert.equal(migrated.level, 2);
+  assert.equal(migrated.levelTitle, 'Explorer');
+});
+
+test('State migration resets non-object or unrecognized shapes to null', () => {
+  assert.equal(migrateState(null), null);
+  assert.equal(migrateState(undefined), null);
+  assert.equal(migrateState('corrupted string'), null);
+  assert.equal(migrateState(12345), null);
+  assert.equal(migrateState([]), null);
+  assert.equal(migrateState({ unrecognizedField: 123 }), null);
 });
 
 test('XP-Once Awards: awarding the same actionId twice increments XP only once (StrictMode idempotency)', () => {
@@ -294,6 +325,107 @@ test('XP-Once Awards: awarding the same actionId twice increments XP only once (
   assert.equal(state5.xp, 70, 'profile_select should be idempotent with enter_portfolio');
 });
 
+test('Per-project IDs and live links award once', () => {
+  const initial = {
+    xp: 0,
+    level: 1,
+    awardedActionIds: [],
+    badgeTimestamps: {}
+  };
+
+  const s1 = applyAwardAction(initial, 'project:open:gla-exchange', 25);
+  assert.equal(s1.xp, 25);
+  const s2 = applyAwardAction(s1, 'project:open:educloud', 25);
+  assert.equal(s2.xp, 50);
+  const s2Repeat = applyAwardAction(s2, 'project:open:educloud', 25);
+  assert.equal(s2Repeat.xp, 50, 'Duplicate project open must award 0 XP');
+
+  const s3 = applyAwardAction(s2, 'project:live:gla-exchange', 15);
+  assert.equal(s3.xp, 65);
+  const s3Repeat = applyAwardAction(s3, 'project:live:gla-exchange', 15);
+  assert.equal(s3Repeat.xp, 65, 'Duplicate live link click must award 0 XP');
+});
+
+test('Distinct terminal commands each award 10 XP once and repeated commands award nothing', () => {
+  let state = {
+    xp: 0,
+    level: 1,
+    awardedActionIds: [],
+    badgeTimestamps: {}
+  };
+
+  const cmds = [
+    'command:help',
+    'command:whoami',
+    'command:about',
+    'command:skills',
+    'command:skills --level',
+    'command:projects',
+    'command:play',
+    'command:achievements',
+    'command:experience',
+    'command:education',
+    'command:resume',
+    'command:contact',
+    'command:github',
+    'command:linkedin',
+    'command:deploy --global',
+    'command:theme',
+    'command:clear'
+  ];
+
+  assert.equal(cmds.length, 17, 'Must have exactly 17 distinct valid commands');
+
+  for (let i = 0; i < cmds.length; i++) {
+    state = applyAwardAction(state, cmds[i], 10);
+    assert.equal(state.xp, (i + 1) * 10);
+  }
+  assert.equal(state.xp, 170, '17 distinct commands must award exactly 170 XP');
+
+  // Repeated commands award nothing
+  for (const cmd of cmds) {
+    const repeatedState = applyAwardAction(state, cmd, 10);
+    assert.equal(repeatedState.xp, 170, `Repeated command ${cmd} must award 0 XP`);
+  }
+});
+
+test('Secret command and Konami code award +100 once for secret_or_konami', () => {
+  const initial = {
+    xp: 0,
+    level: 1,
+    awardedActionIds: [],
+    badgeTimestamps: {}
+  };
+
+  const state1 = applyAwardAction(initial, 'secret_or_konami', 100);
+  assert.equal(state1.xp, 100);
+  assert.equal(state1.badgeUnlocked.konami_master, true);
+
+  // Subsequent activation of either secret or konami awards nothing
+  const state2 = applyAwardAction(state1, 'secret_or_konami', 100);
+  assert.equal(state2.xp, 100);
+});
+
+test('Link click IDs each award +15 once (github, linkedin, resume)', () => {
+  let state = {
+    xp: 0,
+    level: 1,
+    awardedActionIds: [],
+    badgeTimestamps: {}
+  };
+
+  state = applyAwardAction(state, 'link_click:github', 15);
+  assert.equal(state.xp, 15);
+  state = applyAwardAction(state, 'link_click:linkedin', 15);
+  assert.equal(state.xp, 30);
+  state = applyAwardAction(state, 'link_click:resume', 15);
+  assert.equal(state.xp, 45);
+
+  // Repeat clicks award nothing
+  state = applyAwardAction(state, 'link_click:github', 15);
+  assert.equal(state.xp, 45);
+});
+
 test('Badge Triggers: discrete action IDs unlock their exact respective badges', () => {
   const initial = {
     xp: 0,
@@ -310,13 +442,13 @@ test('Badge Triggers: discrete action IDs unlock their exact respective badges',
   const konamiState = applyAwardAction(initial, 'secret_or_konami', 100);
   assert.equal(konamiState.badgeUnlocked.konami_master, true);
 
-  // 3. Project Binge
-  const p1State = applyAwardAction(initial, 'project:open:proj-1', 25);
+  // 3. Project Binge requires both project:open:gla-exchange and project:open:educloud
+  const p1State = applyAwardAction(initial, 'project:open:gla-exchange', 25);
   assert.equal(p1State.badgeUnlocked.project_binge, false);
-  const p2State = applyAwardAction(p1State, 'project:open:proj-2', 25);
+  const p2State = applyAwardAction(p1State, 'project:open:educloud', 25);
   assert.equal(p2State.badgeUnlocked.project_binge, true);
 
-  // 4. Skill Collector
+  // 4. Skill Collector requires all 6 categories
   let skillState = initial;
   const cats = [
     'skill_cat:Languages',
@@ -331,12 +463,41 @@ test('Badge Triggers: discrete action IDs unlock their exact respective badges',
   }
   assert.equal(skillState.badgeUnlocked.skill_collector, true);
 
-  // 5. Cloud Native
-  const cloudState = applyAwardAction(initial, 'aws_services_view', 0);
+  // 5. Cloud Native unlocks on project:open:educloud
+  const cloudState = applyAwardAction(initial, 'project:open:educloud', 25);
   assert.equal(cloudState.badgeUnlocked.cloud_native, true);
+
+  // 6. Shipped It unlocks on project:live:gla-exchange
+  const shippedState = applyAwardAction(initial, 'project:live:gla-exchange', 15);
+  assert.equal(shippedState.badgeUnlocked.shipped_it, true);
+
+  // 7. Reached Out unlocks on contact_form_sent
+  const contactState = applyAwardAction(initial, 'contact_form_sent', 20);
+  assert.equal(contactState.badgeUnlocked.reached_out, true);
+
+  // 8. Certified unlocks on certifications_view
+  const certState = applyAwardAction(initial, 'certifications_view', 0);
+  assert.equal(certState.badgeUnlocked.certified, true);
+
+  // 9. Pilot Episode unlocks on enter_portfolio or preloader_finish
+  const pilotState = applyAwardAction(initial, 'enter_portfolio', 20);
+  assert.equal(pilotState.badgeUnlocked.pilot_episode, true);
 });
 
-test('Level thresholds: verify exact level boundaries from 0 to 555 XP', () => {
+test('Initial state starts at 0 XP, Level 1 and cannot reach Level 5', () => {
+  const initial = {
+    xp: 0,
+    level: 1,
+    awardedActionIds: [],
+    badgeTimestamps: {}
+  };
+  const levelInfo = calculateLevel(initial.xp);
+  assert.equal(levelInfo.level, 1);
+  assert.equal(levelInfo.name, 'Curious Visitor');
+  assert.ok(levelInfo.level < 5, 'Initial state must never be Level 5');
+});
+
+test('Level thresholds: verify exact level boundaries from 0 to 570 XP', () => {
   const boundaries = [
     { xp: 0, expectedLevel: 1, expectedName: 'Curious Visitor' },
     { xp: 99, expectedLevel: 1, expectedName: 'Curious Visitor' },
@@ -347,7 +508,7 @@ test('Level thresholds: verify exact level boundaries from 0 to 555 XP', () => {
     { xp: 350, expectedLevel: 4, expectedName: 'Power User' },
     { xp: 499, expectedLevel: 4, expectedName: 'Power User' },
     { xp: 500, expectedLevel: 5, expectedName: 'Hired!' },
-    { xp: 555, expectedLevel: 5, expectedName: 'Hired!' }
+    { xp: 570, expectedLevel: 5, expectedName: 'Hired!' }
   ];
 
   for (const b of boundaries) {

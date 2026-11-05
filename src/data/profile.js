@@ -277,14 +277,18 @@ export const xpLevels = [
 export const xpActions = {
   ENTER_PORTFOLIO: { id: "enter_portfolio", xp: 20, maxCount: 1 },
   ABOUT_VIEW: { id: "about_view", xp: 30, maxCount: 1 },
-  PROJECT_MODAL_VIEW: { id: "project_modal_view", xp: 25, maxCount: 2 }, // GLA + EduCloud = 50
+  PROJECT_OPEN_GLA: { id: "project:open:gla-exchange", xp: 25, maxCount: 1 },
+  PROJECT_OPEN_EDUCLOUD: { id: "project:open:educloud", xp: 25, maxCount: 1 },
+  PROJECT_LIVE_GLA: { id: "project:live:gla-exchange", xp: 15, maxCount: 1 },
   SKILLS_VIEW: { id: "skills_view", xp: 30, maxCount: 1 },
   TERMINAL_FIRST_OPEN: { id: "terminal_first_open", xp: 50, maxCount: 1 },
-  TERMINAL_COMMAND_UNIQUE: { id: "terminal_command_unique", xp: 10, maxCount: 17 }, // up to 170
+  TERMINAL_COMMAND_UNIQUE: { id: "command:<name>", xp: 10, maxCount: 17 }, // up to 170
   SECRET_OR_KONAMI: { id: "secret_or_konami", xp: 100, maxCount: 1 },
   ACHIEVEMENTS_VIEW: { id: "achievements_view", xp: 20, maxCount: 1 },
   CONTACT_VIEW: { id: "contact_view", xp: 20, maxCount: 1 },
-  LINK_CLICK: { id: "link_click", xp: 15, maxCount: 3 }, // GitHub, LinkedIn, Resume = 45
+  LINK_CLICK_GITHUB: { id: "link_click:github", xp: 15, maxCount: 1 },
+  LINK_CLICK_LINKEDIN: { id: "link_click:linkedin", xp: 15, maxCount: 1 },
+  LINK_CLICK_RESUME: { id: "link_click:resume", xp: 15, maxCount: 1 },
   CONTACT_FORM_SENT: { id: "contact_form_sent", xp: 20, maxCount: 1 }
 };
 
@@ -328,7 +332,7 @@ export const gameAchievements = [
     category: "exploration",
     rarity: "rare",
     unlockHint: "Inspect both project detail modals in the catalog",
-    trigger: "project:open:proj-1 && project:open:proj-2",
+    trigger: "project:open:gla-exchange && project:open:educloud",
     unlockedAt: null,
     secret: false
   },
@@ -379,12 +383,12 @@ export const gameAchievements = [
     key: "cloud_native",
     name: "Cloud Native",
     title: "Cloud Native",
-    description: "Viewed the AWS cloud services infrastructure shelf",
+    description: "Inspected EduCloud serverless architecture",
     icon: "☁️",
     category: "project",
     rarity: "epic",
-    unlockHint: "Inspect the AWS services shelf in the projects catalog",
-    trigger: "aws_services_view",
+    unlockHint: "Open the EduCloud project modal",
+    trigger: "project:open:educloud",
     unlockedAt: null,
     secret: false
   },
@@ -398,7 +402,7 @@ export const gameAchievements = [
     category: "project",
     rarity: "epic",
     unlockHint: "Launch live demo at glaexchange.online",
-    trigger: "link_click:gla_exchange",
+    trigger: "project:live:gla-exchange",
     unlockedAt: null,
     secret: false
   },
@@ -407,7 +411,7 @@ export const gameAchievements = [
     key: "certified",
     name: "Certified",
     title: "Certified",
-    description: "Inspected AWS certifications",
+    description: "Viewed AWS certifications",
     icon: "📜",
     category: "accomplishment",
     rarity: "legendary",
@@ -421,12 +425,12 @@ export const gameAchievements = [
     key: "full_run",
     name: "Full Run",
     title: "Full Run",
-    description: "Unlocked all other 9 achievements across the portfolio",
+    description: "Reached Level 5 (Hired!) at 500 XP",
     icon: "🏁",
     category: "milestone",
     rarity: "mythic",
-    unlockHint: "Unlock all other 9 achievements",
-    trigger: "all 9 achievements unlocked",
+    unlockHint: "Accumulate 500 XP to reach Level 5",
+    trigger: "level_5_reached",
     unlockedAt: null,
     secret: false
   }
@@ -467,7 +471,7 @@ export const certifications = [
     date: "2026",
     expiry: "", // Not stated in resume
     credentialId: "TODO", // TODO: Add from certificate
-    url: "https://aws.amazon.com/verification"
+    url: ""
   },
   {
     id: "cert-2",

@@ -26,7 +26,7 @@ export const KONAMI_CODE = [
 ];
 
 /**
- * Pure helper to verify if an array of key strings matches the Konami sequence.
+ * Pure helper to check if an array of key strings matches the Konami sequence.
  */
 export function isKonamiSequence(keys = []) {
   if (!Array.isArray(keys) || keys.length !== KONAMI_CODE.length) return false;

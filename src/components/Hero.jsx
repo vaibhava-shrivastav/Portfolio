@@ -251,7 +251,7 @@ export function Hero() {
                     href="https://glaexchange.online"
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={() => actions.awardAction('project:live:proj-1', 15)}
+                    onClick={() => actions.awardAction('project:live:gla-exchange', 15)}
                     className="hero-billboard__status-pill"
                     title="Open live production platform at glaexchange.online"
                   >
@@ -292,7 +292,7 @@ export function Hero() {
                     href="https://glaexchange.online"
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={() => actions.awardAction('project:live:proj-1', 15)}
+                    onClick={() => actions.awardAction('project:live:gla-exchange', 15)}
                     className="btn btn--sm btn--ghost"
                     aria-label="Open GLA Exchange live site in new tab"
                   >
