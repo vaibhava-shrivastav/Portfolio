@@ -518,7 +518,7 @@
   transition: width var(--duration-normal) var(--ease-out);
 }
 
-/* Terminal Quick Button */
+/* Terminal Quick Button (Wide Screen: Navbar only >= 768px) */
 .navbar__terminal-btn {
   display: none;
   align-items: center;
@@ -533,6 +533,15 @@
   cursor: pointer;
   min-height: 44px;
   transition: all var(--duration-fast);
+}
+
+.navbar__terminal-kbd {
+  background: rgba(57, 255, 20, 0.15);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 11px;
+  border: 1px solid rgba(57, 255, 20, 0.35);
+  line-height: 1;
 }
 
 @media (min-width: 768px) {
@@ -1058,11 +1067,11 @@
   --color-cyan: #00D8FF;
 }
 
-/* Floating Launcher Container at Bottom-Right */
+/* Floating Launcher Container at Bottom-Right (Small Screen: < 768px only) */
 .terminal-launcher-container {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  right: calc(16px + env(safe-area-inset-right, 0px));
   z-index: 800;
   display: flex;
   flex-direction: column;
@@ -1071,11 +1080,17 @@
   pointer-events: none;
 }
 
-@media (max-width: 640px) {
+/* Wide screen: Navbar button is the single launcher, hide floating button */
+@media (min-width: 768px) {
   .terminal-launcher-container {
-    bottom: 16px;
-    right: 16px;
+    display: none !important;
   }
+}
+
+/* Hide when mobile nav or modal is open */
+body.mobile-nav-open .terminal-launcher-container,
+body.modal-open .terminal-launcher-container {
+  display: none !important;
 }
 
 /* Fixed Launcher Button */
