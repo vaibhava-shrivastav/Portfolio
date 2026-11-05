@@ -1,6 +1,6 @@
 /**
  * ==========================================================================
- * AwsServicesRow — Hackathon Judge Persona Spotlight Shelf
+ * AwsServicesRow — AWS Cloud Infrastructure Services Shelf
  * ==========================================================================
  * Built STRICTLY from real resume facts (EduCloud AWS Stack):
  * - AWS EC2, S3, IAM, VPC, Terraform IaC

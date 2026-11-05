@@ -1,27 +1,27 @@
 /**
  * ==========================================================================
- * GameContext — XP Engine, Discrete Action Table, Badges & Toast State
+ * GameContext — State Management for XP Progression, Badges & Session
  * ==========================================================================
  * Features:
- * - Discrete action-based XP system (StrictMode idempotent, persisted once per ID)
- * - Pure badge derivation function (deriveBadges) with persisted unlock timestamps
- * - Level thresholds:
- *     Level 1: 0 XP (Curious Visitor)
- *     Level 2: 100 XP (Explorer)
- *     Level 3: 200 XP (Insider)
- *     Level 4: 350 XP (Power User)
- *     Level 5: 500 XP (Hired!)
- * - Maximum available XP sum = 555 XP >= 500 XP (Level 5 fully reachable)
- * - Single-item visible Toast queue with pause-on-hover/focus and drop-oldest-XP priority
- * - One-time migration for legacy localStorage formats
+ * - Single-source-of-truth React Context for game engine state
+ * - Pure badge derivation and strict idempotency for XP awards
+ * - Persisted state with migration for legacy shapes and clamped XP
+ * - Welcome Gateway session state (single-user flow)
+ * - Toast notification queue with priority capping
  * ==========================================================================
  */
-import { createContext, useContext, useReducer, useEffect, useMemo } from 'react';
+
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useCallback,
+  useMemo
+} from 'react';
 import {
   profile as initialProfile,
   gameAchievements as initialAchievements,
-  visitorPersonas,
-  defaultPersona,
   projects as allProjects,
   xpLevels,
   xpActions
@@ -29,6 +29,7 @@ import {
 import {
   STORAGE_KEY,
   STORAGE_VERSION,
+  MAX_TOTAL_XP,
   calculateLevel,
   calculateLevelProgress,
   deriveBadges,
@@ -37,15 +38,7 @@ import {
 } from './game-engine';
 
 // Re-export pure logic
-export {
-  STORAGE_KEY,
-  STORAGE_VERSION,
-  calculateLevel,
-  calculateLevelProgress,
-  deriveBadges,
-  enqueueToast,
-  migrateState
-};
+export { calculateLevel, calculateLevelProgress, MAX_TOTAL_XP };
 
 // Initial State
 const initialState = {
@@ -63,10 +56,9 @@ const initialState = {
     unlockedAt: null
   })),
 
-  // Session / Persona select state
+  // Session state (single-user gateway)
   session: {
     profileSelected: false,
-    selectedProfile: null,
     visitedSections: []
   },
 
@@ -101,7 +93,6 @@ export const ActionTypes = {
   SET_MODAL_OPEN: 'SET_MODAL_OPEN',
   SET_SELECTED_PROJECT: 'SET_SELECTED_PROJECT',
   SET_PROFILE_SELECTED: 'SET_PROFILE_SELECTED',
-  SET_SELECTED_PROFILE: 'SET_SELECTED_PROFILE',
   ADD_VISITED_SECTION: 'ADD_VISITED_SECTION',
   ADD_TERMINAL_HISTORY: 'ADD_TERMINAL_HISTORY',
   INCREMENT_COMMAND_COUNT: 'INCREMENT_COMMAND_COUNT',
@@ -117,26 +108,28 @@ export function gameReducer(state, action) {
       const { actionId, amount = 0, label = '' } = action.payload || {};
       if (!actionId) return state;
 
+      let normalizedId = actionId;
+      if (normalizedId === 'profile_select' || normalizedId === 'profile-select') {
+        normalizedId = 'enter_portfolio';
+      } else if (normalizedId === 'terminal_open') {
+        normalizedId = 'terminal_first_open';
+      } else if (normalizedId === 'link_click:gla_exchange') {
+        normalizedId = 'project:live:proj-1';
+      }
+
       const awarded = state.awardedActionIds || [];
       // StrictMode idempotency / duplicate check
-      if (awarded.includes(actionId)) {
-        return state;
-      }
-      if (actionId === 'terminal_open' && awarded.includes('terminal_first_open')) {
-        return state;
-      }
-      if (actionId === 'terminal_first_open' && awarded.includes('terminal_open')) {
+      if (awarded.includes(normalizedId) || (actionId !== normalizedId && awarded.includes(actionId))) {
         return state;
       }
 
-      const newAwarded = [...awarded, actionId];
-      if (actionId === 'terminal_first_open' && !newAwarded.includes('terminal_open')) {
+      const newAwarded = [...awarded, normalizedId];
+      if (normalizedId === 'terminal_first_open' && !newAwarded.includes('terminal_open')) {
         newAwarded.push('terminal_open');
-      } else if (actionId === 'terminal_open' && !newAwarded.includes('terminal_first_open')) {
-        newAwarded.push('terminal_first_open');
       }
+
       const addedXp = Math.max(0, Number(amount) || 0);
-      const newXp = state.xp + addedXp;
+      const newXp = Math.min(MAX_TOTAL_XP, (state.xp || 0) + addedXp);
       const oldLevel = state.level;
       const levelInfo = calculateLevel(newXp);
 
@@ -166,29 +159,28 @@ export function gameReducer(state, action) {
         });
       }
 
-      // 2. Enqueue Achievement Toasts for any newly unlocked badges
+      // 2. Enqueue Badge Unlocked Toast(s)
       for (const badgeKey of newlyUnlockedKeys) {
-        const badgeDef = initialAchievements.find((b) => b.key === badgeKey);
-        if (badgeDef) {
+        const badgeMeta = initialAchievements.find((a) => a.key === badgeKey);
+        if (badgeMeta) {
           newToastQueue = enqueueToast(newToastQueue, {
             type: 'achievement',
-            title: `Badge Unlocked: ${badgeDef.name}`,
-            message: badgeDef.description,
-            icon: badgeDef.icon || 'military_tech',
-            rarity: badgeDef.rarity || 'common',
+            title: `Badge Unlocked: ${badgeMeta.name}`,
+            message: badgeMeta.description,
+            icon: badgeMeta.icon || 'military_tech',
             badgeKey
           });
         }
       }
 
-      // 3. Enqueue XP Toast if XP was gained
-      if (addedXp > 0) {
+      // 3. Enqueue XP Toast (only if XP was awarded and no level up was shown)
+      if (addedXp > 0 && levelInfo.level === oldLevel) {
         newToastQueue = enqueueToast(newToastQueue, {
           type: 'xp',
-          actionId,
+          actionId: normalizedId,
           title: `+${addedXp} XP`,
-          message: label || actionId.replace(/_/g, ' '),
-          amount: addedXp
+          message: label || 'Action completed',
+          icon: 'bolt'
         });
       }
 
@@ -196,6 +188,7 @@ export function gameReducer(state, action) {
         ...state,
         xp: newXp,
         level: levelInfo.level,
+        levelTitle: levelInfo.name,
         xpToNext: levelInfo.nextXp,
         awardedActionIds: newAwarded,
         badgeTimestamps: timestamps,
@@ -218,11 +211,12 @@ export function gameReducer(state, action) {
     }
 
     case ActionTypes.REMOVE_TOAST: {
+      const toastId = action.payload;
       return {
         ...state,
         ui: {
           ...state.ui,
-          toastQueue: (state.ui.toastQueue || []).filter((t) => t.id !== action.payload)
+          toastQueue: (state.ui.toastQueue || []).filter((t) => t.id !== toastId)
         }
       };
     }
@@ -282,14 +276,7 @@ export function gameReducer(state, action) {
     case ActionTypes.SET_PROFILE_SELECTED: {
       return {
         ...state,
-        session: { ...state.session, profileSelected: action.payload }
-      };
-    }
-
-    case ActionTypes.SET_SELECTED_PROFILE: {
-      return {
-        ...state,
-        session: { ...state.session, selectedProfile: action.payload }
+        session: { ...state.session, profileSelected: Boolean(action.payload) }
       };
     }
 
@@ -381,6 +368,7 @@ export function GameProvider({ children }) {
           ...migrated,
           xp: migrated.xp || 0,
           level: levelInfo.level,
+          levelTitle: levelInfo.name,
           xpToNext: levelInfo.nextXp,
           awardedActionIds: migrated.awardedActionIds || [],
           badgeTimestamps: timestamps,
@@ -418,7 +406,6 @@ export function GameProvider({ children }) {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const handleChange = (e) => dispatch({ type: ActionTypes.SET_REDUCED_MOTION, payload: e.matches });
     mediaQuery.addEventListener('change', handleChange);
-    dispatch({ type: ActionTypes.SET_REDUCED_MOTION, payload: mediaQuery.matches });
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
@@ -432,46 +419,31 @@ export function GameProvider({ children }) {
           payload: { actionId, amount, label }
         }),
 
-      // Persona & Profile Selection
-      selectPersona: (personaId) => {
-        dispatch({
-          type: ActionTypes.SET_SELECTED_PROFILE,
-          payload: personaId
-        });
+      // Welcome Gateway Actions
+      enterPortfolio: () => {
         dispatch({
           type: ActionTypes.SET_PROFILE_SELECTED,
           payload: true
         });
-        // Award profile select XP once
         dispatch({
           type: ActionTypes.AWARD_ACTION,
-          payload: { actionId: 'profile_select', amount: 20, label: 'Profile Selected' }
+          payload: { actionId: 'enter_portfolio', amount: 20, label: 'Entered Portfolio Gateway' }
         });
-        // If Judge persona chosen, award persona:judge (triggers Cloud Native badge)
-        if (personaId === 'judge') {
-          dispatch({
-            type: ActionTypes.AWARD_ACTION,
-            payload: { actionId: 'persona:judge', amount: 0, label: 'Judge Persona Chosen' }
-          });
-        }
       },
 
-      enterDirectly: (defaultPersonaId = 'default') => {
-        dispatch({
-          type: ActionTypes.SET_SELECTED_PROFILE,
-          payload: state.session?.selectedProfile || defaultPersonaId
-        });
+      enterCliMode: () => {
         dispatch({
           type: ActionTypes.SET_PROFILE_SELECTED,
+          payload: true
+        });
+        dispatch({
+          type: ActionTypes.SET_TERMINAL_OPEN,
           payload: true
         });
       },
 
       setProfileSelected: (selected) =>
-        dispatch({ type: ActionTypes.SET_PROFILE_SELECTED, payload: selected }),
-
-      setSelectedProfile: (profileId) =>
-        dispatch({ type: ActionTypes.SET_SELECTED_PROFILE, payload: profileId }),
+        dispatch({ type: ActionTypes.SET_PROFILE_SELECTED, payload: Boolean(selected) }),
 
       addVisitedSection: (section) => {
         dispatch({ type: ActionTypes.ADD_VISITED_SECTION, payload: section });
@@ -486,146 +458,91 @@ export function GameProvider({ children }) {
             type: ActionTypes.AWARD_ACTION,
             payload: { actionId: 'skills_view', amount: 30, label: 'Character Sheet Inspected' }
           });
-        } else if (section === 'achievements') {
-          dispatch({
-            type: ActionTypes.AWARD_ACTION,
-            payload: { actionId: 'achievements_view', amount: 20, label: 'Achievements Reviewed' }
-          });
         } else if (section === 'contact') {
           dispatch({
             type: ActionTypes.AWARD_ACTION,
             payload: { actionId: 'contact_view', amount: 20, label: 'Contact Terminal Reached' }
           });
-        }
-      },
-
-      // Project Modal
-      openProjectModal: (projectOrId) => {
-        let proj = projectOrId;
-        if (typeof projectOrId === 'string') {
-          proj =
-            (allProjects || []).find(
-              (p) => p.id === projectOrId || p.title.toLowerCase().includes(projectOrId.toLowerCase())
-            ) || null;
-        }
-        if (proj) {
-          dispatch({ type: ActionTypes.SET_SELECTED_PROJECT, payload: proj });
+        } else if (section === 'achievements') {
           dispatch({
             type: ActionTypes.AWARD_ACTION,
-            payload: {
-              actionId: `project:open:${proj.id}`,
-              amount: 25,
-              label: `Inspected ${proj.title}`
-            }
+            payload: { actionId: 'achievements_view', amount: 20, label: 'Achievements Shelf Explored' }
           });
         }
       },
 
-      closeProjectModal: () => dispatch({ type: ActionTypes.SET_MODAL_OPEN, payload: false }),
-
-      // Terminal
-      toggleTerminal: () => {
-        const willOpen = !state.ui.terminalOpen;
-        dispatch({ type: ActionTypes.TOGGLE_TERMINAL });
-        if (willOpen) {
-          dispatch({
-            type: ActionTypes.AWARD_ACTION,
-            payload: {
-              actionId: 'terminal_first_open',
-              amount: 50,
-              label: 'Interactive Terminal Initialized'
-            }
-          });
-        }
-      },
-
-      openTerminal: () => {
-        dispatch({ type: ActionTypes.SET_TERMINAL_OPEN, payload: true });
+      // Project detail modal
+      openProjectModal: (project) => {
         dispatch({
-          type: ActionTypes.AWARD_ACTION,
-          payload: {
-            actionId: 'terminal_first_open',
-            amount: 50,
-            label: 'Interactive Terminal Initialized'
-          }
+          type: ActionTypes.SET_SELECTED_PROJECT,
+          payload: project
         });
+        if (project && project.id) {
+          // Award XP for opening project detail modal (GLA Exchange = proj-1, EduCloud = proj-2)
+          const proj = allProjects.find((p) => p.id === project.id);
+          if (proj) {
+            dispatch({
+              type: ActionTypes.AWARD_ACTION,
+              payload: {
+                actionId: `project:open:${proj.id}`,
+                amount: 25,
+                label: `Project Detail: ${proj.title}`
+              }
+            });
+          }
+        }
       },
 
+      closeProjectModal: () =>
+        dispatch({
+          type: ActionTypes.SET_MODAL_OPEN,
+          payload: false
+        }),
+
+      // Terminal drawer
+      toggleTerminal: () => dispatch({ type: ActionTypes.TOGGLE_TERMINAL }),
+      openTerminal: () => dispatch({ type: ActionTypes.SET_TERMINAL_OPEN, payload: true }),
       closeTerminal: () => dispatch({ type: ActionTypes.SET_TERMINAL_OPEN, payload: false }),
 
       addTerminalHistory: (entry) =>
         dispatch({ type: ActionTypes.ADD_TERMINAL_HISTORY, payload: entry }),
 
-      incrementCommandCount: () => dispatch({ type: ActionTypes.INCREMENT_COMMAND_COUNT }),
+      incrementCommandCount: () =>
+        dispatch({ type: ActionTypes.INCREMENT_COMMAND_COUNT }),
 
-      addEasterEgg: (egg) => {
-        dispatch({ type: ActionTypes.ADD_EASTER_EGG, payload: { egg } });
-        if (egg === 'konami') {
-          dispatch({
-            type: ActionTypes.AWARD_ACTION,
-            payload: {
-              actionId: 'secret_or_konami',
-              amount: 100,
-              label: 'Secret Konami Code Activated'
-            }
-          });
-        }
-      },
+      addEasterEgg: (egg) =>
+        dispatch({ type: ActionTypes.ADD_EASTER_EGG, payload: { egg } }),
 
-      toggleMatrixMode: () => dispatch({ type: ActionTypes.TOGGLE_MATRIX_MODE }),
+      toggleMatrixMode: () =>
+        dispatch({ type: ActionTypes.TOGGLE_MATRIX_MODE }),
 
       // Toasts
       addToast: (toast) => dispatch({ type: ActionTypes.ADD_TOAST, payload: toast }),
       removeToast: (id) => dispatch({ type: ActionTypes.REMOVE_TOAST, payload: id }),
 
-      // Achievements compatibility helpers
-      unlockAchievement: (key) => {
-        const keyActionMap = {
-          pilot_episode: 'preloader_finish',
-          found_the_terminal: 'terminal_first_open',
-          reached_out: 'contact_form_sent',
-          konami_master: 'secret_or_konami',
-          cloud_native: 'aws_services_view',
-          shipped_it: 'link_click:gla_exchange',
-          certified: 'certifications_view'
-        };
-        const actionId = keyActionMap[key] || `badge_action:${key}`;
-        dispatch({
-          type: ActionTypes.AWARD_ACTION,
-          payload: { actionId, amount: 0, label: `Badge Trigger: ${key}` }
-        });
-      },
-
-      getUnlockedAchievements: () => (state.achievements || []).filter((a) => a.unlocked),
-      getLockedAchievements: () => (state.achievements || []).filter((a) => !a.unlocked),
-
-      // Progress Reset
+      // Reset
       resetGame: () => {
-        if (typeof window !== 'undefined') {
-          try {
-            window.localStorage.removeItem(STORAGE_KEY);
-            window.sessionStorage.removeItem('preloader_completed');
-            window.sessionStorage.removeItem('netflix-portfolio-session-preloader-seen');
-          } catch (e) {
-            console.warn(e);
-          }
+        try {
+          window.localStorage.removeItem(STORAGE_KEY);
+        } catch (e) {
+          /* ignore */
         }
         dispatch({ type: ActionTypes.RESET_STATE });
       },
 
-      // Computed Helpers
-      getLevelProgress: () => calculateLevelProgress(state.xp),
-      getTotalXp: () => state.xp,
-      isLevelMax: () => state.level >= 5
+      // Helpers
+      getUnlockedAchievements: () =>
+        (state.achievements || []).filter((a) => a.unlocked),
+
+      hasBadge: (key) =>
+        Boolean((state.achievements || []).find((a) => a.key === key && a.unlocked))
     }),
-    [state.xp, state.level, state.achievements, state.awardedActionIds, state.ui.terminalOpen]
+    [state.achievements]
   );
 
-  return (
-    <GameContext.Provider value={{ state, actions }}>
-      {children}
-    </GameContext.Provider>
-  );
+  const value = useMemo(() => ({ state, actions }), [state, actions]);
+
+  return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }
 
 // Custom Hooks
@@ -638,39 +555,26 @@ export function useGame() {
 }
 
 export function useXP() {
-  const { state, actions } = useGame();
+  const { state } = useGame();
+  const currentXp = state.xp || 0;
+  const levelInfo = calculateLevel(currentXp);
+  const progressInLevel = calculateLevelProgress(currentXp);
+
   return {
-    xp: state.xp,
-    level: state.level,
-    xpToNext: state.xpToNext,
-    progress: actions.getLevelProgress(),
-    totalXp: actions.getTotalXp(),
-    isMaxLevel: actions.isLevelMax(),
-    awardAction: actions.awardAction
+    xp: currentXp,
+    level: levelInfo.level,
+    levelTitle: levelInfo.name,
+    xpToNext: levelInfo.nextXp,
+    progress: progressInLevel
   };
 }
 
 export function useAchievements() {
-  const { state, actions } = useGame();
+  const { state } = useGame();
   return {
-    achievements: state.achievements,
-    unlocked: actions.getUnlockedAchievements(),
-    locked: actions.getLockedAchievements(),
-    unlock: actions.unlockAchievement
-  };
-}
-
-export function useTerminal() {
-  const { state, actions } = useGame();
-  return {
-    history: state.terminal.history,
-    commandCount: state.terminal.commandCount,
-    easterEggsFound: state.terminal.easterEggsFound,
-    matrixMode: state.terminal.matrixMode,
-    addHistory: actions.addTerminalHistory,
-    incrementCommand: actions.incrementCommandCount,
-    addEasterEgg: actions.addEasterEgg,
-    toggleMatrixMode: actions.toggleMatrixMode
+    achievements: state.achievements || [],
+    unlockedCount: (state.achievements || []).filter((a) => a.unlocked).length,
+    totalCount: (state.achievements || []).length
   };
 }
 
@@ -678,30 +582,11 @@ export function useSession() {
   const { state, actions } = useGame();
   return {
     profileSelected: state.session.profileSelected,
-    selectedProfile: state.session.selectedProfile,
     visitedSections: state.session.visitedSections,
     setProfileSelected: actions.setProfileSelected,
-    setSelectedProfile: actions.setSelectedProfile,
-    selectPersona: actions.selectPersona,
+    enterPortfolio: actions.enterPortfolio,
+    enterCliMode: actions.enterCliMode,
     addVisitedSection: actions.addVisitedSection
-  };
-}
-
-export function usePersona() {
-  const { state, actions } = useGame();
-  const personaId = state.session?.selectedProfile;
-  const persona =
-    visitorPersonas.find((p) => p.id === personaId) ||
-    (personaId === 'default' ? defaultPersona : null);
-  const activePersona = persona || defaultPersona;
-  return {
-    persona: activePersona,
-    personaId: personaId || 'default',
-    selectPersona: actions.selectPersona,
-    enterDirectly: actions.enterDirectly,
-    tagline: activePersona?.tagline || initialProfile.tagline,
-    firstRowOrder: activePersona?.firstRowOrder || ['projects', 'about'],
-    isSelectingProfile: !state.session?.profileSelected
   };
 }
 

@@ -16,13 +16,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { parseCommand, VALID_COMMAND_NAMES } from '../terminal/commands';
 import { getClosestCommand } from '../terminal/suggest';
-import { useGame, useUI, useXP, usePersona } from '../context/GameContext';
+import { useGame, useUI, useXP } from '../context/GameContext';
 
 export default function TerminalDrawer({ onClose }) {
   const { actions } = useGame();
   const { modalOpen, reducedMotion, openProjectModal } = useUI();
   const { xp, level } = useXP();
-  const { persona } = usePersona();
 
   // Terminal I/O State
   const [history, setHistory] = useState([
@@ -164,7 +163,6 @@ export default function TerminalDrawer({ onClose }) {
     const result = parseCommand(trimmed, {
       level,
       xp,
-      persona: persona?.label || persona?.name || 'Curious Visitor',
       achievements: actions.getUnlockedAchievements?.() || []
     });
 
@@ -254,7 +252,7 @@ export default function TerminalDrawer({ onClose }) {
     }
 
     setInputVal('');
-  }, [actions, level, xp, persona, onClose, openProjectModal, reducedMotion]);
+  }, [actions, level, xp, onClose, openProjectModal, reducedMotion]);
 
   // Focus trap inside drawer
   const handleDrawerKeyDown = (e) => {

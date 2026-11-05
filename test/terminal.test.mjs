@@ -42,7 +42,6 @@ test('1. Pure command parsing for all 17 documented commands', () => {
     const res = parseCommand(cmd, {
       level: 2,
       xp: 150,
-      persona: 'Recruiter',
       achievements: ['pilot_episode']
     });
     assert.equal(res.success, true, `Command "${cmd}" must execute successfully`);
@@ -61,18 +60,17 @@ test('2. help command outputs grouped categories', () => {
   assert.match(textAll, /CLASSIFIED/i);
 });
 
-test('3. whoami outputs role, level, current XP, and selected persona', () => {
+test('3. whoami outputs role, level, current XP, and does not mention persona', () => {
   const res = parseCommand('whoami', {
     level: 3,
-    xp: 260,
-    persona: 'Fellow Dev'
+    xp: 260
   });
   assert.equal(res.success, true);
   const textAll = res.output.map((l) => l.text).join('\n');
   assert.match(textAll, /ROLE/i);
   assert.match(textAll, /Level 3/);
   assert.match(textAll, /260 XP/);
-  assert.match(textAll, /Fellow Dev/);
+  assert.ok(!textAll.includes('PERSONA'), 'whoami output must not contain PERSONA');
 });
 
 test('4. skills --level outputs self-assessed levels without Advanced/Working Knowledge wording', () => {
@@ -250,7 +248,6 @@ test('12. Security & Fact Audit: No command output contains phone numbers or for
     const res = parseCommand(input, {
       level: 1,
       xp: 0,
-      persona: 'Recruiter',
       achievements: []
     });
 
@@ -292,7 +289,6 @@ test('13. No terminal command output contains "undefined", "null" or "NaN", and 
     const res = parseCommand(cmdName, {
       level: 2,
       xp: 150,
-      persona: 'Recruiter',
       achievements: [{ id: 'pilot_episode', unlocked: true }]
     });
 
