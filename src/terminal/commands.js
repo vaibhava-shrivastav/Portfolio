@@ -37,7 +37,7 @@ export const commands = {
         { type: 'muted', text: 'Type a command and press Enter, or click Quick-Ops chips.' },
         { type: 'warning', text: '--- CORE COMMANDS ---' },
         { type: 'text', text: '  help            Display this command matrix' },
-        { type: 'text', text: '  whoami          Display role, rank level, XP & selected persona' },
+        { type: 'text', text: '  whoami          Display role, rank level, XP & system status' },
         { type: 'text', text: '  theme <name>    Switch accent theme (dark | neon | pastel)' },
         { type: 'text', text: '  clear           Clear terminal viewport history' },
         { type: 'warning', text: '--- PORTFOLIO COMMANDS ---' },
@@ -61,13 +61,12 @@ export const commands = {
     })
   },
 
-  // 2. WHOAMI (Role, level, current XP, selected persona)
+  // 2. WHOAMI (Role, level, current XP, and system status)
   whoami: {
-    help: 'Display developer profile, rank level, XP, and selected persona',
+    help: 'Display developer profile, rank level, XP, and system status',
     run: (args, context = {}) => {
       const currentXp = Number(context.xp) || 0;
       const levelInfo = calculateLevel(currentXp);
-      const personaDisplay = context.persona || context.personaName || 'Curious Visitor';
 
       return {
         output: [
@@ -75,7 +74,6 @@ export const commands = {
           { type: 'text', text: `ROLE     : ${profile.headline}` },
           { type: 'info', text: `LEVEL    : Level ${levelInfo.level} · ${levelInfo.name}` },
           { type: 'info', text: `XP       : ${currentXp} XP` },
-          { type: 'warning', text: `PERSONA  : ${personaDisplay}` },
           { type: 'muted', text: `LOCATION : ${profile.location}` },
           { type: 'text', text: `EMAIL    : ${profile.email}` }
         ]

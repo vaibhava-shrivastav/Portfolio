@@ -1,6 +1,6 @@
 /**
  * ==========================================================================
- * App — Root Component with Layout, Persona-Tailored Rows, and Modals
+ * App — Root Component with Layout, Portfolio Rows, and Modals
  * ==========================================================================
  */
 import { useEffect } from 'react';
@@ -18,11 +18,8 @@ import { ContactSection } from './components/ContactSection';
 import { Terminal } from './components/Terminal';
 import { ToastContainer } from './components/Toast';
 import { Footer } from './components/Footer';
-import { usePersona } from './context/GameContext';
 
 function App() {
-  const { personaId } = usePersona();
-
   // Initialize theme from localStorage on startup
   useEffect(() => {
     try {
@@ -36,27 +33,6 @@ function App() {
     }
   }, []);
 
-  // Base page order matches navbar:
-  // Hero -> About -> Skills -> Projects (persona-tailored) -> Achievements -> Contact -> Footer
-  // - Hackathon Judge: AWS services architecture row rendered at top of Projects
-  // - All personas: Projects catalog rendered
-  const renderProjects = () => {
-    if (personaId === 'judge') {
-      return (
-        <div className="projects-wrapper">
-          <AwsServicesRow />
-          <Projects />
-        </div>
-      );
-    }
-
-    return (
-      <div className="projects-wrapper">
-        <Projects />
-      </div>
-    );
-  };
-
   return (
     <>
       {/* Skip link for accessibility */}
@@ -65,7 +41,7 @@ function App() {
       {/* Preloader */}
       <Preloader />
 
-      {/* Profile Select Gate */}
+      {/* Welcome Gateway */}
       <ProfileSelect />
 
       {/* Navbar */}
@@ -76,7 +52,10 @@ function App() {
         <Hero />
         <About />
         <SkillsSheet />
-        {renderProjects()}
+        <div className="projects-wrapper">
+          <AwsServicesRow />
+          <Projects />
+        </div>
         <Achievements />
         <ContactSection />
       </main>
