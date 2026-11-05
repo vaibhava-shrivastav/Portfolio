@@ -12,9 +12,12 @@ import {
   calculateLevelProgress,
   deriveBadges,
   enqueueToast,
-  migrateState
+  migrateState,
+  applyAwardAction
 } from '../src/context/game-engine.js';
 import { gameAchievements } from '../src/data/profile.js';
+import { parseCommand } from '../src/terminal/commands.js';
+import { isKonamiSequence } from '../src/hooks/useKonami.js';
 
 test('Level calculator respects exact threshold brackets', () => {
   assert.deepEqual(calculateLevel(0), { level: 1, name: 'Curious Visitor', minXp: 0, nextXp: 100 });
@@ -190,4 +193,105 @@ test('State migration cleans legacy structures', () => {
   assert.deepEqual(migrated.awardedActionIds, []);
   assert.deepEqual(migrated.badgeTimestamps, {});
   assert.equal(migrated.achievements[0].xpReward, undefined);
+});
+
+test('XP-Once Awards: awarding the same actionId twice increments XP only once (StrictMode idempotency)', () => {
+  const initial = {
+    xp: 0,
+    level: 1,
+    levelTitle: 'Curious Visitor',
+    awardedActionIds: [],
+    badgeTimestamps: {}
+  };
+
+  // First award: awards +20 XP
+  const state1 = applyAwardAction(initial, 'profile_select', 20);
+  assert.equal(state1.xp, 20);
+  assert.equal(state1.awardedActionIds.includes('profile_select'), true);
+
+  // Duplicate award of the exact same action: XP must NOT increment
+  const state2 = applyAwardAction(state1, 'profile_select', 20);
+  assert.equal(state2.xp, 20, 'Second award of profile_select must not add double XP');
+  assert.equal(state2.awardedActionIds.length, 1);
+
+  // Terminal alias idempotency: terminal_open vs terminal_first_open
+  const state3 = applyAwardAction(state2, 'terminal_open', 15);
+  assert.equal(state3.xp, 35);
+  const state4 = applyAwardAction(state3, 'terminal_first_open', 15);
+  assert.equal(state4.xp, 35, 'terminal_first_open should be idempotent with terminal_open');
+});
+
+test('Badge Triggers: discrete action IDs unlock their exact respective badges', () => {
+  const initial = {
+    xp: 0,
+    level: 1,
+    awardedActionIds: [],
+    badgeTimestamps: {}
+  };
+
+  // 1. Found the Terminal
+  const terminalState = applyAwardAction(initial, 'terminal_open', 15);
+  assert.equal(terminalState.badgeUnlocked.found_the_terminal, true);
+
+  // 2. Konami Master
+  const konamiState = applyAwardAction(initial, 'secret_or_konami', 100);
+  assert.equal(konamiState.badgeUnlocked.konami_master, true);
+
+  // 3. Project Binge
+  const p1State = applyAwardAction(initial, 'project:open:proj-1', 10);
+  assert.equal(p1State.badgeUnlocked.project_binge, false);
+  const p2State = applyAwardAction(p1State, 'project:open:proj-2', 10);
+  assert.equal(p2State.badgeUnlocked.project_binge, true);
+
+  // 4. Skill Collector
+  let skillState = initial;
+  const cats = [
+    'skill_cat:Languages',
+    'skill_cat:Frameworks & Libraries',
+    'skill_cat:Cloud & DevOps',
+    'skill_cat:Databases',
+    'skill_cat:CS Fundamentals',
+    'skill_cat:Developer Tools'
+  ];
+  for (const cat of cats) {
+    skillState = applyAwardAction(skillState, cat, 5);
+  }
+  assert.equal(skillState.badgeUnlocked.skill_collector, true);
+});
+
+test('Konami sequence validation: verifies 10-key sequence strictly', () => {
+  const validSequence = [
+    'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
+    'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
+    'b', 'a'
+  ];
+  assert.equal(isKonamiSequence(validSequence), true);
+
+  // Incomplete or mutated sequence
+  assert.equal(isKonamiSequence(validSequence.slice(0, 9)), false);
+  assert.equal(isKonamiSequence(['ArrowDown', ...validSequence.slice(1)]), false);
+  assert.equal(isKonamiSequence(['x', 'y']), false);
+});
+
+test('Theme persistence: terminal theme command produces valid side effect and persists valid choices', () => {
+  const themes = ['dark', 'neon', 'pastel'];
+  for (const t of themes) {
+    const res = parseCommand(`theme ${t}`);
+    assert.equal(res.success, true);
+    assert.ok(
+      res.sideEffects.some((e) => e.type === 'SET_THEME' && e.theme === t),
+      `theme ${t} must trigger SET_THEME with ${t}`
+    );
+  }
+
+  // Clear command produces CLEAR_OUTPUT side effect
+  const clearRes = parseCommand('clear');
+  assert.equal(clearRes.success, true);
+  assert.ok(clearRes.sideEffects.some((e) => e.type === 'CLEAR_OUTPUT'));
+
+  // Invalid theme returns guidance without setting theme
+  const invalidRes = parseCommand('theme cyberpunk');
+  assert.equal(invalidRes.success, true);
+  assert.equal(invalidRes.sideEffects.length, 0);
+  assert.ok(invalidRes.output.some((l) => l.text.includes('ACCENT THEMES AVAILABLE')));
 });
