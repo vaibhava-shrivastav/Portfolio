@@ -5,7 +5,7 @@
   "type": "module",
   "main": "src/handler.mjs",
   "scripts": {
-    "test": "node --test test/validate.test.mjs"
+    "test": "node --test"
   },
   "keywords": [
     "aws",
@@ -16,3 +16,4 @@
   "author": "Vaibhava Kumar Shrivastav",
   "license": "MIT"
 }
+

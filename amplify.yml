@@ -89,7 +89,7 @@ applications:
           - key: 'Cache-Control'
             value: 'public, max-age=0, must-revalidate'
           - key: 'Content-Security-Policy'
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://*.execute-api.*.amazonaws.com ${VITE_CONTACT_API_URL}; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://*.execute-api.ap-south-1.amazonaws.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
       - pattern: '**/*.css'
         headers:
           - key: 'Cache-Control'
@@ -119,12 +119,6 @@ applications:
           - key: 'Cache-Control'
             value: 'public, max-age=31536000, immutable'
       - pattern: 'resume.pdf'
-        headers:
-          - key: 'Cache-Control'
-            value: 'public, max-age=86400'
-          - key: 'Content-Disposition'
-            value: 'attachment; filename="Vaibhava_Kumar_Shrivastav_Resume.pdf"'
-      - pattern: 'assets/resume.pdf'
         headers:
           - key: 'Cache-Control'
             value: 'public, max-age=86400'

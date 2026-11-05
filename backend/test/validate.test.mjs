@@ -152,3 +152,4 @@ test('sanitizeText: strips ASCII control chars while preserving newlines and tab
   const cleaned = sanitizeText(dirty);
   assert.equal(cleaned, 'Line 1\nLine 2\tEnd');
 });
+

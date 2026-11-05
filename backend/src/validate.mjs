@@ -93,7 +93,7 @@ export function validatePayload(data = {}) {
     }
   }
 
-  // 3. Email validation (RFC 5322 compliant, max 254 chars)
+  // 3. Email validation (RFC 5322 pattern, max 254 chars)
   const cleanEmail = sanitizeText(rawEmail);
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
   if (!errors.email) {
@@ -129,3 +129,4 @@ export function validatePayload(data = {}) {
     }
   };
 }
+
