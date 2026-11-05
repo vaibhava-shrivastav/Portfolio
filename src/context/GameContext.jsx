@@ -604,6 +604,7 @@ export function GameProvider({ children }) {
         if (typeof window !== 'undefined') {
           try {
             window.localStorage.removeItem(STORAGE_KEY);
+            window.sessionStorage.removeItem('preloader_completed');
             window.sessionStorage.removeItem('netflix-portfolio-session-preloader-seen');
           } catch (e) {
             console.warn(e);

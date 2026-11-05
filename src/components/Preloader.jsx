@@ -63,6 +63,13 @@ export function Preloader() {
     if (!shouldShow) return;
     setMounted(true);
 
+    // Mark preloader as seen for this session immediately so reloads skip it without flash
+    try {
+      sessionStorage.setItem(SESSION_KEY, 'true');
+    } catch {
+      /* ignore */
+    }
+
     // Check prefers-reduced-motion
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (mediaQuery.matches) {
