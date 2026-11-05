@@ -3543,6 +3543,17 @@ body.modal-open .terminal-launcher-container {
   scroll-snap-align: start;
 }
 
+@media (max-width: 640px) {
+  .row-shelf__track {
+    padding-right: var(--space-8);
+  }
+
+  .row-shelf__item {
+    flex: 0 0 82%;
+    max-width: 82%;
+  }
+}
+
 /* Desktop Arrow Buttons */
 .row-shelf__arrow {
   position: absolute;
@@ -3604,14 +3615,16 @@ body.modal-open .terminal-launcher-container {
   position: relative;
   display: flex;
   flex-direction: column;
-  background: #111111;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(18, 18, 18, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
   cursor: pointer;
   outline: none;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease,
+              box-shadow 0.25s ease;
   min-height: 100%;
 }
 
@@ -3619,9 +3632,9 @@ body.modal-open .terminal-launcher-container {
   .project-card:hover,
   .episode-card:hover,
   .aws-card:hover {
-    transform: translateY(-6px) scale(1.02);
-    border-color: var(--color-primary);
-    box-shadow: 0 16px 36px rgba(229, 9, 20, 0.35);
+    transform: translateY(-4px);
+    border-color: rgba(229, 9, 20, 0.5);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8), 0 0 16px rgba(229, 9, 20, 0.2);
   }
 }
 
