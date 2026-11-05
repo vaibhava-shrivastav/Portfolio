@@ -8,8 +8,7 @@
 
 export const profile = {
   name: "Vaibhava Kumar Shrivastav",
-  headline: "B.Tech Computer Science Student · Full-Stack & Cloud Builder",
-  tagline: "Building scalable systems, one commit at a time.",
+  headline: "Computer Science Student & AWS Cloud / Full-Stack Builder",
   welcome: "Welcome. I'm Vaibhava, pick a profile to see the portfolio tailored for you.",
   pronoun: "he/him",
   location: "Lucknow, Uttar Pradesh, India",
@@ -66,14 +65,6 @@ export const education = [
     cpi: "CPI 8.8",
     gpa: "CPI 8.8",
     honors: [],
-    relevantCoursework: [
-      // NOTE: Inferred from skills section; resume does not list specific courses
-      "Data Structures & Algorithms",
-      "Database Management Systems",
-      "Computer Networks",
-      "Operating Systems",
-      "Cloud Computing"
-    ],
     featured: true
   },
   {
@@ -86,7 +77,6 @@ export const education = [
     score: "89.8%",
     gpa: "89.8%",
     honors: [],
-    relevantCoursework: [],
     featured: false
   },
   {
@@ -99,7 +89,6 @@ export const education = [
     score: "86.2%",
     gpa: "86.2%",
     honors: [],
-    relevantCoursework: [],
     featured: false
   }
 ];
@@ -108,7 +97,7 @@ export const skills = {
   categories: [
     {
       name: "Languages",
-      icon: "🔤",
+      icon: "code",
       color: "var(--color-cyan)",
       items: [
         { name: "Java", level: 85, years: 3 }, // SELF-ASSESSED: confirm
@@ -118,7 +107,7 @@ export const skills = {
     },
     {
       name: "Frameworks & Libraries",
-      icon: "⚛️",
+      icon: "layers",
       color: "var(--color-terminal)",
       items: [
         { name: "ReactJS", level: 90, years: 3 }, // SELF-ASSESSED: confirm
@@ -129,7 +118,7 @@ export const skills = {
     },
     {
       name: "Cloud & DevOps",
-      icon: "☁️",
+      icon: "cloud",
       color: "var(--color-primary)",
       items: [
         { name: "AWS: EC2, S3, IAM, VPC", level: 85, years: 2 }, // SELF-ASSESSED: confirm
@@ -141,7 +130,7 @@ export const skills = {
     },
     {
       name: "Databases",
-      icon: "🗄️",
+      icon: "database",
       color: "var(--color-warning)",
       items: [
         { name: "MongoDB", level: 85, years: 2 }, // SELF-ASSESSED: confirm
@@ -151,7 +140,7 @@ export const skills = {
     },
     {
       name: "CS Fundamentals",
-      icon: "📚",
+      icon: "cpu",
       color: "var(--color-info)",
       items: [
         { name: "Data Structures & Algorithms", level: 90, years: 4 }, // SELF-ASSESSED: confirm
@@ -163,7 +152,7 @@ export const skills = {
     },
     {
       name: "Developer Tools",
-      icon: "🛠️",
+      icon: "tool",
       color: "var(--color-success)",
       items: [
         { name: "Git", level: 95, years: 4 }, // SELF-ASSESSED: confirm
@@ -300,7 +289,7 @@ export const gameAchievements = [
     name: "Pilot Episode",
     title: "Pilot Episode",
     description: "Completed the preloader sequence and entered the portfolio",
-    icon: "🎬",
+    icon: "play",
     category: "milestone",
     rarity: "common",
     unlockHint: "Watch or complete the cinematic preloader sequence",
@@ -314,7 +303,7 @@ export const gameAchievements = [
     name: "Found the Terminal",
     title: "Found the Terminal",
     description: "Opened the interactive terminal overlay",
-    icon: "💻",
+    icon: "terminal",
     category: "exploration",
     rarity: "common",
     unlockHint: "Press the ` key or click the Terminal button in the navbar",
@@ -328,7 +317,7 @@ export const gameAchievements = [
     name: "Project Binge",
     title: "Project Binge",
     description: "Opened both project detail modals (GLA Exchange & EduCloud)",
-    icon: "📦",
+    icon: "package",
     category: "exploration",
     rarity: "rare",
     unlockHint: "Inspect both project detail modals in the catalog",
@@ -342,7 +331,7 @@ export const gameAchievements = [
     name: "Skill Collector",
     title: "Skill Collector",
     description: "Expanded all 6 skill categories in the character sheet",
-    icon: "📚",
+    icon: "file",
     category: "exploration",
     rarity: "rare",
     unlockHint: "Expand every category in the Character Attributes sheet",
@@ -356,7 +345,7 @@ export const gameAchievements = [
     name: "Reached Out",
     title: "Reached Out",
     description: "Sent a message via the contact form",
-    icon: "📬",
+    icon: "mail",
     category: "interaction",
     rarity: "rare",
     unlockHint: "Send a message via the contact form",
@@ -370,7 +359,7 @@ export const gameAchievements = [
     name: "Konami Master",
     title: "Konami Master",
     description: "Activated the secret Konami code sequence",
-    icon: "🎮",
+    icon: "gamepad",
     category: "secret",
     rarity: "mythic",
     unlockHint: "↑↑↓↓←→←→BA",
@@ -384,7 +373,7 @@ export const gameAchievements = [
     name: "Cloud Native",
     title: "Cloud Native",
     description: "Inspected EduCloud serverless architecture",
-    icon: "☁️",
+    icon: "cloud",
     category: "project",
     rarity: "epic",
     unlockHint: "Open the EduCloud project modal",
@@ -398,7 +387,7 @@ export const gameAchievements = [
     name: "Shipped It",
     title: "Shipped It",
     description: "Visited the live production deployment of GLA Exchange",
-    icon: "🚀",
+    icon: "rocket",
     category: "project",
     rarity: "epic",
     unlockHint: "Launch live demo at glaexchange.online",
@@ -412,7 +401,7 @@ export const gameAchievements = [
     name: "Certified",
     title: "Certified",
     description: "Viewed AWS certifications",
-    icon: "📜",
+    icon: "award",
     category: "accomplishment",
     rarity: "legendary",
     unlockHint: "View the AWS certifications in the achievements shelf",
@@ -426,7 +415,7 @@ export const gameAchievements = [
     name: "Full Run",
     title: "Full Run",
     description: "Reached Level 5 (Hired!) at 500 XP",
-    icon: "🏁",
+    icon: "flag",
     category: "milestone",
     rarity: "mythic",
     unlockHint: "Accumulate 500 XP to reach Level 5",
@@ -445,21 +434,21 @@ export const accomplishments = [
     title: "LeetCode 150+ Problems",
     description: "Solved 150+ problems on LeetCode focused on arrays, trees, graphs, and dynamic programming.",
     category: "coding",
-    icon: "💻"
+    icon: "terminal"
   },
   {
     id: "acc-2",
     title: "Codeforces Rating 880+",
     description: "Achieved 880+ rating on Codeforces through competitive programming, demonstrating consistent performance under timed, multi-constraint problem solving.",
     category: "coding",
-    icon: "⚡"
+    icon: "bolt"
   },
   {
     id: "acc-3",
     title: "Smart India Hackathon",
     description: "Part of a 5-member team that qualified the internal round, demonstrating cross-disciplinary collaboration and delivery under ambiguity.",
     category: "competition",
-    icon: "🏆"
+    icon: "trophy"
   }
 ];
 
@@ -531,10 +520,10 @@ export const easterEggs = {
   konami: {
     enabled: true,
     reward: { xp: 100, achievement: "konami_master" },
-    message: "🎮 Konami Code activated! You've unlocked the Konami Master achievement."
+    message: "Konami Code activated! You've unlocked the Konami Master achievement."
   },
   commands: {
-    "sudo": { response: "Nice try. This isn't Linux. 😄", xp: 10 },
+    "sudo": { response: "Nice try. This isn't Linux. :)", xp: 10 },
     "whoami": { response: "A developer who loves building things.", xp: 5 },
     "date": { response: () => new Date().toISOString(), xp: 5 },
     "fortune": {
@@ -546,8 +535,8 @@ export const easterEggs = {
       ],
       xp: 10
     },
-    "matrix": { response: "Wake up, Neo... 🐰", xp: 50, unlock: "matrix_mode" },
-    "coffee": { response: "☕ *sips coffee* Ready to deploy!", xp: 5 }
+    "matrix": { response: "Wake up, Neo...", xp: 50, unlock: "matrix_mode" },
+    "coffee": { response: "*sips coffee* Ready to deploy!", xp: 5 }
   }
 };
 

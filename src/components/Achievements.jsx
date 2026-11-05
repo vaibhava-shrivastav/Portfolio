@@ -21,6 +21,7 @@ import {
 } from '../data/profile';
 import { useGame, useXP } from '../context/GameContext';
 import { useInView } from '../hooks/useInView';
+import { Icon } from './Icon';
 
 export function Achievements() {
   const { state, actions } = useGame();
@@ -98,7 +99,9 @@ export function Achievements() {
         {/* Level 5 Banner: "You've Seen It All" */}
         {isMaxLevel && (
           <div className="level-5-banner" role="region" aria-label="Level 5 Completion Trophy">
-            <div className="level-5-banner__icon" aria-hidden="true">🏆</div>
+            <div className="level-5-banner__icon" aria-hidden="true">
+              <Icon name="trophy" size={32} />
+            </div>
             <div className="level-5-banner__content">
               <span className="level-5-banner__pill font-mono">MAXIMUM RANK ACHIEVED</span>
               <h3 className="level-5-banner__title font-display">YOU'VE SEEN IT ALL · LEVEL 5 HIRED!</h3>
@@ -150,7 +153,7 @@ export function Achievements() {
                 <div className="credential-card__foil credential-card__foil--metric" aria-hidden="true" />
                 <div className="credential-card__body">
                   <div className="credential-card__icon-box font-mono text-xl" aria-hidden="true">
-                    {acc.icon}
+                    <Icon name={acc.icon || 'terminal'} size={24} />
                   </div>
                   <div className="credential-card__text">
                     <span className="credential-card__issuer font-mono">PROBLEM SOLVING</span>
@@ -186,10 +189,16 @@ export function Achievements() {
                   {/* Badge Icon Frame */}
                   <div className="badge-card__icon-frame">
                     <span className="badge-card__icon" aria-hidden="true">
-                      {isLocked ? (badge.secret ? '🔒' : '🛡️') : badge.icon}
+                      {isLocked ? (
+                        <Icon name={badge.secret ? 'lock' : 'shield'} size={24} />
+                      ) : (
+                        <Icon name={badge.icon || 'award'} size={24} />
+                      )}
                     </span>
                     {!isLocked && (
-                      <span className="badge-card__check font-mono" aria-hidden="true">✓</span>
+                      <span className="badge-card__check font-mono" aria-hidden="true">
+                        <Icon name="check" size={12} />
+                      </span>
                     )}
                   </div>
 

@@ -20,6 +20,7 @@ import { useState, useEffect, useRef } from 'react';
 import { skills as skillsData, profile as profileData } from '../data/profile';
 import { useGame, useXP } from '../context/GameContext';
 import { useInView } from '../hooks/useInView';
+import { Icon } from './Icon';
 
 export function SkillsSheet() {
   const { actions } = useGame();
@@ -204,7 +205,7 @@ export function SkillsSheet() {
                   >
                     <div className="skills-sheet-module__title-group">
                       <span className="skills-sheet-module__icon font-mono" aria-hidden="true">
-                        {category.icon}
+                        <Icon name={category.icon || 'code'} size={20} />
                       </span>
                       <h3 className="skills-sheet-module__title font-display">
                         {category.name}
@@ -279,7 +280,7 @@ export function SkillsSheet() {
 
             {/* Self-Assessed Rating Disclaimer Note */}
             <p className="skills-sheet-note font-mono text-center">
-              // NOTE: Skill proficiency ratings are self-assessed estimates based on university coursework (GLA University), production deployments (GLA Exchange), and hands-on cloud labs (EduCloud).
+              // NOTE: Skill proficiency ratings are self-assessed estimates based on university academics (GLA University), production deployments (GLA Exchange), and hands-on cloud labs (EduCloud).
             </p>
           </div>
         </div>

@@ -31,6 +31,7 @@
 
   /* Surface / Border — White-Opacity Model (Stitch) */
   --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --border-subtle: var(--color-border-subtle);
   --color-border-default: rgba(255, 255, 255, 0.12);
   --color-border-strong: rgba(255, 255, 255, 0.2);
   --color-border-focus: rgba(229, 9, 20, 0.5);
@@ -128,14 +129,20 @@
   --element-gap: var(--space-4);
 
   /* ==========================================================================
-     4. BORDER RADIUS TOKENS
+     4. BORDER RADIUS TOKENS (Unified 4-Token System)
      ========================================================================== */
+  --radius-control: 12px;
+  --radius-card: 16px;
+  --radius-modal: 20px;
+  --radius-pill: 999px;
+
+  /* Backward-compatible aliases pointing to the 4 tokens */
   --radius-none: 0;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-full: 9999px;
+  --radius-sm: var(--radius-control);
+  --radius-md: var(--radius-control);
+  --radius-lg: var(--radius-card);
+  --radius-xl: var(--radius-modal);
+  --radius-full: var(--radius-pill);
 
   /* ==========================================================================
      5. SHADOW TOKENS

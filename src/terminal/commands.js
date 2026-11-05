@@ -101,9 +101,9 @@ export const commands = {
   // 4. SKILLS (Grouped skills list)
   skills: {
     help: 'Grouped technical skills list (Languages, Cloud, etc.)',
-    run: (args) => {
+    run: (args, context) => {
       if (args && args.includes('--level')) {
-        return commands['skills --level'].run();
+        return commands['skills --level'].run(args, context);
       }
 
       const lines = [
@@ -130,25 +130,38 @@ export const commands = {
   // 5. SKILLS --LEVEL (Self-assessed proficiency bars)
   'skills --level': {
     help: 'Render self-assessed skill proficiency bars',
-    run: () => {
+    run: (args, context = {}) => {
       const lines = [
         { type: 'info', text: 'TECHNICAL SKILLS (SELF-ASSESSED LEVELS)' }
       ];
 
+      // Check mobile / small viewport context to prevent awkward wrapping at 320px
+      let isMobile = Boolean(context.isMobile);
+      if (!isMobile && typeof window !== 'undefined') {
+        isMobile = window.innerWidth < 640;
+      }
+
+      const labelWidth = isMobile ? 16 : 28;
+      const barLength = isMobile ? 8 : 14;
+
       (skills.categories || []).forEach((cat) => {
         lines.push({ type: 'warning', text: `[${cat.name.toUpperCase()}]` });
         (cat.items || []).forEach((item) => {
-          const label = item.name.padEnd(28, ' ');
+          let name = item.name;
+          if (isMobile && name.length > labelWidth) {
+            name = name.slice(0, labelWidth - 1) + '…';
+          }
+          const label = name.padEnd(labelWidth, ' ');
           lines.push({
             type: 'text',
-            text: `  ${label} ${createAsciiBar(item.level)}`
+            text: `  ${label} ${createAsciiBar(item.level, barLength)}`
           });
         });
       });
 
       lines.push({
         type: 'muted',
-        text: '// Note: Percentage ratings are self-assessed estimates based on university coursework and practical project experience.'
+        text: '// Note: Percentage ratings are self-assessed estimates based on university academics and practical project experience.'
       });
 
       return { output: lines };
@@ -283,17 +296,17 @@ export const commands = {
           unlockedCount++;
           badgeLines.push({
             type: 'success',
-            text: `  [UNLOCKED] ${badge.icon} ${badge.name}: ${badge.description}`
+            text: `  [UNLOCKED] [x] ${badge.name}: ${badge.description}`
           });
         } else if (badge.secret) {
           badgeLines.push({
             type: 'muted',
-            text: `  [LOCKED] 🔒 ??? : Secret objective hidden in code or terminal.`
+            text: `  [LOCKED] [?] ??? : Secret objective hidden in code or terminal.`
           });
         } else {
           badgeLines.push({
             type: 'muted',
-            text: `  [LOCKED] 🛡️ ${badge.name}: Hint: ${badge.unlockHint}`
+            text: `  [LOCKED] [-] ${badge.name}: Hint: ${badge.unlockHint}`
           });
         }
       });
@@ -527,7 +540,7 @@ export const commands = {
       output: [
         { type: 'warning', text: '>>> [CLASSIFIED PROTOCOL UNLOCKED] <<<' },
         { type: 'success', text: 'Hello, explorer! Thank you for inspecting the terminal.' },
-        { type: 'text', text: `"${profile.tagline}"` },
+        { type: 'text', text: `"${profile.headline}"` },
         { type: 'info', text: 'Achievement Unlocked: Secret Protocol (+100 XP awarded)' }
       ],
       sideEffects: [

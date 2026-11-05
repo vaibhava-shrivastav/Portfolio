@@ -157,7 +157,7 @@ export function gameReducer(state, action) {
           type: 'levelup',
           title: `Level Up! Level ${levelInfo.level}`,
           message: `Rank: ${levelInfo.name}`,
-          icon: 'auto_awesome',
+          icon: 'bolt',
           level: levelInfo.level
         });
       }
@@ -170,7 +170,7 @@ export function gameReducer(state, action) {
             type: 'achievement',
             title: `Badge Unlocked: ${badgeMeta.name}`,
             message: badgeMeta.description,
-            icon: badgeMeta.icon || 'military_tech',
+            icon: badgeMeta.icon || 'trophy',
             badgeKey
           });
         }
