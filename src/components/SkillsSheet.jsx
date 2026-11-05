@@ -20,6 +20,7 @@ import { useState, useEffect, useRef } from 'react';
 import { skills as skillsData, profile as profileData } from '../data/profile';
 import { useGame, useXP } from '../context/GameContext';
 import { useInView } from '../hooks/useInView';
+import { Icon } from './Icon';
 
 export function SkillsSheet() {
   const { actions } = useGame();
@@ -204,7 +205,7 @@ export function SkillsSheet() {
                   >
                     <div className="skills-sheet-module__title-group">
                       <span className="skills-sheet-module__icon font-mono" aria-hidden="true">
-                        {category.icon}
+                        <Icon name={category.icon || 'code'} size={20} />
                       </span>
                       <h3 className="skills-sheet-module__title font-display">
                         {category.name}

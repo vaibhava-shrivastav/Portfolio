@@ -19,6 +19,7 @@ import { useState, useEffect, useRef } from 'react';
 import { profile } from '../data/profile';
 import { useGame } from '../context/GameContext';
 import { submitContact, validateContactForm } from '../utils/submitContact';
+import { Icon } from './Icon';
 
 export function ContactSection() {
   const { state, actions } = useGame();
@@ -117,8 +118,8 @@ export function ContactSection() {
             actions.addToast({
               type: 'achievement',
               title: 'Transmission Sent!',
-              message: '📬 Reached Out badge unlocked (+20 XP)',
-              icon: '📬'
+              message: 'Reached Out badge unlocked (+20 XP)',
+              icon: 'mail'
             });
           }
         }
@@ -322,14 +323,16 @@ export function ContactSection() {
 
                 {submitStatus === 'unconfigured' && (
                   <div className="contact-form__alert contact-form__alert--warning">
-                    <span className="contact-form__alert-icon" aria-hidden="true">⚠️</span>
+                    <span className="contact-form__alert-icon" aria-hidden="true">
+                      <Icon name="info" size={16} />
+                    </span>
                     <div>
                       <p className="contact-form__alert-text font-semibold">{statusMessage}</p>
                       <a
                         href={prefilledMailto}
                         className="contact-form__fallback-btn font-mono"
                       >
-                        📧 Open In Default Email Client ↗
+                        <Icon name="mail" size={14} className="mr-1" /> Open In Default Email Client <Icon name="external-link" size={12} className="ml-1" />
                       </a>
                     </div>
                   </div>
@@ -337,7 +340,9 @@ export function ContactSection() {
 
                 {submitStatus === 'error' && (
                   <div className="contact-form__alert contact-form__alert--error">
-                    <span className="contact-form__alert-icon" aria-hidden="true">✖</span>
+                    <span className="contact-form__alert-icon" aria-hidden="true">
+                      <Icon name="x" size={16} />
+                    </span>
                     <div>
                       <p className="contact-form__alert-text font-semibold">{statusMessage}</p>
                       <a

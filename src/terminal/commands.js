@@ -283,17 +283,17 @@ export const commands = {
           unlockedCount++;
           badgeLines.push({
             type: 'success',
-            text: `  [UNLOCKED] ${badge.icon} ${badge.name}: ${badge.description}`
+            text: `  [UNLOCKED] [x] ${badge.name}: ${badge.description}`
           });
         } else if (badge.secret) {
           badgeLines.push({
             type: 'muted',
-            text: `  [LOCKED] 🔒 ??? : Secret objective hidden in code or terminal.`
+            text: `  [LOCKED] [?] ??? : Secret objective hidden in code or terminal.`
           });
         } else {
           badgeLines.push({
             type: 'muted',
-            text: `  [LOCKED] 🛡️ ${badge.name}: Hint: ${badge.unlockHint}`
+            text: `  [LOCKED] [-] ${badge.name}: Hint: ${badge.unlockHint}`
           });
         }
       });

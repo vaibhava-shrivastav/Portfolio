@@ -17,6 +17,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { parseCommand, VALID_COMMAND_NAMES } from '../terminal/commands';
 import { getClosestCommand } from '../terminal/suggest';
 import { useGame, useUI, useXP } from '../context/GameContext';
+import { Icon } from './Icon';
 
 export default function TerminalDrawer({ onClose }) {
   const { actions } = useGame();
@@ -379,7 +380,7 @@ export default function TerminalDrawer({ onClose }) {
       {/* Quick Ops Chips Toolbar */}
       <div className="terminal-drawer__chips-bar font-mono" role="toolbar" aria-label="Terminal quick actions">
         <span className="terminal-drawer__chips-label text-muted">
-          ⚡ QUICK OPS:
+          <Icon name="bolt" size={14} className="mr-1 inline-block" /> QUICK OPS:
         </span>
         <button type="button" onClick={() => handleExecute('help')} className="terminal-chip">
           <span className="text-terminal">$</span>&nbsp;help

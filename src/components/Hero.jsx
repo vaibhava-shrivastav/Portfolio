@@ -16,6 +16,7 @@
 import { useState, useEffect } from 'react';
 import { profile as profileData, projects } from '../data/profile';
 import { useGame, useUI } from '../context/GameContext';
+import { Icon } from './Icon';
 
 const FULL_GREETING = '> VAIBHAVA.K.SHRIVASTAV';
 const HINT_STORAGE_KEY = 'netflix-portfolio-onboarding-dismissed';
@@ -197,7 +198,7 @@ export function Hero() {
             {/* Dismissible Onboarding Hint */}
             {!hintDismissed && (
               <div className="hero-billboard__hint font-mono" role="status">
-                <span className="hero-billboard__hint-icon" aria-hidden="true">💡</span>
+                <Icon name="lightbulb" size={16} className="hero-billboard__hint-icon" />
                 <span className="hero-billboard__hint-text">
                   Explore the site to earn XP and unlock 10 badges.{' '}
                   <span className="hero-hint-desktop">Press <kbd>`</kbd> for the terminal.</span>
@@ -209,7 +210,7 @@ export function Hero() {
                   className="hero-billboard__hint-close"
                   aria-label="Dismiss hint"
                 >
-                  ×
+                  <Icon name="x" size={14} />
                 </button>
               </div>
             )}
