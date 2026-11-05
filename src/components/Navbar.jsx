@@ -207,14 +207,15 @@ export function Navbar() {
 
         {/* Right Section: XP Bar, Avatar Menu & Mobile Toggle */}
         <div className="navbar__right">
-          {/* XP Bar (Desktop / Tablet) */}
+          {/* XP Indicator (Compact on small screens, expanded track on wider screens) */}
           <div
             className="navbar__xp"
             role="status"
             aria-label={`Visitor Level ${currentLevel}, ${currentXp} Experience Points`}
           >
-            <div className="navbar__xp-header">
-              <span className="navbar__xp-level">LEVEL {currentLevel}</span>
+            <div className="navbar__xp-header font-mono">
+              <span className="navbar__xp-level">Lv {currentLevel}</span>
+              <span className="navbar__xp-sep" aria-hidden="true">·</span>
               <span className="navbar__xp-text">{currentXp} XP</span>
             </div>
             <div
