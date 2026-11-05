@@ -2467,6 +2467,12 @@ body.modal-open .terminal-launcher-container {
   box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.5);
 }
 
+@media (max-width: 768px) {
+  .footer {
+    padding-bottom: calc(var(--space-10) + 64px);
+  }
+}
+
 .footer__inner {
   display: flex;
   flex-direction: column;
