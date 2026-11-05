@@ -75,12 +75,13 @@ test('3. whoami outputs role, level, current XP, and selected persona', () => {
   assert.match(textAll, /Fellow Dev/);
 });
 
-test('4. skills --level groups by proficiency (Advanced / Working Knowledge)', () => {
+test('4. skills --level outputs self-assessed levels without Advanced/Working Knowledge wording', () => {
   const res = parseCommand('skills --level');
   assert.equal(res.success, true);
   const textAll = res.output.map((l) => l.text).join('\n');
-  assert.match(textAll, /ADVANCED/i);
-  assert.match(textAll, /WORKING KNOWLEDGE/i);
+  assert.match(textAll, /self-assessed levels/i);
+  assert.ok(!textAll.includes('Advanced'), 'Must not contain "Advanced"');
+  assert.ok(!textAll.includes('Working Knowledge'), 'Must not contain "Working Knowledge"');
 });
 
 test('5. achievements lists unlocked badges vs total count', () => {
@@ -92,11 +93,11 @@ test('5. achievements lists unlocked badges vs total count', () => {
   assert.match(textAll, /2\/10 UNLOCKED/i);
 });
 
-test('6. deploy --global simulated deployment log ends in "Deployed to production!"', () => {
+test('6. deploy --global simulated deployment log ends in exact message', () => {
   const res = parseCommand('deploy --global');
   assert.equal(res.success, true);
   const lastLine = res.output[res.output.length - 1];
-  assert.equal(lastLine.text, 'Deployed to production!');
+  assert.equal(lastLine.text, 'Simulation complete. Real deployment: AWS Amplify Hosting.');
   assert.equal(lastLine.type, 'success');
 });
 

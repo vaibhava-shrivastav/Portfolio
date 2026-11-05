@@ -43,7 +43,7 @@ export const commands = {
         { type: 'warning', text: '--- PORTFOLIO COMMANDS ---' },
         { type: 'text', text: '  about           Bio & engineering journey summary' },
         { type: 'text', text: '  skills          List technical skill categories' },
-        { type: 'text', text: '  skills --level  Skills grouped by proficiency (Advanced / Working Knowledge)' },
+        { type: 'text', text: '  skills --level  Render self-assessed skill proficiency bars' },
         { type: 'text', text: '  projects        Catalog of production projects with IDs' },
         { type: 'text', text: '  play <id|num>   Open project detail modal (e.g. play gla, play 1)' },
         { type: 'text', text: '  experience      Work experience & platform training' },
@@ -129,49 +129,28 @@ export const commands = {
     }
   },
 
-  // 5. SKILLS --LEVEL (Grouped by proficiency: Advanced / Working Knowledge)
+  // 5. SKILLS --LEVEL (Self-assessed proficiency bars)
   'skills --level': {
-    help: 'Skills grouped by proficiency (Advanced / Working Knowledge)',
+    help: 'Render self-assessed skill proficiency bars',
     run: () => {
-      const advanced = [];
-      const working = [];
-
-      (skills.categories || []).forEach((cat) => {
-        (cat.items || []).forEach((item) => {
-          if (item.level >= 85) {
-            advanced.push({ ...item, category: cat.name });
-          } else {
-            working.push({ ...item, category: cat.name });
-          }
-        });
-      });
-
       const lines = [
-        { type: 'info', text: 'SKILLS GROUPED BY PROFICIENCY' },
-        { type: 'warning', text: '=== ADVANCED (PROVEN PROJECT & LAB EXPERIENCE) ===' }
+        { type: 'info', text: 'TECHNICAL SKILLS (SELF-ASSESSED LEVELS)' }
       ];
 
-      advanced.forEach((item) => {
-        const label = `${item.name} (${item.category})`.padEnd(36, ' ');
-        lines.push({
-          type: 'success',
-          text: `  ${label} ${createAsciiBar(item.level)}`
-        });
-      });
-
-      lines.push({ type: 'warning', text: '=== WORKING KNOWLEDGE (COURSEWORK & PRACTICAL APPLICATION) ===' });
-
-      working.forEach((item) => {
-        const label = `${item.name} (${item.category})`.padEnd(36, ' ');
-        lines.push({
-          type: 'text',
-          text: `  ${label} ${createAsciiBar(item.level)}`
+      (skills.categories || []).forEach((cat) => {
+        lines.push({ type: 'warning', text: `[${cat.name.toUpperCase()}]` });
+        (cat.items || []).forEach((item) => {
+          const label = item.name.padEnd(28, ' ');
+          lines.push({
+            type: 'text',
+            text: `  ${label} ${createAsciiBar(item.level)}`
+          });
         });
       });
 
       lines.push({
         type: 'muted',
-        text: '// Note: Percentage ratings are self-assessed estimates based on university coursework and project deployments.'
+        text: '// Note: Percentage ratings are self-assessed estimates based on university coursework and practical project experience.'
       });
 
       return { output: lines };
@@ -411,7 +390,7 @@ export const commands = {
     help: 'Print direct resume URL and open in new tab',
     run: () => ({
       output: [
-        { type: 'success', text: 'Opening verified resume (/resume.pdf)...' },
+        { type: 'success', text: 'Opening resume (/resume.pdf)...' },
         { type: 'info', text: 'Direct URL: /resume.pdf' }
       ],
       sideEffects: [
@@ -477,7 +456,7 @@ export const commands = {
         { type: 'text', text: '[AWS API GATEWAY] Verifying route schemas and CORS headers' },
         { type: 'text', text: '[AWS LAMBDA] Provisioning serverless contact dispatch functions' },
         { type: 'text', text: '[AWS SES] Verifying DKIM and identity routing policies' },
-        { type: 'success', text: 'Deployed to production!' }
+        { type: 'success', text: 'Simulation complete. Real deployment: AWS Amplify Hosting.' }
       ],
       sideEffects: []
     })
