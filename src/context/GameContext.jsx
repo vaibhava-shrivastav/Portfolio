@@ -40,6 +40,9 @@ import {
 // Re-export pure logic
 export { calculateLevel, calculateLevelProgress, MAX_TOTAL_XP };
 
+export const WELCOME_ENTERED_KEY = 'portfolio_entered';
+export const PRELOADER_COMPLETED_KEY = 'preloader_completed';
+
 // Initial State
 const initialState = {
   // Discrete XP & Level
@@ -352,6 +355,7 @@ const GameContext = createContext(null);
 export function GameProvider({ children }) {
   const [state, dispatch] = useReducer(gameReducer, initialState, (initial) => {
     if (typeof window === 'undefined') return initial;
+    const hasEntered = window.localStorage.getItem(WELCOME_ENTERED_KEY) === 'true';
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored) {
@@ -359,7 +363,8 @@ export function GameProvider({ children }) {
         const migrated = migrateState(parsed) || {};
         const { unlocked, timestamps } = deriveBadges(
           migrated.awardedActionIds || [],
-          migrated.badgeTimestamps || {}
+          migrated.badgeTimestamps || {},
+          migrated.xp || 0
         );
         const levelInfo = calculateLevel(migrated.xp || 0);
 
@@ -379,7 +384,8 @@ export function GameProvider({ children }) {
           })),
           session: {
             ...initial.session,
-            ...(migrated.session || {})
+            ...(migrated.session || {}),
+            profileSelected: hasEntered || Boolean(migrated.session?.profileSelected)
           },
           version: STORAGE_VERSION
         };
@@ -387,7 +393,13 @@ export function GameProvider({ children }) {
     } catch (err) {
       console.warn('Failed to load persisted game state:', err);
     }
-    return initial;
+    return {
+      ...initial,
+      session: {
+        ...initial.session,
+        profileSelected: hasEntered
+      }
+    };
   });
 
   // Save state to localStorage
@@ -421,6 +433,13 @@ export function GameProvider({ children }) {
 
       // Welcome Gateway Actions
       enterPortfolio: () => {
+        if (typeof window !== 'undefined') {
+          try {
+            window.localStorage.setItem(WELCOME_ENTERED_KEY, 'true');
+          } catch (e) {
+            /* ignore */
+          }
+        }
         dispatch({
           type: ActionTypes.SET_PROFILE_SELECTED,
           payload: true
@@ -432,6 +451,13 @@ export function GameProvider({ children }) {
       },
 
       enterCliMode: () => {
+        if (typeof window !== 'undefined') {
+          try {
+            window.localStorage.setItem(WELCOME_ENTERED_KEY, 'true');
+          } catch (e) {
+            /* ignore */
+          }
+        }
         dispatch({
           type: ActionTypes.SET_PROFILE_SELECTED,
           payload: true
@@ -442,8 +468,16 @@ export function GameProvider({ children }) {
         });
       },
 
-      setProfileSelected: (selected) =>
-        dispatch({ type: ActionTypes.SET_PROFILE_SELECTED, payload: Boolean(selected) }),
+      setProfileSelected: (selected) => {
+        if (typeof window !== 'undefined' && selected) {
+          try {
+            window.localStorage.setItem(WELCOME_ENTERED_KEY, 'true');
+          } catch (e) {
+            /* ignore */
+          }
+        }
+        dispatch({ type: ActionTypes.SET_PROFILE_SELECTED, payload: Boolean(selected) });
+      },
 
       addVisitedSection: (section) => {
         dispatch({ type: ActionTypes.ADD_VISITED_SECTION, payload: section });
@@ -477,14 +511,14 @@ export function GameProvider({ children }) {
           type: ActionTypes.SET_SELECTED_PROJECT,
           payload: project
         });
-        if (project && project.id) {
-          // Award XP for opening project detail modal (GLA Exchange = proj-1, EduCloud = proj-2)
-          const proj = allProjects.find((p) => p.id === project.id);
+        if (project) {
+          const proj = allProjects.find((p) => p.id === project.id || p.slug === project.slug);
           if (proj) {
+            const projectSlug = proj.slug || (proj.id === 'proj-1' ? 'gla-exchange' : 'educloud');
             dispatch({
               type: ActionTypes.AWARD_ACTION,
               payload: {
-                actionId: `project:open:${proj.id}`,
+                actionId: `project:open:${projectSlug}`,
                 amount: 25,
                 label: `Project Detail: ${proj.title}`
               }
@@ -522,10 +556,14 @@ export function GameProvider({ children }) {
 
       // Reset
       resetGame: () => {
-        try {
-          window.localStorage.removeItem(STORAGE_KEY);
-        } catch (e) {
-          /* ignore */
+        if (typeof window !== 'undefined') {
+          try {
+            window.localStorage.removeItem(WELCOME_ENTERED_KEY);
+            window.localStorage.removeItem(STORAGE_KEY);
+            window.sessionStorage.removeItem(PRELOADER_COMPLETED_KEY);
+          } catch (e) {
+            /* ignore */
+          }
         }
         dispatch({ type: ActionTypes.RESET_STATE });
       },

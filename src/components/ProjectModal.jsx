@@ -88,9 +88,9 @@ export function ProjectModal() {
   const liveUrl = isGlaExchange ? 'https://glaexchange.online' : null;
 
   const handleLiveClick = () => {
-    // Award +15 XP once for clicking Live Demo
-    if (actions.awardAction) {
-      actions.awardAction(`project:live:${selectedProject.id}`, 15);
+    // Award +15 XP once for clicking Live Demo (only GLA Exchange has a live link)
+    if (actions.awardAction && isGlaExchange) {
+      actions.awardAction('project:live:gla-exchange', 15);
     }
   };
 

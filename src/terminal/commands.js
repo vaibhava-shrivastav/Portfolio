@@ -463,9 +463,9 @@ export const commands = {
         { type: 'info', text: '[AWS AMPLIFY] Pulling repository branch origin/main' },
         { type: 'text', text: '[AWS AMPLIFY] Building static bundle assets via Vite' },
         { type: 'info', text: '[AWS CLOUDFRONT] Invalidating edge cache distributions' },
-        { type: 'text', text: '[AWS API GATEWAY] Verifying route schemas and CORS headers' },
+        { type: 'text', text: '[AWS API GATEWAY] Validating route schemas and CORS headers' },
         { type: 'text', text: '[AWS LAMBDA] Provisioning serverless contact dispatch functions' },
-        { type: 'text', text: '[AWS SES] Verifying DKIM and identity routing policies' },
+        { type: 'text', text: '[AWS SES] Validating DKIM and identity routing policies' },
         { type: 'success', text: 'Simulation complete. Real deployment: AWS Amplify Hosting.' }
       ],
       sideEffects: []
