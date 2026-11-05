@@ -32,7 +32,7 @@ export default function TerminalDrawer({ onClose }) {
         { type: 'success', text: 'PORTFOLIO_OS v2.4 (x86_64-portfolio-darwin)' },
         {
           type: 'muted',
-          text: 'Interactive developer shell initialized. Welcome, guest! Type "help" or tap quick chips below.'
+          text: 'Interactive developer shell initialized. Welcome! Type "help" or tap quick chips below.'
         }
       ]
     }

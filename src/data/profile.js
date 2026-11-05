@@ -245,7 +245,7 @@ export const projects = [
  * Achievements are badges only (0 XP). All XP is earned via discrete actions:
  *
  * Action Table:
- * 1. Profile select (persona chosen):                 +20 XP (once)
+ * 1. Enter portfolio gateway:                         +20 XP (once)
  * 2. About section viewed:                            +30 XP (once)
  * 3. Each project modal opened (GLA, EduCloud):       +25 XP each = +50 XP (2 projects)
  * 4. Skills section viewed:                           +30 XP (once)
@@ -547,13 +547,6 @@ export const easterEggs = {
   }
 };
 
-/**
- * ==========================================================================
- * Visitor Personas (Who\'s Watching)
- * ==========================================================================
- * Tailors the hero tagline and first row section order per persona.
- * ==========================================================================
- */
 // Default export for convenience
 export default {
   profile,
