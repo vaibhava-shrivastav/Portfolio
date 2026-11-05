@@ -14,7 +14,7 @@
  * ==========================================================================
  */
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
-import { useUI, useGame, useGameActions } from '../context/GameContext';
+import { useUI, useGame, useGameActions, useSession } from '../context/GameContext';
 import { useKonami } from '../hooks/useKonami';
 
 const LazyTerminalDrawer = lazy(() => import('./TerminalDrawer'));
@@ -33,6 +33,7 @@ function isInputFocused() {
 
 export function Terminal() {
   const { terminalOpen, modalOpen } = useUI();
+  const { profileSelected } = useSession();
   const { actions } = useGame();
   const { toggleTerminal } = useGameActions();
 
@@ -145,7 +146,7 @@ export function Terminal() {
   return (
     <>
       {/* Floating Bottom-Right Launcher Widget (Mobile / Small Screen only) */}
-      {!terminalOpen && !modalOpen && (
+      {!terminalOpen && !modalOpen && profileSelected && (
         <aside className="terminal-launcher-container" aria-label="Terminal discovery launcher">
           {/* One-Time Hint Banner */}
           {showHintBanner && (
