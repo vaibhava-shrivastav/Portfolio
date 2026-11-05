@@ -1,7 +1,7 @@
 {
   "name": "Vaibhava Kumar Shrivastav | Full Stack Developer",
   "short_name": "VKS Portfolio",
-  "description": "Full Stack Developer • AWS Enthusiast • Building GLA Exchange • Netflix-inspired portfolio",
+  "description": "B.Tech Computer Science student building full-stack and cloud projects. GLA Exchange, EduCloud, AWS certified.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#131313",
@@ -9,51 +9,51 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "images/icon-72.png",
+      "src": "/images/icon-72.svg",
       "sizes": "72x72",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "images/icon-96.png",
+      "src": "/images/icon-96.svg",
       "sizes": "96x96",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "images/icon-128.png",
+      "src": "/images/icon-128.svg",
       "sizes": "128x128",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "images/icon-144.png",
+      "src": "/images/icon-144.svg",
       "sizes": "144x144",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "images/icon-152.png",
+      "src": "/images/icon-152.svg",
       "sizes": "152x152",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "images/icon-192.png",
+      "src": "/images/icon-192.svg",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "images/icon-384.png",
+      "src": "/images/icon-384.svg",
       "sizes": "384x384",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "images/icon-512.png",
+      "src": "/images/icon-512.svg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ],
@@ -65,14 +65,14 @@
       "short_name": "Projects",
       "description": "View my projects",
       "url": "/#projects",
-      "icons": [{ "src": "images/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/images/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
     },
     {
       "name": "Contact",
       "short_name": "Contact",
       "description": "Get in touch",
       "url": "/#contact",
-      "icons": [{ "src": "images/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/images/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
     }
   ]
 }
