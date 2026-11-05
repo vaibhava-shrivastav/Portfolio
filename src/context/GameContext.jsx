@@ -562,6 +562,7 @@ export function useXP() {
 
   return {
     xp: currentXp,
+    totalXp: currentXp,
     level: levelInfo.level,
     levelTitle: levelInfo.name,
     xpToNext: levelInfo.nextXp,
