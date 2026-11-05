@@ -17,7 +17,7 @@ export const profile = {
   github: "https://github.com/vaibhava-shrivastav",
   linkedin: "https://www.linkedin.com/in/vaibhavakumarshrivastav/",
   resumeUrl: "/resume.pdf",
-  avatar: "assets/images/avatar.png", // TODO: Add avatar image
+  avatar: "/images/avatar.svg",
   bio: `B.Tech Computer Science student at GLA University with hands-on experience building
 full-stack web applications and cloud infrastructure on AWS.
 Skilled in React, Node.js, Python, and Terraform.
@@ -61,7 +61,9 @@ export const education = [
     field: "Computer Science",
     period: "2024 — 2028",
     location: "Mathura, Uttar Pradesh, India",
-    gpa: "8.8/10", // CPI 8.8
+    score: "CPI 8.8",
+    cpi: "CPI 8.8",
+    gpa: "CPI 8.8",
     honors: [],
     relevantCoursework: [
       // NOTE: Inferred from skills section; resume does not list specific courses
@@ -80,6 +82,7 @@ export const education = [
     field: "",
     period: "2023",
     location: "India",
+    score: "89.8%",
     gpa: "89.8%",
     honors: [],
     relevantCoursework: [],
@@ -92,6 +95,7 @@ export const education = [
     field: "",
     period: "2021",
     location: "India",
+    score: "86.2%",
     gpa: "86.2%",
     honors: [],
     relevantCoursework: [],
@@ -180,10 +184,9 @@ export const projects = [
     tagline: "Campus Marketplace Platform",
     description: `Built and deployed a fullstack peer-to-peer marketplace for GLA University students featuring 20+ modules including real-time chat (Socket.io), Google OAuth 2.0, product listings with Cloudinary CDN image storage, and a role-based admin portal serving live users on a custom domain with SSL.`,
     longDescription: `Built and deployed a fullstack peer-to-peer marketplace for GLA University students featuring 20+ modules including real-time chat (Socket.io), Google OAuth 2.0, product listings with Cloudinary CDN image storage, and a role-based admin portal serving live users on a custom domain with SSL. Implemented production-grade security: Helmet.js headers, rate limiting, CORS whitelist, JWT, input validation, Google Search Console SEO with sitemap.xml, and structured data demonstrating ownership across the full software development lifecycle from architecture to deployment.`,
-    image: "assets/images/projects/gla-exchange.png",
+    image: "/images/projects/gla-exchange.svg",
     images: [
-      "assets/images/projects/gla-exchange-1.png",
-      "assets/images/projects/gla-exchange-2.png"
+      "/images/projects/gla-exchange.svg"
     ],
     demoUrl: "https://glaexchange.online",
     repoUrl: "", // Per resume, profile link is canonical
@@ -210,10 +213,9 @@ export const projects = [
     tagline: "Managed Cloud Learning Platform",
     description: `Architected a cloud platform provisioning isolated, fault-tolerant AWS environments for students using Terraform IaC integrating EC2, S3, IAM, and VPC to deliver secure, cost-controlled multi-tenant workspaces at scale.`,
     longDescription: `Architected a cloud platform provisioning isolated, fault-tolerant AWS environments for students using Terraform IaC integrating EC2, S3, IAM, and VPC to deliver secure, cost-controlled multi-tenant workspaces at scale. Designed IAM role-based access control and VPC network isolation for multitenant environments, ensuring security and resource separation across concurrent student workspaces mirroring distributed system patterns used in large-scale cloud platforms.`,
-    image: "assets/images/projects/educloud.png",
+    image: "/images/projects/educloud.svg",
     images: [
-      "assets/images/projects/educloud-1.png",
-      "assets/images/projects/educloud-2.png"
+      "/images/projects/educloud.svg"
     ],
     demoUrl: "", // TODO: Add if deployed
     repoUrl: "", // Per resume, profile link is canonical
@@ -498,12 +500,13 @@ export const contact = {
 
 export const site = {
   title: "Vaibhava Kumar Shrivastav | Full Stack Developer",
-  description: "Full Stack Developer · AWS Enthusiast · Building GLA Exchange · Netflix-inspired portfolio",
-  ogImage: "assets/images/og-image.png", // TODO: Create
-  favicon: "assets/favicon.ico",
+  description: "B.Tech Computer Science student building full-stack and cloud projects. GLA Exchange, EduCloud, AWS certified.",
+  ogImage: "/images/og-image.svg",
+  favicon: "/favicon.svg",
   themeColor: "#E50914",
   lang: "en",
-  canonical: "https://vaibhava-shrivastav.vercel.app", // TODO: Update after deploy
+  // Single canonical URL placeholder constant — update this URL after AWS deployment:
+  canonical: "https://vaibhava-shrivastav.vercel.app",
   features: {
     terminal: true,
     rpgStats: true,

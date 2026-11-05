@@ -338,15 +338,20 @@ export const commands = {
           type: 'success',
           text: `${exp.company} — ${exp.role}`
         });
-        lines.push({
-          type: 'text',
-          text: `  Period    : ${exp.period}`
-        });
-        lines.push({
-          type: 'text',
-          text: `  Technology: ${exp.tech}`
-        });
-        (exp.bullets || []).forEach((b) => {
+        if (exp.period) {
+          lines.push({
+            type: 'text',
+            text: `  Period    : ${exp.period}`
+          });
+        }
+        if (exp.technology) {
+          lines.push({
+            type: 'text',
+            text: `  Technology: ${exp.technology}`
+          });
+        }
+        const bullets = exp.highlights || exp.bullets || [];
+        bullets.forEach((b) => {
           lines.push({
             type: 'muted',
             text: `  ● ${b}`
@@ -371,14 +376,21 @@ export const commands = {
           type: 'success',
           text: `${edu.institution}`
         });
-        lines.push({
-          type: 'text',
-          text: `  Degree: ${edu.degree || 'Secondary'} ${edu.field ? `| ${edu.field}` : ''} (${edu.period})`
-        });
-        lines.push({
-          type: 'info',
-          text: `  Score : ${edu.grade}`
-        });
+        if (edu.degree || edu.period) {
+          const degParts = [edu.degree, edu.field].filter(Boolean).join(' | ');
+          const periodStr = edu.period ? ` (${edu.period})` : '';
+          lines.push({
+            type: 'text',
+            text: `  Degree: ${degParts}${periodStr}`
+          });
+        }
+        const scoreVal = edu.score || edu.cpi || edu.gpa;
+        if (scoreVal) {
+          lines.push({
+            type: 'info',
+            text: `  Score : ${scoreVal}`
+          });
+        }
       });
 
       return { output: lines };

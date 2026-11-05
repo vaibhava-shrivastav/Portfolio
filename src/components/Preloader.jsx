@@ -63,6 +63,13 @@ export function Preloader() {
     if (!shouldShow) return;
     setMounted(true);
 
+    // Mark preloader as seen for this session immediately so reloads skip it without flash
+    try {
+      sessionStorage.setItem(SESSION_KEY, 'true');
+    } catch {
+      /* ignore */
+    }
+
     // Check prefers-reduced-motion
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (mediaQuery.matches) {
@@ -132,21 +139,23 @@ export function Preloader() {
       aria-label="Cinematic Portfolio Intro"
       className={`preloader ${isFading ? 'preloader--fading' : ''} ${phase === 'warp' ? 'preloader--warping' : ''}`}
     >
-      {/* Background lens flare & ambient glow */}
-      <div className="preloader__flare" aria-hidden="true" />
+      {/* Background lens flare & ambient glow wrapper */}
+      <div className="preloader__ambient" aria-hidden="true">
+        <div className="preloader__flare" />
 
-      {/* Symmetrical CSS fanning light streaks */}
-      <div className="preloader__streaks" aria-hidden="true">
-        <div className="preloader__streak-spine" />
-        <div className="preloader__streak preloader__streak--left-1" />
-        <div className="preloader__streak preloader__streak--left-2" />
-        <div className="preloader__streak preloader__streak--left-3" />
-        <div className="preloader__streak preloader__streak--left-4" />
-        <div className="preloader__streak preloader__streak--right-1" />
-        <div className="preloader__streak preloader__streak--right-2" />
-        <div className="preloader__streak preloader__streak--right-3" />
-        <div className="preloader__streak preloader__streak--right-4" />
-        <div className="preloader__streak-horizontal" />
+        {/* Symmetrical CSS fanning light streaks */}
+        <div className="preloader__streaks">
+          <div className="preloader__streak-spine" />
+          <div className="preloader__streak preloader__streak--left-1" />
+          <div className="preloader__streak preloader__streak--left-2" />
+          <div className="preloader__streak preloader__streak--left-3" />
+          <div className="preloader__streak preloader__streak--left-4" />
+          <div className="preloader__streak preloader__streak--right-1" />
+          <div className="preloader__streak preloader__streak--right-2" />
+          <div className="preloader__streak preloader__streak--right-3" />
+          <div className="preloader__streak preloader__streak--right-4" />
+          <div className="preloader__streak-horizontal" />
+        </div>
       </div>
 
       {/* Skip button — visible, keyboard accessible */}

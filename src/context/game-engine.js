@@ -181,3 +181,50 @@ export function migrateState(stored) {
   migrated.version = STORAGE_VERSION;
   return migrated;
 }
+
+/**
+ * Pure state transition for awarding an XP action.
+ * Idempotent: if actionId has already been awarded, returns original state without modifying XP.
+ */
+export function applyAwardAction(state, actionId, amount = 0) {
+  if (!state || !actionId) return state;
+
+  const awarded = state.awardedActionIds || [];
+  if (awarded.includes(actionId)) {
+    return state;
+  }
+  if (actionId === 'terminal_open' && awarded.includes('terminal_first_open')) {
+    return state;
+  }
+  if (actionId === 'terminal_first_open' && awarded.includes('terminal_open')) {
+    return state;
+  }
+
+  const newAwarded = [...awarded, actionId];
+  if (actionId === 'terminal_first_open' && !newAwarded.includes('terminal_open')) {
+    newAwarded.push('terminal_open');
+  } else if (actionId === 'terminal_open' && !newAwarded.includes('terminal_first_open')) {
+    newAwarded.push('terminal_first_open');
+  }
+
+  const addedXp = Math.max(0, Number(amount) || 0);
+  const currentXp = Number(state.xp) || 0;
+  const newXp = currentXp + addedXp;
+  const levelInfo = calculateLevel(newXp);
+
+  const { unlocked, timestamps, newlyUnlockedKeys } = deriveBadges(
+    newAwarded,
+    state.badgeTimestamps
+  );
+
+  return {
+    ...state,
+    xp: newXp,
+    level: levelInfo.level,
+    levelTitle: levelInfo.name,
+    awardedActionIds: newAwarded,
+    badgeTimestamps: timestamps,
+    badgeUnlocked: unlocked,
+    newlyUnlockedKeys
+  };
+}

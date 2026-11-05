@@ -101,9 +101,11 @@ export function SkillsSheet() {
         <div className="skills-sheet-grid">
           {/* LEFT COLUMN: Character Card & Vitals */}
           <aside className="skills-sheet-character-card" aria-label="Developer identity and vitals">
-            {/* Ambient Background Glows */}
-            <div className="skills-sheet-card__flare skills-sheet-card__flare--top" aria-hidden="true" />
-            <div className="skills-sheet-card__flare skills-sheet-card__flare--bottom" aria-hidden="true" />
+            {/* Ambient Background Glows Wrapper */}
+            <div className="skills-sheet-card__ambient" aria-hidden="true">
+              <div className="skills-sheet-card__flare skills-sheet-card__flare--top" />
+              <div className="skills-sheet-card__flare skills-sheet-card__flare--bottom" />
+            </div>
 
             {/* Avatar Frame with Inline SVG */}
             <div className="skills-sheet-avatar-frame">
