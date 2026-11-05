@@ -22,11 +22,6 @@ export function ProfileSelect() {
   const { selectPersona } = usePersona();
   const containerRef = useRef(null);
 
-  // If already selected and not toggled back open, do not render
-  if (profileSelected) {
-    return null;
-  }
-
   // Real telemetry data
   const currentLevel = state.level || 1;
   const currentXp = state.xp || 0;
@@ -34,6 +29,8 @@ export function ProfileSelect() {
 
   // Handle keyboard shortcuts: 1, 2, 3, 4, Esc
   useEffect(() => {
+    if (profileSelected) return;
+
     const handleKeyDown = (e) => {
       // Ignore if typing in input
       if (['INPUT', 'TEXTAREA'].includes(e.target?.tagName)) return;
@@ -59,7 +56,12 @@ export function ProfileSelect() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectPersona, selectedProfile, actions]);
+  }, [profileSelected, selectPersona, selectedProfile, actions]);
+
+  // If already selected and not toggled back open, do not render
+  if (profileSelected) {
+    return null;
+  }
 
   const handleSelect = (personaId) => {
     selectPersona(personaId);

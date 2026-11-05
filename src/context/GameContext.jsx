@@ -91,7 +91,7 @@ const initialState = {
 };
 
 // Action Types
-const ActionTypes = {
+export const ActionTypes = {
   AWARD_ACTION: 'AWARD_ACTION',
   ADD_TOAST: 'ADD_TOAST',
   REMOVE_TOAST: 'REMOVE_TOAST',
@@ -111,7 +111,7 @@ const ActionTypes = {
 };
 
 // Reducer
-function gameReducer(state, action) {
+export function gameReducer(state, action) {
   switch (action.type) {
     case ActionTypes.AWARD_ACTION: {
       const { actionId, amount = 0, label = '' } = action.payload || {};
@@ -604,6 +604,7 @@ export function GameProvider({ children }) {
         if (typeof window !== 'undefined') {
           try {
             window.localStorage.removeItem(STORAGE_KEY);
+            window.sessionStorage.removeItem('preloader_completed');
             window.sessionStorage.removeItem('netflix-portfolio-session-preloader-seen');
           } catch (e) {
             console.warn(e);

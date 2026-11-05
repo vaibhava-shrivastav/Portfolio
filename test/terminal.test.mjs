@@ -267,3 +267,46 @@ test('12. Security & Fact Audit: No command output contains phone numbers or for
     }
   }
 });
+
+test('13. No terminal command output contains "undefined", "null" or "NaN", and includes real facts ("CPI" and "Salesforce.com")', () => {
+  const allCommandsToTest = [
+    ...VALID_COMMAND_NAMES,
+    'skills --level',
+    'deploy --global',
+    'experience',
+    'education',
+    'secret',
+    'konami',
+    'play 1',
+    'play 2',
+    'theme dark',
+    'theme neon',
+    'theme pastel',
+    'theme clear'
+  ];
+
+  let foundCpi = false;
+  let foundSalesforce = false;
+
+  for (const cmdName of allCommandsToTest) {
+    const res = parseCommand(cmdName, {
+      level: 2,
+      xp: 150,
+      persona: 'Recruiter',
+      achievements: [{ id: 'pilot_episode', unlocked: true }]
+    });
+
+    for (const line of res.output || []) {
+      const text = line.text;
+      assert.ok(!text.includes('undefined'), `Command "${cmdName}" output line "${text}" must NOT contain "undefined"`);
+      assert.ok(!text.includes('null'), `Command "${cmdName}" output line "${text}" must NOT contain "null"`);
+      assert.ok(!text.includes('NaN'), `Command "${cmdName}" output line "${text}" must NOT contain "NaN"`);
+
+      if (text.includes('CPI')) foundCpi = true;
+      if (text.includes('Salesforce.com')) foundSalesforce = true;
+    }
+  }
+
+  assert.equal(foundCpi, true, 'Terminal command outputs must include "CPI" from profile.js');
+  assert.equal(foundSalesforce, true, 'Terminal command outputs must include "Salesforce.com" from profile.js');
+});
