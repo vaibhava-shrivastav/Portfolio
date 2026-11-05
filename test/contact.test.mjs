@@ -268,3 +268,32 @@ test('10. Error path handles server error gracefully', async () => {
   assert.equal(res.status, 'error');
   assert.match(res.message, /Bad Gateway/i);
 });
+
+test('11. 400 validation error response extracts field-level errors', async () => {
+  const mockFetch = async () => ({
+    ok: false,
+    status: 400,
+    json: async () => ({
+      ok: false,
+      error: 'Validation failed',
+      errors: { name: 'Name contains invalid characters', email: 'Email domain invalid' }
+    })
+  });
+
+  const res = await submitContact(
+    {
+      name: 'Bad Name',
+      email: 'bad@email.com',
+      message: 'Testing 400 response mapping'
+    },
+    {
+      apiUrl: 'https://api.example.com/contact',
+      fetchImpl: mockFetch
+    }
+  );
+
+  assert.equal(res.status, 'error');
+  assert.equal(res.errors.name, 'Name contains invalid characters');
+  assert.equal(res.errors.email, 'Email domain invalid');
+  assert.equal(res.message, 'Validation failed');
+});

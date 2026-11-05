@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless contact form dispatch backend for Netflix Portfolio (API Gateway HTTP API + Node.js 20 Lambda + SES)
+
+Parameters:
+  SenderEmail:
+    Type: String
+    Description: Verified AWS SES sender email address (e.g. portfolio@yourdomain.com)
+    AllowedPattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
+    ConstraintDescription: Must be a valid email address format.
+
+  RecipientEmail:
+    Type: String
+    Description: Destination email address where contact submissions will be delivered
+    AllowedPattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
+    ConstraintDescription: Must be a valid email address format.
+
+  AllowedOrigins:
+    Type: String
+    Default: 'http://localhost:5173'
+    Description: Comma-separated list of allowed CORS origins (e.g. https://main.<app-id>.amplifyapp.com,http://localhost:5173)
+
+  SesRegion:
+    Type: String
+    Default: ''
+    Description: AWS Region where SES identity is verified (defaults to the stack region if omitted)
+
+Conditions:
+  HasSesRegion: !Not [!Equals [!Ref SesRegion, '']]
+
+Resources:
+  ContactHttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins: !Split [',', !Ref AllowedOrigins]
+        AllowHeaders:
+          - Content-Type
+        AllowMethods:
+          - POST
+          - OPTIONS
+        MaxAge: 600
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 10
+        ThrottlingRateLimit: 5
+
+  ContactFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${ContactFunction}'
+      RetentionInDays: 14
+
+  ContactFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: src/handler.handler
+      Runtime: nodejs20.x
+      Architectures:
+        - arm64
+      MemorySize: 128
+      Timeout: 10
+      Environment:
+        Variables:
+          SENDER_EMAIL: !Ref SenderEmail
+          RECIPIENT_EMAIL: !Ref RecipientEmail
+          ALLOWED_ORIGINS: !Ref AllowedOrigins
+          SES_REGION: !If [HasSesRegion, !Ref SesRegion, !Ref 'AWS::Region']
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+              Resource:
+                !Sub
+                  - 'arn:aws:ses:${Region}:${AWS::AccountId}:identity/${SenderEmail}'
+                  - Region: !If [HasSesRegion, !Ref SesRegion, !Ref 'AWS::Region']
+      Events:
+        ContactPost:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref ContactHttpApi
+            Path: /contact
+            Method: POST
+
+Outputs:
+  ApiUrl:
+    Description: Full HTTPS URL for the contact form API endpoint
+    Value: !Sub 'https://${ContactHttpApi}.execute-api.${AWS::Region}.amazonaws.com/contact'
+
