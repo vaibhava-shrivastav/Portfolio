@@ -38,8 +38,42 @@ export function Terminal() {
   const { actions } = useGame();
   const { toggleTerminal } = useGameActions();
 
+  const [inputFocused, setInputFocused] = useState(false);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+
   const launcherRef = useRef(null);
   const openerRef = useRef(null);
+
+  // Track input focus across the document to hide floating launcher
+  useEffect(() => {
+    const handleFocusIn = (e) => {
+      const tag = e.target?.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target?.isContentEditable) {
+        setInputFocused(true);
+      }
+    };
+    const handleFocusOut = () => {
+      setInputFocused(false);
+    };
+
+    window.addEventListener('focusin', handleFocusIn);
+    window.addEventListener('focusout', handleFocusOut);
+    return () => {
+      window.removeEventListener('focusin', handleFocusIn);
+      window.removeEventListener('focusout', handleFocusOut);
+    };
+  }, []);
+
+  // Track mobile visualViewport to detect open on-screen keyboard
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.visualViewport) return;
+    const handleResize = () => {
+      const isKb = window.visualViewport.height < window.innerHeight * 0.75;
+      setKeyboardOpen(isKb);
+    };
+    window.visualViewport.addEventListener('resize', handleResize);
+    return () => window.visualViewport.removeEventListener('resize', handleResize);
+  }, []);
 
   // Discovery Hint Banner (shown once per session after delay, auto-dismisses after 8s)
   const [showHintBanner, setShowHintBanner] = useState(false);
@@ -147,7 +181,7 @@ export function Terminal() {
   return (
     <>
       {/* Floating Bottom-Right Launcher Widget (Mobile / Small Screen only) */}
-      {!terminalOpen && !modalOpen && profileSelected && (
+      {!terminalOpen && !modalOpen && !inputFocused && !keyboardOpen && profileSelected && (
         <aside className="terminal-launcher-container" aria-label="Terminal discovery launcher">
           {/* One-Time Hint Banner */}
           {showHintBanner && (

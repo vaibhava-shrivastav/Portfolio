@@ -18,6 +18,7 @@ import { education, experience, projects } from '../data/profile';
 import { Row } from './Row';
 import { useInView } from '../hooks/useInView';
 import { useGame, useUI } from '../context/GameContext';
+import { Icon } from './Icon';
 
 export function About() {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
@@ -43,8 +44,8 @@ export function About() {
       tag: 'EDUCATION',
       title: 'GLA University · Computer Science',
       period: education[0]?.period || '2024 — 2028',
-      summary: `B.Tech in Computer Science at GLA University (CPI 8.8/10). Academic coursework spanning Data Structures, Database Systems, Computer Networks, and Cloud Computing. Prior: Adani Public School (89.8%), OP Jindal (86.2%).`,
-      tech: ['Data Structures', 'DBMS', 'OS', 'Networks', 'Cloud'],
+      summary: `B.Tech in Computer Science at GLA University Mathura (2024–2028, CPI 8.8). Class XII at Adani Public School (2023, 89.8%). Class X at Shri O.P Jindal Vidya Niketan (2021, 86.2%).`,
+      tech: ['GLA University', 'CPI 8.8', 'Adani Public School', 'O.P Jindal'],
       gradient: 'linear-gradient(135deg, #1C0A35 0%, #0F081E 100%)',
       actionLabel: 'View Education'
     },
@@ -157,7 +158,7 @@ export function About() {
                   <span className="episode-card__cta-text">
                     {ep.actionLabel}
                   </span>
-                  <span className="episode-card__cta-arrow" aria-hidden="true">➔</span>
+                  <Icon name="chevron-right" size={14} className="episode-card__cta-arrow" />
                 </div>
               )}
             </div>

@@ -43,12 +43,46 @@ export default function TerminalDrawer({ onClose }) {
   const [commandHistory, setCommandHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [matrixActive, setMatrixActive] = useState(false);
+  const [drawerStyle, setDrawerStyle] = useState({});
 
   // DOM Refs
   const drawerRef = useRef(null);
   const inputRef = useRef(null);
   const scrollAreaRef = useRef(null);
   const canvasRef = useRef(null);
+
+  // Adapt terminal height to on-screen keyboard using dvh and visualViewport
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const updateDrawerHeight = () => {
+      if (window.innerWidth < 768 && window.visualViewport) {
+        const vvh = window.visualViewport.height;
+        const targetHeight = Math.min(vvh * 0.92, Math.max(260, vvh * 0.72));
+        setDrawerStyle({
+          height: `${targetHeight}px`,
+          maxHeight: `${targetHeight}px`
+        });
+      } else {
+        setDrawerStyle({});
+      }
+    };
+
+    updateDrawerHeight();
+    window.addEventListener('resize', updateDrawerHeight);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updateDrawerHeight);
+      window.visualViewport.addEventListener('scroll', updateDrawerHeight);
+    }
+
+    return () => {
+      window.removeEventListener('resize', updateDrawerHeight);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', updateDrawerHeight);
+        window.visualViewport.removeEventListener('scroll', updateDrawerHeight);
+      }
+    };
+  }, []);
 
   // Auto-focus input on open
   useEffect(() => {
@@ -161,10 +195,12 @@ export default function TerminalDrawer({ onClose }) {
     setCommandHistory((prev) => [...prev, trimmed]);
     setHistoryIndex(-1);
 
+    const isMobileViewport = typeof window !== 'undefined' ? window.innerWidth < 640 : false;
     const result = parseCommand(trimmed, {
       level,
       xp,
-      achievements: actions.getUnlockedAchievements?.() || []
+      achievements: actions.getUnlockedAchievements?.() || [],
+      isMobile: isMobileViewport
     });
 
     const entryId = `${Date.now()}-${Math.random().toString(36).substr(2, 4)}`;
@@ -323,6 +359,12 @@ export default function TerminalDrawer({ onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     handleExecute(inputVal);
+    // Explicit auto-scroll to bottom of terminal output on submit
+    setTimeout(() => {
+      if (scrollAreaRef.current) {
+        scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
+      }
+    }, 60);
   };
 
   return (
@@ -331,6 +373,7 @@ export default function TerminalDrawer({ onClose }) {
       role="dialog"
       aria-modal="true"
       aria-label="Interactive Terminal"
+      style={drawerStyle}
       onKeyDown={handleDrawerKeyDown}
       className={`terminal-drawer ${reducedMotion ? 'terminal-drawer--reduced-motion' : ''}`}
     >
@@ -364,15 +407,12 @@ export default function TerminalDrawer({ onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="terminal-drawer__close-btn"
+            className="terminal-drawer__close-btn font-mono"
             aria-label="Close terminal"
             title="Press ESC to close"
           >
-            <span>Close [ESC]</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+            <span className="hidden sm:inline">Close [ESC]</span>
+            <Icon name="x" size={16} />
           </button>
         </div>
       </header>

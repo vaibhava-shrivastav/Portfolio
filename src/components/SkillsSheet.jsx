@@ -280,7 +280,7 @@ export function SkillsSheet() {
 
             {/* Self-Assessed Rating Disclaimer Note */}
             <p className="skills-sheet-note font-mono text-center">
-              // NOTE: Skill proficiency ratings are self-assessed estimates based on university coursework (GLA University), production deployments (GLA Exchange), and hands-on cloud labs (EduCloud).
+              // NOTE: Skill proficiency ratings are self-assessed estimates based on university academics (GLA University), production deployments (GLA Exchange), and hands-on cloud labs (EduCloud).
             </p>
           </div>
         </div>

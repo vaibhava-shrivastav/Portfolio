@@ -65,14 +65,6 @@ export const education = [
     cpi: "CPI 8.8",
     gpa: "CPI 8.8",
     honors: [],
-    relevantCoursework: [
-      // NOTE: Inferred from skills section; resume does not list specific courses
-      "Data Structures & Algorithms",
-      "Database Management Systems",
-      "Computer Networks",
-      "Operating Systems",
-      "Cloud Computing"
-    ],
     featured: true
   },
   {
@@ -85,7 +77,6 @@ export const education = [
     score: "89.8%",
     gpa: "89.8%",
     honors: [],
-    relevantCoursework: [],
     featured: false
   },
   {
@@ -98,7 +89,6 @@ export const education = [
     score: "86.2%",
     gpa: "86.2%",
     honors: [],
-    relevantCoursework: [],
     featured: false
   }
 ];
