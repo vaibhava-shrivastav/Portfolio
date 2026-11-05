@@ -36,37 +36,24 @@ function App() {
     }
   }, []);
 
-  // Determine row order based on persona:
-  // - Hackathon Judge: AWS services first (EduCloud real stack: EC2, S3, IAM, VPC, Terraform)
-  // - Recruiter: Skills sheet first
-  // - Hiring Manager / Fellow Dev / Default: Projects first
-  const renderRows = () => {
+  // Base page order matches navbar:
+  // Hero -> About -> Skills -> Projects (persona-tailored) -> Achievements -> Contact -> Footer
+  // - Hackathon Judge: AWS services architecture row rendered at top of Projects
+  // - All personas: Projects catalog rendered
+  const renderProjects = () => {
     if (personaId === 'judge') {
       return (
-        <>
+        <div className="projects-wrapper">
           <AwsServicesRow />
           <Projects />
-          <About />
-        </>
+        </div>
       );
     }
 
-    if (personaId === 'recruiter') {
-      return (
-        <>
-          <SkillsSheet />
-          <Projects />
-          <About />
-        </>
-      );
-    }
-
-    // Default order: Projects -> About
     return (
-      <>
+      <div className="projects-wrapper">
         <Projects />
-        <About />
-      </>
+      </div>
     );
   };
 
@@ -84,15 +71,12 @@ function App() {
       {/* Navbar */}
       <Navbar />
 
-      {/* Main Content */}
+      {/* Main Content (order matches navbar navigation) */}
       <main id="main-content" role="main">
         <Hero />
-
-        {/* Persona-Ordered Shelves */}
-        {renderRows()}
-
-        {/* SkillsSheet rendered here if not already rendered above for recruiter */}
-        {personaId !== 'recruiter' && <SkillsSheet />}
+        <About />
+        <SkillsSheet />
+        {renderProjects()}
         <Achievements />
         <ContactSection />
       </main>
