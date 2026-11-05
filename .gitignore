@@ -9,8 +9,10 @@ dist
 .env.local
 
 # AWS SAM
+.aws-sam
 backend/.aws-sam
 samconfig.toml
+backend/samconfig.toml
 
 # OS
 .DS_Store
