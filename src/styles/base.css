@@ -117,18 +117,15 @@ body {
    REUSABLE UTILITY CLASSES
    ========================================================================== */
 
-/* Container */
+/* Container — Unified 1280px Grid & Fluid Padding */
 .container {
   width: 100%;
-  max-width: var(--container-xl);
-  margin: 0 auto;
-  padding: 0 var(--page-margin);
-}
-
-@media (min-width: 1440px) {
-  .container {
-    max-width: var(--container-2xl);
-  }
+  max-width: var(--container-max, 1280px);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--container-padding, clamp(1rem, 3.5vw, 2.5rem));
+  padding-right: var(--container-padding, clamp(1rem, 3.5vw, 2.5rem));
+  box-sizing: border-box;
 }
 
 /* Grid System */
@@ -215,7 +212,18 @@ body {
 .text-4xl { font-size: var(--text-4xl); }
 .text-5xl { font-size: var(--text-5xl); }
 
-/* Section */
+/* Section — Anchor Offset for Fixed Navbar & Spacing */
+.section,
+section[id],
+#hero,
+#about,
+#skills,
+#projects,
+#achievements,
+#contact {
+  scroll-margin-top: calc(var(--nav-height, 64px) + 1.5rem);
+}
+
 .section {
   padding: var(--section-gap) 0;
 }
