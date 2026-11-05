@@ -200,7 +200,9 @@ export function Hero() {
               <div className="hero-billboard__hint font-mono" role="status">
                 <span className="hero-billboard__hint-icon" aria-hidden="true">💡</span>
                 <span className="hero-billboard__hint-text">
-                  Explore the site to earn XP and unlock 10 badges. Press <kbd>`</kbd> for the terminal.
+                  Explore the site to earn XP and unlock 10 badges.{' '}
+                  <span className="hero-hint-desktop">Press <kbd>`</kbd> for the terminal.</span>
+                  <span className="hero-hint-touch">Tap the terminal button.</span>
                 </span>
                 <button
                   type="button"

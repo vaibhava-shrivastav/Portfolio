@@ -3360,6 +3360,20 @@ body.modal-open .terminal-launcher-container {
   font-weight: 700;
 }
 
+.hero-hint-touch {
+  display: none;
+}
+
+@media (pointer: coarse), (hover: none), (max-width: 768px) {
+  .hero-hint-desktop {
+    display: none !important;
+  }
+
+  .hero-hint-touch {
+    display: inline !important;
+  }
+}
+
 .hero-billboard__hint-close {
   background: none;
   border: none;
