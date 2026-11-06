@@ -33,9 +33,14 @@ Resources:
     Type: AWS::Serverless::HttpApi
     Properties:
       CorsConfiguration:
-        AllowOrigins: !Split [',', !Ref AllowedOrigins]
+        AllowOrigins:
+          - 'https://main.d1yysbj5hjw4kc.amplifyapp.com'
+          - 'http://localhost:5173'
+          - '*'
         AllowHeaders:
           - Content-Type
+          - Accept
+          - '*'
         AllowMethods:
           - POST
           - OPTIONS
@@ -83,6 +88,12 @@ Resources:
             ApiId: !Ref ContactHttpApi
             Path: /contact
             Method: POST
+        ContactOptions:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref ContactHttpApi
+            Path: /contact
+            Method: OPTIONS
 
 Outputs:
   ApiUrl:
